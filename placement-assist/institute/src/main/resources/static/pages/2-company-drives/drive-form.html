@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drive Form - Placement Assist</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/css/theme.css" rel="stylesheet">
+  <link href="/css/components.css" rel="stylesheet">
+</head>
+<body>
+  <div class="app-wrapper">
+    <div id="sidebar-container"></div>
+    <div class="main-content">
+      <div id="topbar-container"></div>
+
+      <main class="content-body">
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div>
+            <h4 class="fw-bold mb-1 text-dark" id="form-title">Create Campus Drive</h4>
+            <p class="text-muted small mb-0">Configure hiring criteria, company details, package brackets, and schedule.</p>
+          </div>
+          <a href="/institute/pages/2-company-drives/drive-list.html" class="btn btn-outline-secondary btn-sm">
+            &larr; Back to Drives
+          </a>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-lg-9">
+            <div class="card p-4">
+              <form id="drive-form" novalidate>
+                <div class="row g-3">
+                  <!-- Company Selection & Quick Add -->
+                  <div class="col-md-8">
+                    <label class="form-label small fw-semibold">Company <span class="text-danger">*</span></label>
+                    <select id="companyId" class="form-select" required>
+                      <option value="">Choose Company...</option>
+                    </select>
+                    <div class="invalid-feedback">Please choose a recruiting company.</div>
+                  </div>
+                  <div class="col-md-4 d-flex align-items-end">
+                    <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#newCompanyModal">
+                      + Add New Company
+                    </button>
+                  </div>
+
+                  <!-- Drive Title -->
+                  <div class="col-12">
+                    <label class="form-label small fw-semibold">Drive Title <span class="text-danger">*</span></label>
+                    <input type="text" id="title" class="form-control" required placeholder="e.g. Microsoft Graduate Software Engineer Hiring 2025">
+                    <div class="invalid-feedback">Please enter a drive title.</div>
+                  </div>
+
+                  <!-- Roles -->
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Offered Roles <span class="text-danger">*</span></label>
+                    <input type="text" id="roles" class="form-control" required placeholder="e.g. SDE-1, Cloud Associate">
+                    <div class="invalid-feedback">Please specify offered roles.</div>
+                  </div>
+
+                  <!-- Location -->
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Location / Venue</label>
+                    <input type="text" id="location" class="form-control" placeholder="e.g. Campus Seminar Hall / Virtual">
+                  </div>
+
+                  <!-- Package Range -->
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Minimum CTC (LPA)</label>
+                    <input type="number" id="packageMin" class="form-control" step="0.1" min="0" placeholder="e.g. 8.0">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Maximum CTC (LPA)</label>
+                    <input type="number" id="packageMax" class="form-control" step="0.1" min="0" placeholder="e.g. 14.5">
+                  </div>
+
+                  <!-- Eligibility Criteria -->
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Minimum CGPA Required</label>
+                    <input type="number" id="eligibilityCgpa" class="form-control" step="0.01" min="0" max="10" placeholder="e.g. 7.5">
+                  </div>
+                  <div class="col-md-6">
+                    <label class="form-label small fw-semibold">Max Backlogs Allowed</label>
+                    <input type="number" id="maxBacklogs" class="form-control" min="0" value="0">
+                  </div>
+
+                  <!-- Eligible Branches -->
+                  <div class="col-12">
+                    <label class="form-label small fw-semibold d-block">Eligible Branches</label>
+                    <div class="d-flex flex-wrap gap-3">
+                      <div class="form-check">
+                        <input class="form-check-input branch-check" type="checkbox" value="CSE" id="branch-cse" checked>
+                        <label class="form-check-label" for="branch-cse">CSE</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input branch-check" type="checkbox" value="IT" id="branch-it" checked>
+                        <label class="form-check-label" for="branch-it">IT</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input branch-check" type="checkbox" value="ECE" id="branch-ece">
+                        <label class="form-check-label" for="branch-ece">ECE</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input branch-check" type="checkbox" value="EEE" id="branch-eee">
+                        <label class="form-check-label" for="branch-eee">EEE</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input branch-check" type="checkbox" value="MECH" id="branch-mech">
+                        <label class="form-check-label" for="branch-mech">MECH</label>
+                      </div>
+                      <div class="form-check">
+                        <input class="form-check-input branch-check" type="checkbox" value="CIVIL" id="branch-civil">
+                        <label class="form-check-label" for="branch-civil">CIVIL</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Dates & Status -->
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold">Application Deadline <span class="text-danger">*</span></label>
+                    <input type="date" id="lastDateToApply" class="form-control" required>
+                    <div class="invalid-feedback">Choose the application deadline.</div>
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold">Drive Date</label>
+                    <input type="date" id="driveDate" class="form-control">
+                  </div>
+                  <div class="col-md-4">
+                    <label class="form-label small fw-semibold">Status</label>
+                    <select id="status" class="form-select">
+                      <option value="UPCOMING" selected>UPCOMING</option>
+                      <option value="ONGOING">ONGOING</option>
+                      <option value="COMPLETED">COMPLETED</option>
+                      <option value="CANCELLED">CANCELLED</option>
+                    </select>
+                  </div>
+
+                  <!-- Description -->
+                  <div class="col-12">
+                    <label class="form-label small fw-semibold">Drive Description & Instructions</label>
+                    <textarea id="description" class="form-control" rows="4" placeholder="Detailed job description, hiring rounds overview, dress code, bond terms, etc."></textarea>
+                  </div>
+
+                  <!-- Actions -->
+                  <div class="col-12 d-flex justify-content-end gap-2 mt-4 pt-3 border-top">
+                    <a href="/institute/pages/2-company-drives/drive-list.html" class="btn btn-light px-4">Cancel</a>
+                    <button type="submit" class="btn btn-primary px-4" id="btn-save">
+                      Save Drive
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- New Company Modal -->
+  <div class="modal fade" id="newCompanyModal" tabindex="-1" aria-labelledby="newCompanyModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title fw-bold" id="newCompanyModalLabel">Add Recruiting Company</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="new-company-form">
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Company Name <span class="text-danger">*</span></label>
+              <input type="text" id="modal-company-name" class="form-control" required placeholder="e.g. Google India">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Website</label>
+              <input type="url" id="modal-company-website" class="form-control" placeholder="https://google.com">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Industry / Domain</label>
+              <input type="text" id="modal-company-industry" class="form-control" placeholder="e.g. Information Technology & Services">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">HR / Contact Person</label>
+              <input type="text" id="modal-company-contact" class="form-control" placeholder="e.g. Priya Sharma">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-semibold">Contact Email</label>
+              <input type="email" id="modal-company-email" class="form-control" placeholder="recruitment@company.com">
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+              <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" id="btn-create-company">Create Company</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module">
+    import auth from '/js/auth.js';
+    import api from '/js/api.js';
+    import ui from '/js/ui.js';
+
+    if (!auth.requireAuth(['ADMIN', 'TPO'])) {
+      // restricted
+    } else {
+      ui.initLayout('drives');
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const driveId = urlParams.get('id');
+
+      async function init() {
+        await loadCompanies();
+
+        if (driveId) {
+          document.getElementById('form-title').textContent = 'Edit Campus Drive';
+          document.getElementById('btn-save').textContent = 'Update Drive';
+          await loadDriveDetails(driveId);
+        }
+      }
+
+      async function loadCompanies(selectedId = null) {
+        try {
+          const companies = await api.get('/api/companies');
+          const select = document.getElementById('companyId');
+          select.innerHTML = '<option value="">Choose Company...</option>';
+          companies.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = c.name;
+            if (selectedId && c.id == selectedId) opt.selected = true;
+            select.appendChild(opt);
+          });
+        } catch (err) {
+          ui.showToast('Could not load companies: ' + err.message, 'danger');
+        }
+      }
+
+      async function loadDriveDetails(id) {
+        try {
+          const drive = await api.get(`/api/drives/${id}`);
+          document.getElementById('companyId').value = drive.companyId || '';
+          document.getElementById('title').value = drive.title || '';
+          document.getElementById('roles').value = drive.roles || '';
+          document.getElementById('location').value = drive.location || '';
+          document.getElementById('packageMin').value = drive.packageMin || '';
+          document.getElementById('packageMax').value = drive.packageMax || '';
+          document.getElementById('eligibilityCgpa').value = drive.eligibilityCgpa || '';
+          document.getElementById('maxBacklogs').value = drive.maxBacklogs || 0;
+          document.getElementById('lastDateToApply').value = drive.lastDateToApply || '';
+          document.getElementById('driveDate').value = drive.driveDate || '';
+          document.getElementById('status').value = drive.status || 'UPCOMING';
+          document.getElementById('description').value = drive.description || '';
+
+          const rawBranches = Array.isArray(drive.eligibleBranches)
+            ? drive.eligibleBranches
+            : (typeof drive.eligibleBranches === 'string' ? drive.eligibleBranches.split(',') : []);
+          const branches = rawBranches.map(s => String(s).trim());
+          document.querySelectorAll('.branch-check').forEach(cb => {
+            cb.checked = branches.includes(cb.value);
+          });
+        } catch (err) {
+          ui.showToast('Failed to load drive: ' + err.message, 'danger');
+        }
+      }
+
+      // Quick add company
+      document.getElementById('new-company-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const payload = {
+          name: document.getElementById('modal-company-name').value.trim(),
+          website: document.getElementById('modal-company-website').value.trim() || null,
+          industry: document.getElementById('modal-company-industry').value.trim() || null,
+          contactPerson: document.getElementById('modal-company-contact').value.trim() || null,
+          contactEmail: document.getElementById('modal-company-email').value.trim() || null
+        };
+
+        try {
+          const created = await api.post('/api/companies', payload);
+          ui.showToast(`Company "${created.name}" created successfully!`);
+          bootstrap.Modal.getInstance(document.getElementById('newCompanyModal')).hide();
+          await loadCompanies(created.id);
+        } catch (err) {
+          ui.showToast(err.message || 'Failed to create company', 'danger');
+        }
+      });
+
+      // Submit Drive Form
+      document.getElementById('drive-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        if (!form.checkValidity()) {
+          form.classList.add('was-validated');
+          return;
+        }
+
+        const selectedBranches = Array.from(document.querySelectorAll('.branch-check:checked')).map(cb => cb.value).join(',');
+
+        const payload = {
+          companyId: parseInt(document.getElementById('companyId').value, 10),
+          title: document.getElementById('title').value.trim(),
+          description: document.getElementById('description').value.trim() || null,
+          roles: document.getElementById('roles').value.trim(),
+          packageMin: document.getElementById('packageMin').value ? parseFloat(document.getElementById('packageMin').value) : null,
+          packageMax: document.getElementById('packageMax').value ? parseFloat(document.getElementById('packageMax').value) : null,
+          eligibilityCgpa: document.getElementById('eligibilityCgpa').value ? parseFloat(document.getElementById('eligibilityCgpa').value) : null,
+          eligibleBranches: selectedBranches || null,
+          maxBacklogs: document.getElementById('maxBacklogs').value ? parseInt(document.getElementById('maxBacklogs').value, 10) : 0,
+          driveDate: document.getElementById('driveDate').value || null,
+          lastDateToApply: document.getElementById('lastDateToApply').value,
+          location: document.getElementById('location').value.trim() || null,
+          status: document.getElementById('status').value
+        };
+
+        const saveBtn = document.getElementById('btn-save');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+
+        try {
+          if (driveId) {
+            await api.put(`/api/drives/${driveId}`, payload);
+            ui.showToast('Drive updated successfully!');
+          } else {
+            await api.post('/api/drives', payload);
+            ui.showToast('Campus drive published successfully!');
+          }
+          setTimeout(() => {
+            window.location.href = '/pages/2-company-drives/drive-list.html';
+          }, 800);
+        } catch (err) {
+          ui.showToast(err.message || 'Failed to save drive', 'danger');
+          saveBtn.disabled = false;
+          saveBtn.textContent = driveId ? 'Update Drive' : 'Save Drive';
+        }
+      });
+
+      init();
+    }
+  </script>
+</body>
+</html>

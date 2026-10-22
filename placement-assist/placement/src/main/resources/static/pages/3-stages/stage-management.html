@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="placement">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stage Progression & Journey Line - Placement Season</title>
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Page Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <div class="d-flex align-center gap-2 mb-2">
+              <span class="chip chip-accent uppercase tracking-wider">Evaluation Route</span>
+              <span class="text-xs text-muted">Multi-Stage Journey Line</span>
+            </div>
+            <h1 class="page-title">Stage &amp; Round Progression</h1>
+            <p class="page-subtitle">Configure evaluation pipelines, orchestrate active candidate batches, and broadcast real-time round advancements.</p>
+          </div>
+          <div class="d-flex flex-wrap align-center gap-2">
+            <select id="drive-selector" class="form-select" style="min-width: 240px;">
+              <option value="">Select Recruitment Drive...</option>
+            </select>
+            <button type="button" class="btn btn-primary" id="btn-open-create-stage">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#plus"></use></svg>
+              <span>Add Stage</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- Stepper Pipeline Container -->
+        <div id="stages-pipeline-container" class="mb-6">
+          <div class="text-center py-6 text-muted">
+            <div class="spinner-modern mb-3"></div>
+            <div>Loading drive stages...</div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Create Stage Modal (Native Accessible Dialog) -->
+  <dialog id="createStageModal" class="custom-dialog">
+    <div class="dialog-card">
+      <form id="create-stage-form">
+        <div class="dialog-header d-flex justify-between align-center p-4 border-bottom">
+          <h3 class="text-lg fw-semibold text-ink mb-0" id="createStageModalLabel">Add Evaluation Stage</h3>
+          <button type="button" class="btn-icon" id="btn-close-stage-modal" aria-label="Close dialog">
+            <svg class="icon icon-sm"><use href="/icons/sprite.svg#x"></use></svg>
+          </button>
+        </div>
+
+        <div class="dialog-body p-5">
+          <div class="form-grid g-3">
+            <div class="form-col-12">
+              <label class="form-label">Stage / Round Name *</label>
+              <input type="text" name="roundName" class="form-control" required placeholder="e.g. Technical Coding Round 2">
+            </div>
+            <div class="form-col-6">
+              <label class="form-label">Round Type *</label>
+              <select name="roundType" class="form-select" required>
+                <option value="ONLINE_TEST">ONLINE TEST</option>
+                <option value="CODING">CODING EVALUATION</option>
+                <option value="TECHNICAL">TECHNICAL INTERVIEW</option>
+                <option value="HR">HR INTERVIEW</option>
+                <option value="GROUP_DISCUSSION">GROUP DISCUSSION</option>
+              </select>
+            </div>
+            <div class="form-col-6">
+              <label class="form-label">Sequence / Order *</label>
+              <input type="number" name="sequenceOrder" class="form-control" min="1" value="1" required>
+            </div>
+            <div class="form-col-12">
+              <label class="form-label">Description &amp; Candidate Guidelines</label>
+              <textarea name="description" class="form-control" rows="3" placeholder="Provide test structure, venue, duration, or documents to carry..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="dialog-footer p-4 border-top d-flex justify-end gap-2 surface-ground">
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-cancel-stage-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Create Stage</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import ui from '/js/ui.js';
+    import api from '/js/api.js';
+
+    if (!auth.requireAuth(['ADMIN', 'TPO', 'DIRECTOR', 'STUDENT', 'STAFF', 'COMPANY'])) {}
+
+    ui.initLayout('stages');
+
+    let currentStages = [];
+
+    async function loadDrives() {
+      try {
+        const res = await api.get('/drives/all');
+        const drives = Array.isArray(res) ? res : (res?.data || res?.content || []);
+        const selector = document.getElementById('drive-selector');
+
+        const params = new URLSearchParams(window.location.search);
+        const presetDriveId = params.get('driveId');
+
+        selector.innerHTML = drives.map(d => {
+          const comp = d.company?.name || d.companyName || 'Drive';
+          return `<option value="${d.id}">${ui.escapeHtml(comp)} &mdash; ${ui.escapeHtml(d.title || 'Drive')}</option>`;
+        }).join('');
+
+        if (presetDriveId) {
+          selector.value = presetDriveId;
+          loadStages(presetDriveId);
+        } else if (drives.length > 0) {
+          selector.value = drives[0].id;
+          loadStages(drives[0].id);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function loadStages(driveId) {
+      if (!driveId) return;
+      const container = document.getElementById('stages-pipeline-container');
+      container.innerHTML = `<div class="text-center py-5 text-muted">${ui.renderLoader('Loading evaluation stages...')}</div>`;
+
+      try {
+        const res = await api.get(`/drives/${driveId}/stages`);
+        currentStages = Array.isArray(res) ? res : (res?.data || []);
+        renderStages();
+      } catch {
+        container.innerHTML = `<div class="text-center py-5 text-danger">${ui.renderError('Failed to load stages for selected drive.')}</div>`;
+      }
+    }
+
+    function renderStages() {
+      const container = document.getElementById('stages-pipeline-container');
+      if (currentStages.length === 0) {
+        container.innerHTML = `
+          <div class="card p-6 text-center text-muted">
+            <h3 class="text-lg fw-semibold text-ink mb-1">No evaluation stages configured for this drive yet.</h3>
+            <p class="text-sm text-muted mb-4">Add stages like Online Aptitude Test, Technical Interviews, and HR Discussions.</p>
+            <div>
+              <button class="btn btn-primary btn-sm" id="btn-add-first-stage">
+                <svg class="icon icon-sm"><use href="/icons/sprite.svg#plus"></use></svg>
+                Add First Stage
+              </button>
+            </div>
+          </div>
+        `;
+        document.getElementById('btn-add-first-stage')?.addEventListener('click', openModal);
+        return;
+      }
+
+      // 1. Render Journey Route Line at Top
+      let journeyHtml = `
+        <div class="bezel-outer mb-6">
+          <div class="bezel-inner p-5">
+            <span class="text-xs text-muted uppercase tracking-wider d-block mb-4">Live Route Progression</span>
+            <ol class="journey-route d-flex justify-between align-center p-0 m-0 list-unstyled" role="list">
+      `;
+
+      currentStages.forEach((s, idx) => {
+        const isPassed = s.status === 'COMPLETED';
+        const isCurrent = s.status === 'ACTIVE' || s.status === 'IN_PROGRESS';
+        const stateClass = isPassed ? 'station-passed' : (isCurrent ? 'station-current' : 'station-upcoming');
+        const ariaCurrent = isCurrent ? 'aria-current="step"' : '';
+
+        journeyHtml += `
+          <li class="journey-station ${stateClass} d-flex flex-column align-center text-center flex-grow-1" ${ariaCurrent}>
+            <div class="station-node d-flex align-center justify-center tabular-nums">
+              ${isPassed ? '<svg class="icon icon-xs"><use href="/icons/sprite.svg#check"></use></svg>' : (idx + 1)}
+            </div>
+            <span class="station-label text-xs mt-2 fw-semibold text-truncate" style="max-width: 120px;">
+              ${ui.escapeHtml(s.roundName || `Stage ${idx + 1}`)}
+            </span>
+          </li>
+        `;
+      });
+
+      journeyHtml += `
+            </ol>
+          </div>
+        </div>
+      `;
+
+      // 2. Render Stage Cards (Hall-Ticket Inspired)
+      let cardsHtml = '<div class="d-flex flex-column gap-4">';
+      currentStages.forEach((stage, idx) => {
+        const isActive = stage.status === 'ACTIVE' || stage.status === 'IN_PROGRESS';
+        const isCompleted = stage.status === 'COMPLETED';
+        const statusChip = isActive
+          ? '<span class="status-chip status-placed"><span class="status-dot"></span> LIVE NOW</span>'
+          : (isCompleted ? '<span class="status-chip status-neutral">COMPLETED</span>' : '<span class="status-chip status-warning">UPCOMING</span>');
+
+        cardsHtml += `
+          <div class="bezel-outer ${isActive ? 'stage-card-active' : ''}">
+            <div class="bezel-inner p-5 d-flex flex-column flex-md-row justify-between align-start align-md-center gap-4">
+              <div class="d-flex align-start gap-3">
+                <span class="avatar avatar-md avatar-placement tabular-nums mt-1">${stage.sequenceOrder || (idx + 1)}</span>
+                <div>
+                  <div class="d-flex align-center gap-2 mb-1">
+                    <h3 class="text-base fw-bold text-ink mb-0">${ui.escapeHtml(stage.roundName || stage.name || `Round ${idx + 1}`)}</h3>
+                    ${statusChip}
+                  </div>
+                  <div class="text-xs text-muted mb-2">
+                    Round Type: <strong class="text-ink">${ui.escapeHtml(stage.roundType || 'EVALUATION')}</strong>
+                    ${stage.venue ? ` &bull; Venue: <span class="text-ink">${ui.escapeHtml(stage.venue)}</span>` : ''}
+                  </div>
+                  <p class="text-xs text-ink-2 lh-relaxed mb-0">${ui.escapeHtml(stage.description || 'Candidates who meet qualification criteria advance to the subsequent evaluation round.')}</p>
+                </div>
+              </div>
+
+              <div class="d-flex align-center gap-2 text-nowrap">
+                ${!isActive && !isCompleted ? `
+                  <button class="btn btn-primary btn-sm btn-activate-stage" data-id="${stage.id}">
+                    <svg class="icon icon-sm"><use href="/icons/sprite.svg#play"></use></svg>
+                    Activate Stage
+                  </button>
+                ` : ''}
+                ${isActive ? `
+                  <button class="btn btn-outline btn-sm btn-complete-stage" data-id="${stage.id}">
+                    <svg class="icon icon-sm"><use href="/icons/sprite.svg#check-circle"></use></svg>
+                    Complete Round
+                  </button>
+                ` : ''}
+                <a href="/placement/pages/7-results/drive-results.html?stageId=${stage.id}" class="btn btn-secondary btn-sm">
+                  View Results
+                  <svg class="icon icon-sm"><use href="/icons/sprite.svg#arrow-right"></use></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      cardsHtml += '</div>';
+
+      container.innerHTML = journeyHtml + cardsHtml;
+
+      // Bind actions
+      container.querySelectorAll('.btn-activate-stage').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-id');
+          try {
+            await api.put(`/stages/${id}/activate`);
+            ui.showToast('Stage activated! Candidate rosters broadcast in real-time.');
+            const driveId = document.getElementById('drive-selector').value;
+            loadStages(driveId);
+          } catch (err) {
+            ui.showToast(err.message || 'Failed to activate stage', 'danger');
+          }
+        });
+      });
+
+      container.querySelectorAll('.btn-complete-stage').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-id');
+          try {
+            await api.put(`/stages/${id}/complete`);
+            ui.showToast('Stage marked as completed.');
+            const driveId = document.getElementById('drive-selector').value;
+            loadStages(driveId);
+          } catch (err) {
+            ui.showToast(err.message || 'Failed to complete stage', 'danger');
+          }
+        });
+      });
+    }
+
+    const modalEl = document.getElementById('createStageModal');
+    function openModal() {
+      if (modalEl.showModal) modalEl.showModal();
+      else modalEl.setAttribute('open', 'true');
+    }
+    document.getElementById('btn-open-create-stage')?.addEventListener('click', openModal);
+    document.getElementById('btn-close-stage-modal')?.addEventListener('click', () => modalEl.close ? modalEl.close() : modalEl.removeAttribute('open'));
+    document.getElementById('btn-cancel-stage-modal')?.addEventListener('click', () => modalEl.close ? modalEl.close() : modalEl.removeAttribute('open'));
+
+    // Drive selector listener
+    document.getElementById('drive-selector').addEventListener('change', (e) => {
+      loadStages(e.target.value);
+    });
+
+    // Form submit
+    document.getElementById('create-stage-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const driveId = document.getElementById('drive-selector').value;
+      if (!driveId) {
+        ui.showToast('Please select a recruitment drive first', 'danger');
+        return;
+      }
+      const data = {
+        stageName: form.roundName.value.trim(),
+        stageType: form.roundType.value,
+        stageOrder: parseInt(form.sequenceOrder.value, 10),
+        instructions: form.description.value.trim(),
+        status: 'UPCOMING'
+      };
+
+      try {
+        await api.post(`/drives/${driveId}/stages`, data);
+        ui.showToast('Stage created successfully!');
+        if (modalEl.close) modalEl.close();
+        else modalEl.removeAttribute('open');
+        form.reset();
+        loadStages(driveId);
+      } catch (err) {
+        ui.showToast(err.message || 'Failed to create stage', 'danger');
+      }
+    });
+
+    loadDrives();
+  </script>
+</body>
+</html>

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-domain="portal">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Component Gallery - Placement Assistance Design System</title>
+  
+  <!-- Design System CSS -->
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+
+  <style>
+    .gallery-section {
+      margin-bottom: var(--space-16);
+      padding-bottom: var(--space-8);
+      border-bottom: 1px solid var(--surface-3);
+    }
+    .gallery-label {
+      font-size: var(--text-xs);
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-4);
+    }
+  </style>
+</head>
+<body>
+  <!-- Paper Grain Overlay -->
+  <div class="grain-overlay"></div>
+
+  <div class="container py-8" style="padding-top: var(--space-12); padding-bottom: var(--space-20);">
+    <!-- Top Gallery Controls -->
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-10);">
+      <div>
+        <h1 class="font-display" style="font-size: var(--text-display-lg); margin-bottom: var(--space-2);">Design System Component Gallery</h1>
+        <p class="text-muted">Authoritative reference and interactive states for Portal, Institute, and Placement pillars.</p>
+      </div>
+      <div style="display: flex; gap: var(--space-3); align-items: center;">
+        <!-- Theme Toggle -->
+        <button class="btn btn-outline" id="theme-btn">
+          <span>Toggle Theme</span>
+        </button>
+        <!-- Domain Switcher Simulation -->
+        <select class="select-field" id="domain-select" style="width: auto;">
+          <option value="portal">Domain: Portal (Brass)</option>
+          <option value="institute">Domain: Institute (Oxblood)</option>
+          <option value="placement">Domain: Placement (Pine)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- 1. TYPOGRAPHY & SCALE -->
+    <section class="gallery-section">
+      <div class="gallery-label">1. Typographic Scale & Families</div>
+      <div class="display-xl" style="margin-bottom: var(--space-4);">Round by round to your offer.</div>
+      <h2 class="app-heading" style="margin-bottom: var(--space-2);">Geist 600 App Interior Heading for Dashboards and Reports</h2>
+      <p class="lead" style="margin-bottom: var(--space-4);">
+        Secondary narrative lead text in Geist 400. One ground, one ink, one accent per domain. No pure black, no violet or indigo, no purple glows.
+      </p>
+      <div style="display: flex; gap: var(--space-6); font-variant-numeric: tabular-nums;">
+        <div><strong>Tabular Figures:</strong> 12,450 candidates</div>
+        <div><strong>Package Range:</strong> 8.5 – 44.0 LPA</div>
+        <div><strong>CGPA Cutoff:</strong> ≥ 7.50</div>
+      </div>
+    </section>
+
+    <!-- 2. TONAL DOUBLE-BEZEL CONTAINERS -->
+    <section class="gallery-section">
+      <div class="gallery-label">2. Tonal Double-Bezel Architecture</div>
+      <div class="double-bezel" style="max-width: 720px;">
+        <div class="double-bezel-inner">
+          <h3 style="margin-bottom: var(--space-2);">Double-Bezel Signature Container</h3>
+          <p class="text-muted" style="margin-bottom: var(--space-4);">
+            Outer shell uses --surface-2 with 32px concentric radius and 6px padding; inner core uses --surface with 26px radius.
+          </p>
+          <a href="#" class="btn-nested-cta">
+            <span>Explore Architecture</span>
+            <span class="btn-nested-circle">
+              <svg width="18" height="18"><use href="#ph-arrow-up-right"/></svg>
+            </span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. BUTTONS & CHIPS -->
+    <section class="gallery-section">
+      <div class="gallery-label">3. Tactile Buttons & Chips</div>
+      <div style="display: flex; flex-wrap: wrap; gap: var(--space-3); align-items: center; margin-bottom: var(--space-6);">
+        <button class="btn btn-primary">Primary Domain Action</button>
+        <button class="btn btn-secondary">Secondary Tone Step</button>
+        <button class="btn btn-outline">Outline Quiet</button>
+        <button class="btn btn-danger">Destructive Action</button>
+        <button class="btn btn-brass">Brass Signature</button>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center;">
+        <span class="chip chip-success"><svg width="12" height="12"><use href="#ph-check"/></svg> Verified Eligible</span>
+        <span class="chip chip-warning"><svg width="12" height="12"><use href="#ph-clock"/></svg> 2 Days Remaining</span>
+        <span class="chip chip-danger"><svg width="12" height="12"><use href="#ph-warning-circle"/></svg> Attendance Defaulter</span>
+        <span class="chip chip-info"><svg width="12" height="12"><use href="#ph-map-pin"/></svg> Seminar Hall B</span>
+        <span class="chip chip-brass">Offer Confirmed</span>
+      </div>
+    </section>
+
+    <!-- 4. PERFORATED HALL TICKET -->
+    <section class="gallery-section">
+      <div class="gallery-label">4. Perforated Hall Ticket (Admit Card)</div>
+      <div class="hall-ticket" style="max-width: 820px;">
+        <div class="ticket-body">
+          <div class="ticket-stamp">QUALIFIED</div>
+          <div style="font-size: var(--text-xs); color: var(--muted); margin-bottom: 4px;">STAGE 2 • ON-CAMPUS TECHNICAL EVALUATION</div>
+          <h3 style="margin-bottom: var(--space-1);">Google India Software Engineering Drive</h3>
+          <div style="font-size: var(--text-sm); color: var(--ink-2); margin-bottom: var(--space-4);">
+            Platform: Main Audi Hall 1 • Reporting: 09:30 AM IST • Duration: 90 Minutes
+          </div>
+          <table class="ledger-table" style="font-size: var(--text-xs); max-width: 480px;">
+            <thead>
+              <tr><th>Section</th><th>Questions</th><th>Marks</th><th>Negative Marking</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Algorithms & DS</td><td>20 MCQs</td><td>40</td><td>-0.25</td></tr>
+              <tr><td>System Design</td><td>2 Coding</td><td>60</td><td>Nil</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="ticket-perforation"></div>
+        <div class="ticket-stub">
+          <div style="width: 80px; height: 80px; background: var(--surface); border: 1px solid var(--surface-3); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-2); border-radius: 8px;">
+            <svg width="48" height="48" style="color: var(--ink);"><use href="#ph-qr-code"/></svg>
+          </div>
+          <div style="font-size: var(--text-xs); font-weight: 600; font-variant-numeric: tabular-nums;">ROLL: 22CS042</div>
+          <div style="font-size: 11px; color: var(--muted);">SEAT: B-14</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. JOURNEY LINE -->
+    <section class="gallery-section">
+      <div class="gallery-label">5. Visual Journey Line (Selection Stations)</div>
+      <div class="journey-line-container">
+        <div class="journey-route">
+          <div class="journey-track"></div>
+          <div class="journey-progress" style="width: 50%;"></div>
+          
+          <div class="journey-station passed">
+            <div class="station-node"><svg width="14" height="14"><use href="#ph-check"/></svg></div>
+            <div class="station-title">Pre-Placement Talk</div>
+          </div>
+          <div class="journey-station passed">
+            <div class="station-node"><svg width="14" height="14"><use href="#ph-check"/></svg></div>
+            <div class="station-title">Online Aptitude</div>
+          </div>
+          <div class="journey-station current">
+            <div class="station-node">3</div>
+            <div class="station-title">Technical Interview</div>
+          </div>
+          <div class="journey-station">
+            <div class="station-node">4</div>
+            <div class="station-title">Managerial Round</div>
+          </div>
+          <div class="journey-station">
+            <div class="station-node">5</div>
+            <div class="station-title">Offer Letter</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. PINNED NOTICE BOARD CHITS -->
+    <section class="gallery-section">
+      <div class="gallery-label">6. Pinned Notice Board Chits</div>
+      <div class="notice-board">
+        <div class="notice-chit chit-urgent">
+          <div class="chit-pin"></div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2); padding-top: 6px;">
+            <span class="chip chip-warning">URGENT UPDATE</span>
+            <span style="font-size: 11px; color: var(--muted);">10m ago</span>
+          </div>
+          <h4 style="font-size: 1rem; margin-bottom: 6px;">Venue Relocated for Microsoft PPT</h4>
+          <p style="font-size: var(--text-sm); color: var(--ink-2); margin-bottom: var(--space-3);">
+            Due to capacity requirements, reporting shifted from <span class="venue-changed-old">Lab 4</span> to <span class="venue-changed-new">Main Audi</span>.
+          </p>
+          <div style="font-size: 11px; color: var(--muted);">Placement Secretariat • Circular #84</div>
+        </div>
+
+        <div class="notice-chit">
+          <div class="chit-pin"></div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2); padding-top: 6px;">
+            <span class="chip chip-info">SHORTLIST</span>
+            <span style="font-size: 11px; color: var(--muted);">1h ago</span>
+          </div>
+          <h4 style="font-size: 1rem; margin-bottom: 6px;">Cisco Technical Round 1 Results</h4>
+          <p style="font-size: var(--text-sm); color: var(--ink-2); margin-bottom: var(--space-3);">
+            42 candidates cleared for Round 2. Reporting at Cisco Interview Cabin, Block C tomorrow 09:00 AM.
+          </p>
+          <div style="font-size: 11px; color: var(--muted);">TPO Office • CSE & ECE</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. SPLIT-FLAP BOARD SIMULATION -->
+    <section class="gallery-section">
+      <div class="gallery-label">7. Split-Flap Departure Board</div>
+      <div id="flap-board-demo" style="max-width: 680px;"></div>
+    </section>
+
+    <!-- 8. DUAL-MODE LEDGER TABLE -->
+    <section class="gallery-section">
+      <div class="gallery-label">8. Dual-Mode Ledger Table (View vs Edit Mode)</div>
+      <div class="ledger-container" style="max-width: 920px;">
+        <div class="ledger-mode-bar" id="table-mode-bar">
+          <div style="display: flex; align-items: center; gap: var(--space-2);">
+            <svg width="14" height="14"><use href="#ph-lock"/></svg>
+            <span id="table-mode-text">View Mode • Student Directory</span>
+          </div>
+          <button class="btn btn-sm btn-outline" id="toggle-table-mode">Toggle Edit Mode</button>
+        </div>
+        <table class="ledger-table">
+          <thead>
+            <tr>
+              <th>Roll No</th>
+              <th>Student Name</th>
+              <th>Branch</th>
+              <th>CGPA</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="roll-no">22CS001</td>
+              <td>Aarav Sharma</td>
+              <td>CSE</td>
+              <td><span class="cell-val">9.14</span></td>
+              <td><span class="chip chip-success">Placed</span></td>
+              <td><button class="btn btn-sm btn-outline">Profile</button></td>
+            </tr>
+            <tr>
+              <td class="roll-no">22CS014</td>
+              <td>Diya Patel</td>
+              <td>IT</td>
+              <td><span class="cell-val">8.72</span></td>
+              <td><span class="chip chip-info">In Process</span></td>
+              <td><button class="btn btn-sm btn-outline">Profile</button></td>
+            </tr>
+            <tr>
+              <td class="roll-no">22EC028</td>
+              <td>Rohan Verma</td>
+              <td>ECE</td>
+              <td><span class="cell-val">7.45</span></td>
+              <td><span class="chip chip-neutral">Eligible</span></td>
+              <td><button class="btn btn-sm btn-outline">Profile</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <!-- SVG Sprite Inclusion -->
+  <div id="sprite-container" style="display: none;"></div>
+
+  <!-- Scripts -->
+  <script type="module">
+    import theme from '/js/core/theme.js';
+    import FlapBoard from '/js/motion/flap-board.js';
+
+    // Load sprite
+    fetch('/icons/sprite.svg')
+      .then(r => r.text())
+      .then(svg => {
+        document.getElementById('sprite-container').innerHTML = svg;
+      });
+
+    // Theme toggle
+    document.getElementById('theme-btn').addEventListener('click', () => {
+      theme.toggleTheme();
+    });
+
+    // Domain switch
+    document.getElementById('domain-select').addEventListener('change', (e) => {
+      document.documentElement.setAttribute('data-domain', e.target.value);
+    });
+
+    // Flap Board
+    const flap = new FlapBoard('flap-board-demo', { rows: 2, cols: 20 });
+    flap.render();
+    flap.cyclePlacements([
+      { company: 'GOOGLE INDIA', role: 'SWE L3', package: '32.5' },
+      { company: 'MICROSOFT IDC', role: 'SDE 1', package: '28.0' },
+      { company: 'GOLDMAN SACHS', role: 'ANALYST', package: '24.0' }
+    ]);
+
+    // Table Mode Toggle
+    const modeBar = document.getElementById('table-mode-bar');
+    const modeText = document.getElementById('table-mode-text');
+    let isEdit = false;
+    document.getElementById('toggle-table-mode').addEventListener('click', () => {
+      isEdit = !isEdit;
+      if (isEdit) {
+        modeBar.className = 'ledger-mode-bar mode-edit';
+        modeText.textContent = 'Editing as TPO • 0 unsaved changes';
+        document.querySelectorAll('.cell-val').forEach(el => {
+          el.innerHTML = `<input class="ledger-edit-cell" value="${el.textContent}">`;
+        });
+      } else {
+        modeBar.className = 'ledger-mode-bar';
+        modeText.textContent = 'View Mode • Student Directory';
+        document.querySelectorAll('.cell-val').forEach(el => {
+          const inp = el.querySelector('input');
+          if (inp) el.textContent = inp.value;
+        });
+      }
+    });
+  </script>
+</body>
+</html>

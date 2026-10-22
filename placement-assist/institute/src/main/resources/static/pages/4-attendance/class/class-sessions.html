@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-domain="institute">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Class Sessions — Academic Institute Pillar</title>
+  
+  <!-- Design System CSS -->
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <!-- Paper Grain Overlay -->
+  <div class="grain-overlay"></div>
+
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Page Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <div class="d-flex align-center gap-2 mb-2">
+              <span class="chip chip-accent uppercase tracking-wider">Academic Attendance</span>
+              <span class="text-xs text-muted">Daily Curriculum Attendance Registers</span>
+            </div>
+            <h1 class="page-title">Classroom Attendance Sessions</h1>
+            <p class="page-subtitle">Record and audit regular departmental lectures, laboratory practicals, and semester course rosters.</p>
+          </div>
+          <div class="d-flex align-center gap-2">
+            <a href="/institute/pages/4-attendance/class/class-report.html" class="btn btn-outline btn-sm">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#file-text"></use></svg>
+              <span>Attendance Report</span>
+            </a>
+            <button class="btn btn-primary btn-sm" id="btn-open-new-class">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#plus"></use></svg>
+              <span>Schedule Class Session</span>
+            </button>
+          </div>
+        </header>
+
+        <!-- Filters Bar (Tonal Double Bezel) -->
+        <div class="bezel-outer mb-6">
+          <div class="bezel-inner p-4">
+            <div class="form-grid g-3 align-center">
+              <div class="form-col-4">
+                <label for="filter-search" class="form-label">Search Curriculum</label>
+                <div class="input-icon-wrap">
+                  <svg class="icon input-icon"><use href="/icons/sprite.svg#magnifying-glass"></use></svg>
+                  <input type="text" id="filter-search" class="form-control" placeholder="Search subject code, title, professor...">
+                </div>
+              </div>
+              <div class="form-col-3">
+                <label for="filter-branch" class="form-label">Department / Branch</label>
+                <select id="filter-branch" class="form-select">
+                  <option value="">All Academic Branches</option>
+                  <option value="CSE">CSE (Computer Science)</option>
+                  <option value="IT">IT (Information Tech)</option>
+                  <option value="ECE">ECE (Electronics)</option>
+                  <option value="EEE">EEE (Electrical)</option>
+                  <option value="MECH">MECH (Mechanical)</option>
+                  <option value="CIVIL">CIVIL (Civil)</option>
+                </select>
+              </div>
+              <div class="form-col-2">
+                <label for="filter-semester" class="form-label">Semester</label>
+                <select id="filter-semester" class="form-select">
+                  <option value="">All Semesters</option>
+                  <option value="1">Sem 1</option>
+                  <option value="2">Sem 2</option>
+                  <option value="3">Sem 3</option>
+                  <option value="4">Sem 4</option>
+                  <option value="5">Sem 5</option>
+                  <option value="6">Sem 6</option>
+                  <option value="7" selected>Sem 7</option>
+                  <option value="8">Sem 8</option>
+                </select>
+              </div>
+              <div class="form-col-3">
+                <label for="filter-date" class="form-label">Date</label>
+                <input type="date" id="filter-date" class="form-control">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sessions Ledger Table Container -->
+        <div class="double-bezel">
+          <div class="double-bezel-inner">
+            <div class="ledger-container">
+              <div id="table-container">
+                <div class="py-6 text-center text-muted">
+                  <div class="spinner-modern mb-2"></div>
+                  <div>Loading class registers...</div>
+                </div>
+              </div>
+            </div>
+            <div id="pagination-container" class="p-3 border-top d-flex justify-between align-center text-xs text-muted"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Native Accessible Schedule Session Dialog -->
+  <dialog id="newClassModal" class="custom-dialog">
+    <div class="dialog-card">
+      <form id="new-class-form">
+        <div class="dialog-header">
+          <h3 class="text-base fw-bold mb-0 text-ink">Schedule Regular Class Session</h3>
+          <button type="button" class="btn-icon" id="btn-close-modal" aria-label="Close dialog">
+            <svg class="icon icon-sm"><use href="/icons/sprite.svg#x"></use></svg>
+          </button>
+        </div>
+
+        <div class="dialog-body">
+          <div class="form-grid g-3">
+            <div class="form-col-12">
+              <label class="form-label" for="modal-subject">Subject Name &amp; Course Code *</label>
+              <input type="text" id="modal-subject" class="form-control" required placeholder="e.g. CS701 - Distributed Systems &amp; Cloud Architecture">
+            </div>
+
+            <div class="form-col-6">
+              <label class="form-label" for="modal-branch">Branch *</label>
+              <select id="modal-branch" class="form-select" required>
+                <option value="CSE" selected>CSE - Computer Science</option>
+                <option value="IT">IT - Information Technology</option>
+                <option value="ECE">ECE - Electronics &amp; Comm.</option>
+                <option value="EEE">EEE - Electrical Engineering</option>
+                <option value="MECH">MECH - Mechanical Eng.</option>
+                <option value="CIVIL">CIVIL - Civil Engineering</option>
+              </select>
+            </div>
+
+            <div class="form-col-3">
+              <label class="form-label" for="modal-semester">Semester</label>
+              <input type="number" id="modal-semester" class="form-control" min="1" max="8" value="7">
+            </div>
+
+            <div class="form-col-3">
+              <label class="form-label" for="modal-section">Section</label>
+              <input type="text" id="modal-section" class="form-control" value="A">
+            </div>
+
+            <div class="form-col-6">
+              <label class="form-label" for="modal-date">Session Date *</label>
+              <input type="date" id="modal-date" class="form-control" required>
+            </div>
+
+            <div class="form-col-6">
+              <label class="form-label" for="modal-period">Period / Lecture Slot</label>
+              <input type="text" id="modal-period" class="form-control" placeholder="e.g. Period 2 (10:00 - 11:00 AM)">
+            </div>
+
+            <div class="form-col-12">
+              <label class="form-label" for="modal-faculty">Faculty Instructor</label>
+              <input type="text" id="modal-faculty" class="form-control" placeholder="e.g. Prof. Sneha Rao">
+            </div>
+          </div>
+        </div>
+
+        <div class="dialog-footer surface-ground">
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-cancel-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm" id="btn-save-class">Create Session</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- SVG Sprite Inclusion -->
+  <div id="sprite-container" style="display: none;"></div>
+
+  <!-- Scripts -->
+  <script type="module">
+    import auth from '/js/core/auth.js';
+    import api from '/js/core/api.js';
+    import ui from '/js/core/ui.js';
+
+    // Inject SVG Sprite
+    fetch('/icons/sprite.svg')
+      .then(r => r.text())
+      .then(svg => {
+        document.getElementById('sprite-container').innerHTML = svg;
+      });
+
+    if (!auth.requireAuth()) {
+      // redirected
+    } else {
+      ui.initLayout('attendance-class');
+
+      const modalEl = document.getElementById('newClassModal');
+      const openBtn = document.getElementById('btn-open-new-class');
+      const closeBtn = document.getElementById('btn-close-modal');
+      const cancelBtn = document.getElementById('btn-cancel-modal');
+
+      const user = auth.getUser();
+      const canManage = auth.canManage();
+
+      if (!canManage) {
+        if (openBtn) openBtn.style.display = 'none';
+      }
+
+      const openDialog = () => {
+        // Default date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('modal-date').value = today;
+        if (modalEl.showModal) modalEl.showModal();
+        else modalEl.setAttribute('open', 'true');
+      };
+
+      const closeDialog = () => {
+        if (modalEl.close) modalEl.close();
+        else modalEl.removeAttribute('open');
+      };
+
+      openBtn?.addEventListener('click', openDialog);
+      closeBtn?.addEventListener('click', closeDialog);
+      cancelBtn?.addEventListener('click', closeDialog);
+
+      let currentPage = 0;
+      const pageSize = 15;
+
+      async function fetchClassSessions(page = 0) {
+        currentPage = page;
+        const container = document.getElementById('table-container');
+        container.innerHTML = `<div class="py-6 text-center text-muted">${ui.renderLoader('Loading class registers...')}</div>`;
+
+        const search = document.getElementById('filter-search').value.trim();
+        const branch = document.getElementById('filter-branch').value;
+        const semester = document.getElementById('filter-semester').value;
+        const date = document.getElementById('filter-date').value;
+
+        const params = {
+          page: currentPage,
+          size: pageSize,
+          search: search || undefined,
+          branch: branch || undefined,
+          semester: semester || undefined,
+          sessionDate: date || undefined
+        };
+
+        try {
+          const res = await api.get('/api/class-sessions', params);
+          const sessions = Array.isArray(res) ? res : (res?.content || res?.data || []);
+          const totalPages = res?.totalPages || 1;
+          const totalElements = res?.totalElements || sessions.length;
+
+          if (sessions.length === 0) {
+            container.innerHTML = ui.renderEmpty('No class sessions found', 'Try adjusting your search criteria, date, or branch filter.');
+            document.getElementById('pagination-container').innerHTML = '';
+            return;
+          }
+
+          container.innerHTML = `
+            <table class="ledger-table">
+              <thead>
+                <tr>
+                  <th>Subject &amp; Faculty</th>
+                  <th>Cohort / Section</th>
+                  <th>Date &amp; Time Slot</th>
+                  <th>Attendance Status</th>
+                  <th style="text-align: right;">Roster Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${sessions.map(item => {
+                  const subject = item.subject || item.subjectName || 'Course Lecture';
+                  const faculty = item.faculty || item.facultyName || 'Department Faculty';
+                  const branchInfo = `${item.branch || 'CSE'} &bull; Sem ${item.year || item.semester || 7} (${item.section || 'A'})`;
+                  const dateStr = item.sessionDate || 'Scheduled';
+                  const timeStr = item.startTime && item.endTime ? `${item.startTime} - ${item.endTime}` : (item.period || 'Regular Lecture Slot');
+                  const countStr = `${item.attendedCount || 0} / ${item.totalEnrolledStudents || 42} marked`;
+
+                  return `
+                    <tr>
+                      <td>
+                        <div style="font-weight: 600; color: var(--ink);">${ui.escapeHtml(subject)}</div>
+                        <div style="font-size: 11px; color: var(--muted);">${ui.escapeHtml(faculty)}</div>
+                      </td>
+                      <td>
+                        <span class="chip chip-neutral" style="font-size: 11px;">${branchInfo}</span>
+                      </td>
+                      <td>
+                        <div style="font-weight: 500; font-size: var(--text-xs); color: var(--ink); font-variant-numeric: tabular-nums;">${dateStr}</div>
+                        <div style="font-size: 11px; color: var(--muted);">${ui.escapeHtml(timeStr)}</div>
+                      </td>
+                      <td>
+                        <span class="chip chip-${item.attendedCount > 0 ? 'success' : 'warning'}" style="font-size: 11px;">
+                          ${countStr}
+                        </span>
+                      </td>
+                      <td style="text-align: right;">
+                        <a href="/institute/pages/4-attendance/class/mark-class.html?sessionId=${item.id}" class="btn btn-sm btn-outline">
+                          <svg class="icon icon-xs"><use href="/icons/sprite.svg#pencil"/></svg>
+                          <span>${canManage ? 'Mark Attendance' : 'View Slate'}</span>
+                        </a>
+                      </td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          `;
+
+          document.getElementById('pagination-container').innerHTML = `
+            <div>Showing ${sessions.length} of ${totalElements} sessions (Page ${currentPage + 1} of ${totalPages})</div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm btn-outline" id="prev-page" ${currentPage === 0 ? 'disabled' : ''}>&larr; Prev</button>
+              <button class="btn btn-sm btn-outline" id="next-page" ${currentPage >= totalPages - 1 ? 'disabled' : ''}>Next &rarr;</button>
+            </div>
+          `;
+
+          document.getElementById('prev-page')?.addEventListener('click', () => {
+            if (currentPage > 0) fetchClassSessions(currentPage - 1);
+          });
+          document.getElementById('next-page')?.addEventListener('click', () => {
+            if (currentPage < totalPages - 1) fetchClassSessions(currentPage + 1);
+          });
+
+        } catch (err) {
+          container.innerHTML = ui.renderError(err.message, 'fetchClassSessions');
+        }
+      }
+
+      // Schedule modal submit
+      document.getElementById('new-class-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const payload = {
+          subject: document.getElementById('modal-subject').value.trim(),
+          faculty: document.getElementById('modal-faculty').value.trim() || 'Prof. Department Faculty',
+          branch: document.getElementById('modal-branch').value,
+          year: parseInt(document.getElementById('modal-semester').value || 7, 10),
+          section: document.getElementById('modal-section').value.trim() || 'A',
+          sessionDate: document.getElementById('modal-date').value,
+          period: document.getElementById('modal-period').value.trim() || 'Period 1 (09:00 - 10:00 AM)',
+          startTime: '09:00',
+          endTime: '10:00'
+        };
+
+        const btn = document.getElementById('btn-save-class');
+        btn.disabled = true;
+        btn.textContent = 'Scheduling...';
+
+        try {
+          await api.post('/api/class-sessions', payload);
+          ui.showToast('Class session scheduled successfully!', 'success');
+          closeDialog();
+          document.getElementById('new-class-form').reset();
+          btn.disabled = false;
+          btn.textContent = 'Create Session';
+          fetchClassSessions(0);
+        } catch (err) {
+          ui.showToast(err.message || 'Failed to create session', 'danger');
+          btn.disabled = false;
+          btn.textContent = 'Create Session';
+        }
+      });
+
+      let timeout;
+      document.getElementById('filter-search')?.addEventListener('input', () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fetchClassSessions(0), 250);
+      });
+      document.getElementById('filter-branch')?.addEventListener('change', () => fetchClassSessions(0));
+      document.getElementById('filter-semester')?.addEventListener('change', () => fetchClassSessions(0));
+      document.getElementById('filter-date')?.addEventListener('change', () => fetchClassSessions(0));
+
+      fetchClassSessions(0);
+    }
+  </script>
+</body>
+</html>

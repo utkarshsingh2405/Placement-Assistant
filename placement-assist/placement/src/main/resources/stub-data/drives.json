@@ -1,0 +1,38 @@
+[
+  {
+    "id": 1,
+    "title": "Google Campus Recruitment 2026",
+    "companyName": "Google",
+    "companyWebsite": "https://careers.google.com",
+    "roles": "Software Engineer (L3), SRE",
+    "rolesList": ["Software Engineer (L3)", "SRE"],
+    "packageMin": 38.5,
+    "packageMax": 54.5,
+    "eligibilityCgpa": 8.0,
+    "eligibleBranches": "CSE, IT, ECE",
+    "eligibleBranchesList": ["CSE", "IT", "ECE"],
+    "maxBacklogs": 0,
+    "status": "ONGOING",
+    "lastDateToApply": "2026-11-10",
+    "driveDate": "2026-11-15",
+    "location": "Bangalore / Hyderabad"
+  },
+  {
+    "id": 2,
+    "title": "Microsoft SDE FTE & Intern Drive",
+    "companyName": "Microsoft",
+    "companyWebsite": "https://careers.microsoft.com",
+    "roles": "Software Development Engineer",
+    "rolesList": ["Software Development Engineer"],
+    "packageMin": 28.0,
+    "packageMax": 42.0,
+    "eligibilityCgpa": 7.5,
+    "eligibleBranches": "CSE, IT, ECE, EE",
+    "eligibleBranchesList": ["CSE", "IT", "ECE", "EE"],
+    "maxBacklogs": 0,
+    "status": "ONGOING",
+    "lastDateToApply": "2026-11-18",
+    "driveDate": "2026-11-20",
+    "location": "Hyderabad / Noida"
+  }
+]

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="institute">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Company Recruitment Drives - Academic Institute</title>
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Breadcrumb & Domain Nav -->
+        <div class="breadcrumb-bar mb-3">
+          <a href="/institute/dashboard.html" class="nav-crumb">
+            <svg class="icon icon-sm"><use href="/icons/sprite.svg#arrow-left"></use></svg>
+            Dashboard
+          </a>
+          <span class="crumb-separator">/</span>
+          <span class="crumb-current">Recruitment Drives</span>
+          <div class="ms-auto d-flex gap-2">
+            <a href="/placement/pages/1-drives/drive-list.html" class="btn btn-outline btn-sm">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#briefcase"></use></svg>
+              View in Placement Domain
+            </a>
+          </div>
+        </div>
+
+        <!-- Page Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <h1 class="page-title">Campus Recruitment Drives</h1>
+            <p class="page-subtitle">Schedules, eligibility standards, and candidate pipelines across partner enterprises.</p>
+          </div>
+          <div class="d-flex gap-2">
+            <a href="/institute/pages/2-company-drives/drive-form.html" class="btn btn-primary" id="btn-create-drive">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#plus"></use></svg>
+              Create Drive
+            </a>
+          </div>
+        </header>
+
+        <!-- Filters Bar (Tonal Double Bezel) -->
+        <div class="bezel-outer mb-6">
+          <div class="bezel-inner p-4">
+            <div class="form-grid g-3">
+              <div class="form-col-5">
+                <label for="filter-search" class="form-label">Search Directory</label>
+                <div class="input-icon-wrap">
+                  <svg class="icon input-icon"><use href="/icons/sprite.svg#magnifying-glass"></use></svg>
+                  <input type="text" id="filter-search" class="form-control" placeholder="Search by drive title, role, or company...">
+                </div>
+              </div>
+              <div class="form-col-3">
+                <label for="filter-status" class="form-label">Hiring Status</label>
+                <select id="filter-status" class="form-select">
+                  <option value="">All Statuses</option>
+                  <option value="UPCOMING">Upcoming</option>
+                  <option value="ONGOING">Ongoing</option>
+                  <option value="COMPLETED">Completed</option>
+                  <option value="CANCELLED">Cancelled</option>
+                </select>
+              </div>
+              <div class="form-col-4">
+                <label for="filter-branch" class="form-label">Eligible Branch</label>
+                <select id="filter-branch" class="form-select">
+                  <option value="">All Branches</option>
+                  <option value="CSE">Computer Science (CSE)</option>
+                  <option value="IT">Information Tech (IT)</option>
+                  <option value="ECE">Electronics & Comm (ECE)</option>
+                  <option value="EEE">Electrical & Electronics (EEE)</option>
+                  <option value="MECH">Mechanical Engg (MECH)</option>
+                  <option value="CIVIL">Civil Engg (CIVIL)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drives Grid Container -->
+        <div id="drives-loading"></div>
+        <div id="drives-grid" class="bento-grid mb-6"></div>
+        <div id="pagination-container" class="mt-4"></div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import api from '/js/api.js';
+    import ui from '/js/ui.js';
+    import Pagination from '/js/pagination.js';
+
+    if (!auth.requireAuth(['ADMIN', 'TPO', 'DIRECTOR', 'STUDENT', 'STAFF'])) {
+      // redirected
+    } else {
+      ui.initLayout('drives');
+
+      if (!auth.isTpo() && !auth.hasRole('ADMIN') && !auth.hasRole('DIRECTOR')) {
+        document.getElementById('btn-create-drive')?.classList.add('d-none');
+      }
+
+      let currentPage = 0;
+      const pageSize = 9;
+
+      async function fetchDrives(page = 0) {
+        currentPage = page;
+        const loader = document.getElementById('drives-loading');
+        const grid = document.getElementById('drives-grid');
+        loader.innerHTML = ui.renderLoader('Loading campus drives...');
+        grid.innerHTML = '';
+
+        const search = document.getElementById('filter-search').value.trim();
+        const status = document.getElementById('filter-status').value;
+        const branch = document.getElementById('filter-branch').value;
+
+        const params = {
+          page: currentPage,
+          size: pageSize,
+          search: search || undefined,
+          status: status || undefined,
+          branch: branch || undefined
+        };
+
+        try {
+          const res = await api.get('/api/drives', params);
+          loader.innerHTML = '';
+
+          const drives = res.content || [];
+          const totalPages = res.totalPages || 0;
+          const totalElements = res.totalElements || 0;
+
+          if (drives.length === 0) {
+            grid.innerHTML = `<div style="grid-column: 1 / -1;">${ui.renderEmpty('No drives found', 'Try adjusting your search criteria or create a new campus recruitment drive.')}</div>`;
+            return;
+          }
+
+          drives.forEach(d => {
+            const statusClass = (d.status || 'UPCOMING').toLowerCase();
+            const rawBranches = Array.isArray(d.eligibleBranches)
+              ? d.eligibleBranches
+              : (typeof d.eligibleBranches === 'string' ? d.eligibleBranches.split(',') : []);
+            const branches = rawBranches.filter(Boolean).map(b => `<span class="chip chip-muted">${String(b).trim()}</span>`).join(' ');
+
+            const card = document.createElement('article');
+            card.className = 'bezel-outer poster-card';
+            card.innerHTML = `
+              <div class="bezel-inner p-5 d-flex flex-column h-100 justify-between">
+                <div>
+                  <div class="d-flex justify-between align-start gap-2 mb-3">
+                    <span class="status-chip status-${statusClass}">
+                      <span class="status-dot"></span>
+                      ${ui.escapeHtml(d.status || 'UPCOMING')}
+                    </span>
+                    <div class="package-block text-end">
+                      <span class="package-value">${d.packageMin || 0} - ${d.packageMax || 0}</span>
+                      <span class="package-unit">LPA</span>
+                    </div>
+                  </div>
+
+                  <h3 class="poster-title mb-1">
+                    <a href="/institute/pages/2-company-drives/drive-detail.html?id=${d.id}" class="text-ink text-decoration-none">
+                      ${ui.escapeHtml(d.title)}
+                    </a>
+                  </h3>
+                  
+                  <div class="company-subhead text-muted mb-4 d-flex align-center gap-2">
+                    <svg class="icon icon-sm"><use href="/icons/sprite.svg#buildings"></use></svg>
+                    <a href="/institute/pages/2-company-drives/company-detail.html?id=${d.companyId}" class="text-muted text-decoration-none fw-semibold">
+                      ${ui.escapeHtml(d.companyName || 'Enterprise Partner')}
+                    </a>
+                    ${d.location ? `<span>&bull;</span> <span>${ui.escapeHtml(d.location)}</span>` : ''}
+                  </div>
+
+                  <div class="criteria-specs mb-4 p-3 surface-tone rounded-3">
+                    <div class="d-flex justify-between py-1 border-bottom-subtle">
+                      <span class="text-muted">Target Roles</span>
+                      <strong class="text-ink">${ui.escapeHtml(d.roles || 'Software Development')}</strong>
+                    </div>
+                    <div class="d-flex justify-between py-1 border-bottom-subtle">
+                      <span class="text-muted">Min CGPA</span>
+                      <strong class="tabular-nums">${d.eligibilityCgpa ? Number(d.eligibilityCgpa).toFixed(2) : 'Open'}</strong>
+                    </div>
+                    <div class="d-flex justify-between py-1">
+                      <span class="text-muted">Max Backlogs</span>
+                      <strong class="tabular-nums">${d.maxBacklogs !== null && d.maxBacklogs !== undefined ? d.maxBacklogs : 0}</strong>
+                    </div>
+                  </div>
+
+                  <div class="mb-4">
+                    <span class="text-xs text-muted d-block mb-1">Eligible Branches</span>
+                    <div class="d-flex flex-wrap gap-1">
+                      ${branches || '<span class="chip chip-muted">Open to all branches</span>'}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-4 border-top d-flex justify-between align-center">
+                  <div class="deadline-block">
+                    <span class="text-xs text-muted d-block">Last Date</span>
+                    <strong class="text-institute text-sm">${ui.escapeHtml(d.lastDateToApply || 'Rolling')}</strong>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <a href="/institute/pages/2-company-drives/drive-detail.html?id=${d.id}" class="btn btn-outline btn-sm">
+                      Details
+                    </a>
+                    <a href="/institute/pages/5-drive-rounds/rounds-board.html?driveId=${d.id}" class="btn btn-secondary btn-sm" title="View Evaluation Rounds">
+                      Rounds
+                      <svg class="icon icon-sm"><use href="/icons/sprite.svg#arrow-right"></use></svg>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            `;
+            grid.appendChild(card);
+          });
+
+          Pagination.render({
+            containerId: 'pagination-container',
+            currentPage: currentPage,
+            totalPages: totalPages,
+            totalElements: totalElements,
+            pageSize: pageSize,
+            onPageChange: (newPage) => fetchDrives(newPage)
+          });
+
+        } catch (err) {
+          loader.innerHTML = ui.renderError(err.message);
+        }
+      }
+
+      let searchTimeout;
+      document.getElementById('filter-search').addEventListener('input', () => {
+        clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => fetchDrives(0), 300);
+      });
+      document.getElementById('filter-status').addEventListener('change', () => fetchDrives(0));
+      document.getElementById('filter-branch').addEventListener('change', () => fetchDrives(0));
+
+      fetchDrives(0);
+    }
+  </script>
+</body>
+</html>

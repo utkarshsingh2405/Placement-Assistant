@@ -1,0 +1,44 @@
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbproject/load-impl.xml
+/nbproject/build-impl.xml
+
+### VS Code ###
+.vscode/
+
+### Data, Logs & Runtime State ###
+*.log
+logs/
+.run/
+data/
+uploads/
+*.db
+*.db-wal
+*.db-shm
+*.pid
+
+### OS generated ###
+.DS_Store
+Thumbs.db

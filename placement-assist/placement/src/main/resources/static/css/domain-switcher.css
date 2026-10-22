@@ -1,0 +1,160 @@
+/* ==============================================================================
+   DOMAIN SWITCHER - Topbar Component Styling
+   Interactive domain switcher pill, dropdown menu, domain badges, red notification dots
+   ============================================================================== */
+
+.domain-switcher-container {
+  position: relative;
+  display: inline-block;
+  user-select: none;
+}
+
+.domain-pill {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  background-color: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 0.825rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-speed);
+}
+
+.domain-pill:hover,
+.domain-pill:focus-visible {
+  border-color: var(--accent);
+  background-color: var(--accent-soft);
+  color: var(--accent);
+  outline: none;
+}
+
+.domain-pill-icon {
+  width: 16px;
+  height: 16px;
+  color: var(--accent);
+}
+
+.domain-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent);
+}
+
+.domain-unread-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--danger);
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0%   { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.7); }
+  70%  { transform: scale(1.05); box-shadow: 0 0 0 5px rgba(220, 38, 38, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(220, 38, 38, 0); }
+}
+
+.domain-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 260px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-md);
+  padding: 0.5rem;
+  z-index: 1050;
+  display: none;
+  animation: dropdownFade 150ms ease;
+}
+
+.domain-dropdown.show {
+  display: block;
+}
+
+@keyframes dropdownFade {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.domain-dropdown-header {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+  padding: 0.5rem 0.75rem 0.25rem;
+}
+
+.domain-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: var(--radius-input);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color var(--transition-speed);
+}
+
+.domain-item:hover {
+  background-color: var(--surface-2);
+}
+
+.domain-item.active {
+  background-color: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.domain-item-left {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+
+.domain-badge-institute {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--institute-accent);
+}
+
+.domain-badge-placement {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--placement-accent);
+}
+
+.domain-badge-portal {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: var(--brand-navy);
+}
+
+.domain-dropdown-divider {
+  height: 1px;
+  background-color: var(--border);
+  margin: 0.4rem 0;
+}
+
+.domain-shortcut-hint {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  background-color: var(--surface-2);
+  padding: 0.15rem 0.4rem;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+}

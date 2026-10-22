@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="placement">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Placement Assistance - Live Recruitment Pillar</title>
+  <meta name="description" content="Campus Recruitment Engine - Real-time drive management, live candidate pipeline, PPT sessions, QR attendance and offer rollouts.">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/placement/css/theme.css" rel="stylesheet">
+  <link href="/placement/css/components.css" rel="stylesheet">
+  <link href="/placement/css/domain-switcher.css" rel="stylesheet">
+  <link href="/placement/css/landing.css" rel="stylesheet">
+  <style>
+    .hero-banner {
+      background: linear-gradient(135deg, #091e28 0%, #0d324d 50%, #175873 100%);
+      color: #ffffff;
+      padding: 5rem 0 6rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-banner::after {
+      content: '';
+      position: absolute;
+      bottom: -30%;
+      right: -10%;
+      width: 550px;
+      height: 550px;
+      background: radial-gradient(circle, rgba(13, 148, 136, 0.3) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .metric-badge {
+      font-size: 0.8rem;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--teal-300, #5eead4);
+    }
+    .live-pulse {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background-color: #10b981;
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulse 1.6s infinite;
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .feature-card-recruitment {
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 12px;
+      padding: 1.75rem;
+      background: var(--surface, #ffffff);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      height: 100%;
+    }
+    .feature-card-recruitment:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 24px -10px rgba(13, 148, 136, 0.15);
+      border-color: #99f6e4;
+    }
+    .live-ticker-bar {
+      background: #042f2e;
+      color: #99f6e4;
+      font-size: 0.85rem;
+      padding: 0.5rem 1rem;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- Live Announcements Ticker -->
+  <div class="live-ticker-bar d-flex align-items-center gap-3" id="live-ticker-wrapper">
+    <div class="d-flex align-items-center gap-2 fw-bold text-white">
+      <span class="live-pulse"></span>
+      <span>LIVE RECRUITMENT FEED:</span>
+    </div>
+    <div id="live-ticker-content" class="text-truncate">
+      Connecting to real-time drive event stream...
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3 border-bottom border-secondary border-opacity-25 sticky-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2 fw-bold" href="/placement/dashboard.html">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-info">
+          <rect width="20" height="14" x="2" y="7" rx="2" ry="2"/>
+          <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+        </svg>
+        <span class="text-white">Placement Pillar</span>
+        <span class="badge bg-teal text-white ms-1" style="background-color: #0d9488; font-size: 0.68rem;">LIVE</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu" aria-controls="navMenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navMenu">
+        <ul class="navbar-nav ms-auto align-items-center gap-3">
+          <li class="nav-item"><a class="nav-link" href="/placement/pages/1-drives/drive-list.html">Recruitment Drives</a></li>
+          <li class="nav-item"><a class="nav-link" href="/placement/pages/4-talks/talk-list.html">Pre-Placement Talks</a></li>
+          <li class="nav-item"><a class="nav-link" href="/placement/pages/8-placed/placed-students.html">Placed Wall</a></li>
+          <li class="nav-item"><a class="nav-link" href="/placement/pages/9-opportunities/internships.html">Opportunities</a></li>
+          <li class="nav-item">
+            <a href="/placement/dashboard.html" class="btn btn-teal text-white btn-sm px-3 fw-semibold" style="background-color: #0d9488;" id="nav-dashboard-btn">
+              Go to Dashboard
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/choose-domain.html" class="btn btn-outline-light btn-sm px-2" title="Switch Pillar">
+              Domain Chooser
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <header class="hero-banner">
+    <div class="container">
+      <div class="row align-items-center g-5">
+        <div class="col-lg-7">
+          <div class="metric-badge mb-2 d-flex align-items-center gap-2">
+            <span class="live-pulse"></span>
+            <span>Live Recruitment & Selection Engine</span>
+          </div>
+          <h1 class="display-4 fw-bold mb-3 lh-sm text-white">
+            Real-Time Campus Drives, Instant Selections.
+          </h1>
+          <p class="lead text-light text-opacity-80 mb-4">
+            Manage live on-campus recruitment end-to-end: multi-stage candidate evaluation, instant QR check-in, interactive pre-placement talks with live Q&amp;A, and verified selected candidate listings.
+          </p>
+          <div class="d-flex flex-wrap gap-3">
+            <a href="/placement/dashboard.html" class="btn btn-lg px-4 fw-semibold text-white shadow-sm" style="background-color: #0d9488;" id="hero-dashboard-btn">
+              Open Placement Dashboard
+            </a>
+            <a href="/placement/pages/1-drives/drive-list.html" class="btn btn-outline-light btn-lg px-4 fw-semibold" id="hero-browse-drives-btn">
+              Explore Active Drives
+            </a>
+          </div>
+        </div>
+
+        <div class="col-lg-5">
+          <div class="card bg-dark bg-opacity-75 text-white border border-teal border-opacity-30 p-4 shadow-lg">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <span class="badge" style="background-color: #0d9488;">Recruitment Active</span>
+              <span class="text-light small text-opacity-75">Port 8082</span>
+            </div>
+            <h5 class="fw-bold mb-3 text-white">Recruitment Highlights</h5>
+            <div class="vstack gap-3 small text-light text-opacity-90">
+              <div class="d-flex align-items-center gap-2">
+                <span class="text-success fw-bold">✓</span> <strong>Dynamic Stage Stepper:</strong> Aptitude, Tech &amp; HR Progression
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="text-success fw-bold">✓</span> <strong>QR Code Attendance:</strong> One-tap student check-in
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="text-success fw-bold">✓</span> <strong>Real-Time SSE Feeds:</strong> Instant stage notifications
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="text-success fw-bold">✓</span> <strong>Strict Authority Verification:</strong> TPO/Director authorized lists
+              </div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="text-success fw-bold">✓</span> <strong>Hall of Fame Wall:</strong> Placed students &amp; compensation stats
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Capabilities Section -->
+  <section class="py-5 bg-surface">
+    <div class="container py-4">
+      <div class="text-center max-w-700 mx-auto mb-5">
+        <h6 class="text-uppercase fw-bold text-teal" style="color: #0d9488; letter-spacing: 1px;">Pillar Core</h6>
+        <h2 class="fw-bold text-dark">Engineered for Rapid Recruitment Operations</h2>
+        <p class="text-muted">High-performance recruitment portal synchronized seamlessly with Institute master records.</p>
+      </div>
+
+      <div class="row g-4">
+        <!-- Live Drives Card -->
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card-recruitment">
+            <div class="fs-2 mb-3">🏢</div>
+            <h5 class="fw-bold mb-2">Live Campus Drives</h5>
+            <p class="text-muted small mb-3">Access comprehensive drive information, CTC structures, hiring workflow, and register with your institute credentials.</p>
+            <a href="/placement/pages/1-drives/drive-list.html" class="fw-semibold text-decoration-none small text-teal" style="color: #0d9488;">View Active Drives &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Stage Progression Card -->
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card-recruitment">
+            <div class="fs-2 mb-3">⚡</div>
+            <h5 class="fw-bold mb-2">Multi-Stage Stepper</h5>
+            <p class="text-muted small mb-3">Track progress stage-by-stage. Recruiter moves qualified candidates forward with one click and automatic alerts.</p>
+            <a href="/placement/pages/3-stages/stage-management.html" class="fw-semibold text-decoration-none small text-teal" style="color: #0d9488;">Manage Stages &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Pre-Placement Talks Card -->
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card-recruitment">
+            <div class="fs-2 mb-3">🎤</div>
+            <h5 class="fw-bold mb-2">Pre-Placement Talks</h5>
+            <p class="text-muted small mb-3">Attend live corporate presentations, review company slides, and participate in live real-time candidate Q&amp;A.</p>
+            <a href="/placement/pages/4-talks/talk-list.html" class="fw-semibold text-decoration-none small text-teal" style="color: #0d9488;">Join PPT Sessions &rarr;</a>
+          </div>
+        </div>
+
+        <!-- QR Attendance Card -->
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card-recruitment">
+            <div class="fs-2 mb-3">📱</div>
+            <h5 class="fw-bold mb-2">QR Code Check-in</h5>
+            <p class="text-muted small mb-3">Fast-track drive entry with dynamic QR codes. Automatic verification ensures zero queue congestion on campus.</p>
+            <a href="/placement/pages/6-attendance/scan.html" class="fw-semibold text-decoration-none small text-teal" style="color: #0d9488;">Scan &amp; Check-in &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Selected Lists Card -->
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card-recruitment">
+            <div class="fs-2 mb-3">📜</div>
+            <h5 class="fw-bold mb-2">Selection Lists</h5>
+            <p class="text-muted small mb-3">Strictly managed by TPO &amp; Director roles. Transparent candidate status with remarks and instant offer generation.</p>
+            <a href="/placement/pages/7-results/drive-results.html" class="fw-semibold text-decoration-none small text-teal" style="color: #0d9488;">View Selected Lists &rarr;</a>
+          </div>
+        </div>
+
+        <!-- Placed Wall Card -->
+        <div class="col-md-6 col-lg-4">
+          <div class="feature-card-recruitment">
+            <div class="fs-2 mb-3">🏆</div>
+            <h5 class="fw-bold mb-2">Placed Students Wall</h5>
+            <p class="text-muted small mb-3">Celebrate achievement! Real-time honor roll of students placed across dream packages and global technology companies.</p>
+            <a href="/placement/pages/8-placed/placed-students.html" class="fw-semibold text-decoration-none small text-teal" style="color: #0d9488;">Explore Placed Wall &rarr;</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-dark text-white py-4 border-top border-secondary border-opacity-25 mt-auto">
+    <div class="container text-center text-sm-between d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3">
+      <div class="small text-secondary">
+        &copy; 2026 Placement Assist Platform &bull; Placement Pillar
+      </div>
+      <div class="small">
+        <a href="/placement/dashboard.html" class="text-secondary text-decoration-none me-3">Dashboard</a>
+        <a href="/placement/pages/1-drives/drive-list.html" class="text-secondary text-decoration-none me-3">Drives</a>
+        <a href="/placement/pages/8-placed/placed-students.html" class="text-secondary text-decoration-none me-3">Placed Wall</a>
+        <a href="/choose-domain.html" class="text-info text-decoration-none">Switch Pillar</a>
+      </div>
+    </div>
+  </footer>
+
+  <script type="module">
+    import auth from '/placement/js/auth.js';
+    import sseClient from '/placement/js/sse.js';
+
+    // Update ticker with live events
+    const ticker = document.getElementById('live-ticker-content');
+    sseClient.connect();
+    sseClient.on('DRIVE_ANNOUNCEMENT', (data) => {
+      if (ticker) {
+        ticker.textContent = `📢 [${data.companyName || 'Campus Drive'}] ${data.message || data.title}`;
+      }
+    });
+    sseClient.on('STAGE_UPDATE', (data) => {
+      if (ticker) {
+        ticker.textContent = `⚡ Stage Update: ${data.message || 'Next recruitment stage is active'}`;
+      }
+    });
+
+    // Check user auth
+    if (auth.isAuthenticated()) {
+      const user = auth.getUser();
+      const heroBtn = document.getElementById('hero-dashboard-btn');
+      if (heroBtn && user) {
+        heroBtn.textContent = `Welcome, ${user.name || user.email} &rarr;`;
+      }
+    }
+  </script>
+</body>
+</html>

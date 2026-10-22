@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-domain="portal">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Placement Secretariat — Institutional Campus Placement Portal</title>
+  
+  <!-- Preload Display Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- GSAP & ScrollTrigger (Allowed on Landing Page Only) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <!-- Design System CSS -->
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+  <link rel="stylesheet" href="/css/landing.css">
+</head>
+<body>
+  <!-- Skip Link -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Fixed Paper Grain Overlay -->
+  <div class="grain-overlay"></div>
+
+  <!-- Header (Solid Grounded Bar) -->
+  <header class="app-topbar" style="background-color: var(--night); border-bottom-color: #1A262B; color: #FFFFFF;">
+    <div style="display: flex; align-items: center; gap: var(--space-4);">
+      <a href="/" class="brand-wordmark" style="color: #FFFFFF;">
+        <span class="brand-dot" style="background-color: var(--brass);"></span>
+        <span>Placement Secretariat</span>
+      </a>
+      <span class="chip" style="background: rgba(255,255,255,0.1); color: #E8EEEC; font-size: 11px;">ACADEMIC & RECRUITMENT</span>
+    </div>
+
+    <!-- Center Nav Links -->
+    <nav class="hide-on-mobile" style="display: flex; align-items: center; gap: var(--space-6); font-size: var(--text-sm); font-weight: 500;">
+      <a href="#journey" style="color: #A0B0B4; transition: color 150ms;">Journey</a>
+      <a href="#doors" style="color: #A0B0B4; transition: color 150ms;">Two Desks</a>
+      <a href="#checker" style="color: #A0B0B4; transition: color 150ms;">Eligibility</a>
+      <a href="#notices" style="color: #A0B0B4; transition: color 150ms;">Notice Board</a>
+      <a href="#operations" style="color: #A0B0B4; transition: color 150ms;">Operations</a>
+    </nav>
+
+    <!-- Header Actions -->
+    <div style="display: flex; align-items: center; gap: var(--space-3);">
+      <button class="btn btn-sm btn-outline" id="theme-btn" title="Toggle Theme" style="border-color: #2A383E; color: #E8EEEC; padding: 8px;">
+        <span id="theme-icon">
+          <svg width="16" height="16"><use href="#ph-moon"/></svg>
+        </span>
+      </button>
+
+      <a href="/login.html" class="btn btn-sm btn-brass" id="auth-cta-btn">
+        <span>Sign In</span>
+        <svg width="14" height="14"><use href="#ph-arrow-right"/></svg>
+      </a>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <!-- HERO SECTION (Night Field, Editorial Split) -->
+    <section class="hero-section">
+      <div class="container">
+        <div class="split-hero">
+          <!-- Left: Editorial Typography & Primary CTA -->
+          <div class="hero-content">
+            <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(217, 119, 6, 0.12); border: 1px solid rgba(217, 119, 6, 0.32); border-radius: 9999px; padding: 6px 14px; margin-bottom: var(--space-4);">
+              <span class="status-dot status-live-pulse" style="background: var(--brass);"></span>
+              <span style="font-size: 11px; font-weight: 600; color: var(--brass); letter-spacing: 0.08em; text-transform: uppercase;">Placement Secretariat • Season 2026</span>
+            </div>
+
+            <h1 class="display-xl hero-title" style="font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(3rem, 5.8vw, 4.75rem); line-height: 1.05; color: #FFFFFF; margin-bottom: var(--space-3); letter-spacing: -0.01em;">
+              Placement <span style="font-style: italic; color: var(--brass); font-weight: 400; text-shadow: 0 0 32px rgba(217,119,6,0.35);">Secretariat</span>
+              <span style="display: block; font-family: 'Geist', -apple-system, sans-serif; font-size: clamp(1.4rem, 2.6vw, 2.1rem); font-weight: 600; letter-spacing: -0.02em; color: #E8EEEC; margin-top: 10px;">
+                Round by round, to your dream offer.
+              </span>
+            </h1>
+
+            <p class="hero-subtitle" style="color: #A0B0B4; font-size: clamp(1.05rem, 1.25vw, 1.2rem); line-height: 1.55; margin-bottom: var(--space-6); max-width: 50ch;">
+              One unified portal for the Academic Institute and Live Recruitment Season. Eligibility audits, real-time stage progression, QR admit passes, and instant offer confirmations.
+            </p>
+
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-4); margin-bottom: var(--space-8);">
+              <a href="/login.html" class="btn-nested-cta" id="hero-main-cta">
+                <span id="hero-cta-text">Enter Workspace</span>
+                <span class="btn-nested-circle">
+                  <svg width="18" height="18"><use href="#ph-arrow-up-right"/></svg>
+                </span>
+              </a>
+
+              <a href="/placement/pages/1-drives/drive-list.html" class="btn btn-sm btn-outline" style="border-color: rgba(255,255,255,0.2); color: #E8EEEC; padding: 12px 20px; font-weight: 500; font-size: var(--text-sm);">
+                <span>Browse Active Drives &rarr;</span>
+              </a>
+            </div>
+
+            <!-- Key Proof Points Strip -->
+            <div style="display: flex; flex-wrap: wrap; gap: var(--space-6); padding-top: var(--space-5); border-top: 1px solid rgba(255,255,255,0.08); width: 100%; max-width: 520px;">
+              <div>
+                <div style="font-size: 1.6rem; font-weight: 700; color: #FFFFFF; font-variant-numeric: tabular-nums;">96.4%</div>
+                <div style="font-size: 10px; color: #8A9CA0; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600;">Placement Ratio</div>
+              </div>
+              <div style="width: 1px; height: 38px; background: rgba(255,255,255,0.1);"></div>
+              <div>
+                <div style="font-size: 1.6rem; font-weight: 700; color: var(--brass); font-variant-numeric: tabular-nums;">44.0 LPA</div>
+                <div style="font-size: 10px; color: #8A9CA0; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600;">Highest Package</div>
+              </div>
+              <div style="width: 1px; height: 38px; background: rgba(255,255,255,0.1);"></div>
+              <div>
+                <div style="font-size: 1.6rem; font-weight: 700; color: #FFFFFF; font-variant-numeric: tabular-nums;">140+</div>
+                <div style="font-size: 10px; color: #8A9CA0; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600;">Visiting Leaders</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Mechanical 3D Split-Flap Board -->
+          <div class="reveal-init" style="--i: 3;">
+            <div style="font-size: var(--text-xs); color: var(--brass); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: var(--space-2);">
+              LIVE SEASON RECRUITMENT FEED
+            </div>
+            <div id="hero-flap-board"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PINNED JOURNEY SCENE (Apply -> Talk -> Aptitude -> Tech -> HR -> Offer) -->
+    <section class="journey-section" id="journey">
+      <div class="container">
+        <div style="margin-bottom: var(--space-12);">
+          <h2 class="display-lg" style="margin-bottom: var(--space-2);">What happens before you walk in.</h2>
+          <p class="lead">Every recruitment stage specifies the venue, reporting gate time, and syllabus checklist before the round begins. No surprises.</p>
+        </div>
+
+        <div class="journey-pin-container">
+          <!-- Left: Physical Journey Route Line -->
+          <div>
+            <div class="journey-line-container">
+              <div class="journey-route" style="flex-direction: column; min-width: auto; gap: var(--space-6); align-items: flex-start; padding-left: var(--space-6); border-left: 3px solid var(--accent);">
+                <div class="journey-station passed" data-station="0" style="flex-direction: row; gap: var(--space-4); text-align: left;">
+                  <div class="station-node" style="width: 36px; height: 36px;"><svg width="14" height="14"><use href="#ph-check"/></svg></div>
+                  <div>
+                    <div style="font-weight: 600;">1. Application & Resume Submission</div>
+                    <div style="font-size: var(--text-xs); color: var(--muted);">Direct registry synchronization</div>
+                  </div>
+                </div>
+                <div class="journey-station passed" data-station="1" style="flex-direction: row; gap: var(--space-4); text-align: left;">
+                  <div class="station-node" style="width: 36px; height: 36px;"><svg width="14" height="14"><use href="#ph-check"/></svg></div>
+                  <div>
+                    <div style="font-weight: 600;">2. Pre-Placement Presentation</div>
+                    <div style="font-size: var(--text-xs); color: var(--muted);">Audi 1 • Live Q&A • Attendance recorded</div>
+                  </div>
+                </div>
+                <div class="journey-station current" data-station="2" style="flex-direction: row; gap: var(--space-4); text-align: left;">
+                  <div class="station-node" style="width: 36px; height: 36px; border-color: var(--accent);">3</div>
+                  <div>
+                    <div style="font-weight: 600; color: var(--accent);">3. Online Aptitude Evaluation</div>
+                    <div style="font-size: var(--text-xs); color: var(--muted);">Computer Labs 1-4 • 90 Minutes</div>
+                  </div>
+                </div>
+                <div class="journey-station" data-station="3" style="flex-direction: row; gap: var(--space-4); text-align: left;">
+                  <div class="station-node" style="width: 36px; height: 36px;">4</div>
+                  <div>
+                    <div style="font-weight: 600;">4. Technical Interviews</div>
+                    <div style="font-size: var(--text-xs); color: var(--muted);">Department Cabins • Coding & System Design</div>
+                  </div>
+                </div>
+                <div class="journey-station" data-station="4" style="flex-direction: row; gap: var(--space-4); text-align: left;">
+                  <div class="station-node" style="width: 36px; height: 36px;">5</div>
+                  <div>
+                    <div style="font-weight: 600;">5. Final HR & Offer Letter</div>
+                    <div style="font-size: var(--text-xs); color: var(--muted);">Official Seal • Appointment Handover</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Dynamic Perforated Hall Ticket Preview -->
+          <div>
+            <div class="hall-ticket">
+              <div class="ticket-body">
+                <div class="ticket-stamp">QUALIFIED</div>
+                <div style="font-size: 11px; color: var(--muted); text-transform: uppercase; margin-bottom: 4px;">
+                  STAGE 3 • ONLINE APTITUDE EVALUATION
+                </div>
+                <h3 style="margin-bottom: var(--space-1);">Google India Campus Drive</h3>
+                <div style="font-size: var(--text-sm); color: var(--ink-2); margin-bottom: var(--space-4);">
+                  Venue: Central Computing Centre Lab 2 • Reporting: 09:15 AM
+                </div>
+                <table class="ledger-table" style="font-size: var(--text-xs);">
+                  <thead>
+                    <tr><th>Section</th><th>Questions</th><th>Duration</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Quantitative & Logic</td><td>30 MCQs</td><td>45 Mins</td></tr>
+                    <tr><td>Data Structures & Alg.</td><td>2 Coding</td><td>45 Mins</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="ticket-perforation"></div>
+              <div class="ticket-stub">
+                <div style="width: 80px; height: 80px; background: var(--surface); border: 1px solid var(--surface-3); display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-2); border-radius: 8px;">
+                  <svg width="48" height="48" style="color: var(--ink);"><use href="#ph-qr-code"/></svg>
+                </div>
+                <div style="font-size: var(--text-xs); font-weight: 600;">ADMIT TICKET</div>
+                <div style="font-size: 11px; color: var(--muted);">GATE CHECK: ROTATING QR</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TWO DOORS SECTION (Chalk Field) -->
+    <section class="doors-section" id="doors">
+      <div class="container">
+        <div style="margin-bottom: var(--space-8);">
+          <h2 class="display-lg" style="margin-bottom: var(--space-2);">Two desks, one login.</h2>
+          <p class="lead">Two specialized workspaces connected by a single identity. Move between rooms with one keystroke.</p>
+        </div>
+
+        <div class="doors-grid">
+          <!-- Door 1: Institute Academic -->
+          <div class="door-panel door-institute" onclick="window.location.href='/login.html?next=/institute/pages/1-students/student-list.html'">
+            <div>
+              <div class="chip" style="background: rgba(255,255,255,0.2); color: #FFF; margin-bottom: var(--space-4);">
+                DESK 1 • ACADEMIC REGISTRY
+              </div>
+              <h3 class="font-display" style="font-size: 2.5rem; color: #FFF; margin-bottom: var(--space-3);">Academic Institute</h3>
+              <p style="color: rgba(255,255,255,0.85); font-size: var(--text-body); line-height: 1.5; margin-bottom: var(--space-6);">
+                The registrar's domain. Master student roster, verified CGPAs, CRT & class attendance registers, question bank practice mode, and ATS score analytics.
+              </p>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.2); padding-top: var(--space-4);">
+              <span style="font-size: var(--text-xs); color: rgba(255,255,255,0.7);">Port 8081 • Context /institute</span>
+              <div class="btn-nested-cta" style="background: #FFFFFF; color: var(--institute); padding: 6px 8px 6px 18px; font-size: var(--text-sm);">
+                <span>Enter Desk</span>
+                <span class="btn-nested-circle" style="width: 30px; height: 30px; background: var(--institute); color: #FFFFFF;">
+                  <svg width="14" height="14"><use href="#ph-arrow-right"/></svg>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Door 2: Placement Recruitment -->
+          <div class="door-panel door-placement" onclick="window.location.href='/login.html?next=/placement/pages/1-drives/drive-list.html'">
+            <div>
+              <div class="chip" style="background: rgba(255,255,255,0.2); color: #FFF; margin-bottom: var(--space-4);">
+                DESK 2 • RECRUITMENT SEASON
+              </div>
+              <h3 class="font-display" style="font-size: 2.5rem; color: #FFF; margin-bottom: var(--space-3);">Recruitment Season</h3>
+              <p style="color: rgba(255,255,255,0.85); font-size: var(--text-body); line-height: 1.5; margin-bottom: var(--space-6);">
+                The active hiring board. Campus recruitment drives, pre-placement presentations, live notice chits, QR check-ins, and verified offer letters.
+              </p>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.2); padding-top: var(--space-4);">
+              <span style="font-size: var(--text-xs); color: rgba(255,255,255,0.7);">Port 8082 • Context /placement</span>
+              <div class="btn-nested-cta" style="background: #FFFFFF; color: var(--placement); padding: 6px 8px 6px 18px; font-size: var(--text-sm);">
+                <span>Enter Desk</span>
+                <span class="btn-nested-circle" style="width: 30px; height: 30px; background: var(--placement); color: #FFFFFF;">
+                  <svg width="14" height="14"><use href="#ph-arrow-right"/></svg>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- LIVE STATS BAND (Pine Field) -->
+    <section class="stats-band">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-number" id="stat-placed">412</div>
+            <div class="stat-label">Students Placed in 2026 Season</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="stat-companies">68</div>
+            <div class="stat-label">Recruiting Companies Visited</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="stat-highest">44.0</div>
+            <div class="stat-label">Highest Package (LPA CTC)</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-number" id="stat-rate">88.4%</div>
+            <div class="stat-label">Eligible Batch Clearance</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ELIGIBILITY CHECKER (Live Interactive Tool) -->
+    <section class="container" id="checker" style="padding-top: var(--space-20); padding-bottom: var(--space-20);">
+      <div style="margin-bottom: var(--space-8);">
+        <h2 class="display-lg" style="margin-bottom: var(--space-2);">Verify eligibility now.</h2>
+        <p class="lead">Set your branch, CGPA, and backlog count to see which active companies accept your profile.</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr; gap: var(--space-8);">
+        <div style="display: grid; grid-template-columns: 1fr; gap: var(--space-8);">
+          <div class="double-bezel">
+            <div class="double-bezel-inner">
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-6);">
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Select Branch</label>
+                  <select class="select-field" id="checker-branch">
+                    <option value="CSE">CSE</option>
+                    <option value="IT">IT</option>
+                    <option value="ECE">ECE</option>
+                    <option value="EEE">EEE</option>
+                    <option value="MECH">MECH</option>
+                  </select>
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">CGPA: <strong id="cgpa-val" style="color: var(--accent);">7.50</strong></label>
+                  <input type="range" class="cgpa-slider" id="checker-cgpa" min="5.0" max="10.0" step="0.1" value="7.5" style="margin-top: 10px;">
+                </div>
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label">Active Backlogs</label>
+                  <select class="select-field" id="checker-backlogs">
+                    <option value="0">0 Backlogs (Clean Record)</option>
+                    <option value="1">1 Active Backlog</option>
+                    <option value="2">2+ Active Backlogs</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Eligibility Output Results -->
+              <div id="checker-results" style="display: grid; grid-template-columns: 1fr; gap: var(--space-3);">
+                <!-- Dynamically generated live drive cards -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NOTICE BOARD PREVIEW -->
+    <section class="container" id="notices" style="padding-bottom: var(--space-20);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-8);">
+        <div>
+          <div class="on-air-badge" style="margin-bottom: var(--space-2);">
+            <span class="on-air-dot"></span>
+            <span>Live Dispatch</span>
+          </div>
+          <h2 class="display-lg">Notices land here first.</h2>
+        </div>
+        <a href="/login.html" class="btn btn-outline hide-on-mobile">
+          <span>View Full Feed</span>
+          <svg width="14" height="14"><use href="#ph-arrow-right"/></svg>
+        </a>
+      </div>
+
+      <div class="notice-board" id="notices-board-preview">
+        <!-- Pinned Chits -->
+        <div class="notice-chit chit-urgent">
+          <div class="chit-pin"></div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2); padding-top: 6px;">
+            <span class="chip chip-warning">URGENT</span>
+            <span style="font-size: 11px; color: var(--muted);">15m ago</span>
+          </div>
+          <h3 style="font-size: 1.1rem; margin-bottom: 6px;">Microsoft IDC Slot Change</h3>
+          <p style="font-size: var(--text-sm); color: var(--ink-2); line-height: 1.4; margin-bottom: var(--space-3);">
+            Technical round reporting relocated from <span class="venue-changed-old">Lab 3</span> to <span class="venue-changed-new">Main Audi</span>. Bring physical college ID.
+          </p>
+          <div style="font-size: 11px; color: var(--muted);">TPO Secretariat • Circular #89</div>
+        </div>
+
+        <div class="notice-chit">
+          <div class="chit-pin"></div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2); padding-top: 6px;">
+            <span class="chip chip-info">SHORTLIST</span>
+            <span style="font-size: 11px; color: var(--muted);">2h ago</span>
+          </div>
+          <h3 style="font-size: 1.1rem; margin-bottom: 6px;">Google SWE Aptitude Results</h3>
+          <p style="font-size: var(--text-sm); color: var(--ink-2); line-height: 1.4; margin-bottom: var(--space-3);">
+            34 students qualified for Round 2. Check individual hall tickets for reporting schedule and interview booth allocation.
+          </p>
+          <div style="font-size: 11px; color: var(--muted);">Technical Hiring Panel • CSE & IT</div>
+        </div>
+
+        <div class="notice-chit">
+          <div class="chit-pin"></div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-2); padding-top: 6px;">
+            <span class="chip chip-neutral">CAMPUS RECRUITMENT</span>
+            <span style="font-size: 11px; color: var(--muted);">4h ago</span>
+          </div>
+          <h3 style="font-size: 1.1rem; margin-bottom: 6px;">Goldman Sachs PPT Tomorrow</h3>
+          <p style="font-size: var(--text-sm); color: var(--ink-2); line-height: 1.4; margin-bottom: var(--space-3);">
+            Pre-Placement Presentation starts promptly at 10:00 AM in Seminar Hall A. Attendance is mandatory for registered students.
+          </p>
+          <div style="font-size: 11px; color: var(--muted);">Directorate of Training & Placement</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KINETIC OPPORTUNITIES MARQUEE -->
+    <section style="background-color: var(--surface); border-top: 1px solid var(--surface-3); border-bottom: 1px solid var(--surface-3); padding: var(--space-8) 0;">
+      <div class="marquee-wrapper">
+        <div class="marquee-track">
+          <span class="marquee-item"><svg width="14" height="14"><use href="#ph-briefcase"/></svg> Google SDE Intern (45k/mo)</span>
+          <span class="marquee-item"><svg width="14" height="14"><use href="#ph-building"/></svg> Microsoft IDC FTE (28.5 LPA)</span>
+          <span class="marquee-item"><svg width="14" height="14"><use href="#ph-briefcase"/></svg> Cisco Systems Hardware (18.0 LPA)</span>
+          <span class="marquee-item"><svg width="14" height="14"><use href="#ph-building"/></svg> Goldman Sachs Analyst (24.0 LPA)</span>
+          <span class="marquee-item"><svg width="14" height="14"><use href="#ph-briefcase"/></svg> Oracle Cloud Infrastructure (21.0 LPA)</span>
+          <span class="marquee-item"><svg width="14" height="14"><use href="#ph-building"/></svg> Adobe Research Fellowship (30.0 LPA)</span>
+        </div>
+      </div>
+      <div class="marquee-wrapper" style="padding-top: var(--space-2);">
+        <div class="marquee-track track-reverse">
+          <span class="marquee-item"><svg width="14" height="14"><use href="#ph-seal-check"/></svg> Smart India Hackathon Grand Finale</span>
+          <span class="marquee-item"><svg width="14" height="14"><use href="#ph-seal-check"/></svg> Flipkart GRiD 6.0 Robotics Challenge</span>
+          <span class="marquee-item"><svg width="14" height="14"><use href="#ph-seal-check"/></svg> Tata Crucible Campus Quiz National</span>
+          <span class="marquee-item"><svg width="14" height="14"><use href="#ph-seal-check"/></svg> HackCBS National Collegiate Hackathon</span>
+          <span class="marquee-item"><svg width="14" height="14"><use href="#ph-seal-check"/></svg> Uber HackTag Competitive Coding</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ASYMMETRIC BENTO: OPERATIONS INFRASTRUCTURE -->
+    <section class="container" id="operations" style="padding-top: var(--space-20); padding-bottom: var(--space-20);">
+      <div style="margin-bottom: var(--space-8);">
+        <h2 class="display-lg" style="margin-bottom: var(--space-2);">Built for how a season runs.</h2>
+        <p class="lead">Engineered specifically for the real pressure points of campus recruitment: attendance shortages, result validation, and venue shifts.</p>
+      </div>
+
+      <div class="ui-fragments-grid">
+        <!-- Fragment 1: Results Verification Stepper -->
+        <div class="fragment-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+            <div style="font-size: var(--text-xs); font-weight: 600; color: var(--accent);">TPO VERIFICATION INTERFACE</div>
+            <span class="chip chip-brass">AUDIT TRAIL LOGGED</span>
+          </div>
+          <h3 style="font-size: 1.15rem; margin-bottom: var(--space-2);">Publish verified offer lists with row-level validation.</h3>
+          <p class="text-muted text-sm" style="margin-bottom: var(--space-4);">Four-step upload stepper ensures duplicate offers, unregistered roll numbers, and eligibility overrides are resolved before public announcement.</p>
+          <div class="ledger-container">
+            <table class="ledger-table" style="font-size: var(--text-xs);">
+              <thead>
+                <tr><th>Roll</th><th>Candidate</th><th>Status</th><th>Validation</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>22CS014</td><td>Aarav Sharma</td><td>Selected</td><td><span class="chip chip-success">Verified</span></td></tr>
+                <tr style="background: var(--danger-tint);"><td>22CS099</td><td>Invalid Entry</td><td>Pending</td><td><span class="chip chip-danger">Roll Not Found</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Fragment 2: Rotating QR Code Attendance -->
+        <div class="fragment-card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+            <div style="font-size: var(--text-xs); font-weight: 600; color: var(--accent);">DOOR SCANNER ENGINE</div>
+            <span class="chip chip-info">15S ROTATION</span>
+          </div>
+          <h3 style="font-size: 1.15rem; margin-bottom: var(--space-2);">Eliminate proxy attendance at seminar doors.</h3>
+          <p class="text-muted text-sm" style="margin-bottom: var(--space-4);">Dynamic cryptographically signed QR codes rotate automatically with countdown rings to prevent forwarded screenshots.</p>
+          <div style="display: flex; align-items: center; gap: var(--space-4); background: var(--surface-2); padding: var(--space-4); border-radius: var(--radius-control);">
+            <svg width="44" height="44"><use href="#ph-qr-code"/></svg>
+            <div>
+              <div style="font-weight: 600; font-size: var(--text-sm);">Audi Hall 1 • Check-in Active</div>
+              <div style="font-size: var(--text-xs); color: var(--muted); font-variant-numeric: tabular-nums;">218 students scanned in real time</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FREQUENTLY ANSWERED QUESTIONS -->
+    <section class="container" style="padding-bottom: var(--space-20); max-width: 860px;">
+      <div style="margin-bottom: var(--space-8); text-align: center;">
+        <h2 class="display-lg">Questions and answers.</h2>
+      </div>
+
+      <div class="faq-accordion">
+        <details open>
+          <summary>
+            <span>Can I access both the Institute and Placement systems with one account?</span>
+            <svg width="18" height="18"><use href="#ph-caret-down"/></svg>
+          </summary>
+          <p style="margin-top: var(--space-3); color: var(--ink-2); font-size: var(--text-sm); line-height: 1.6;">
+            Yes. Your institutional email and password authenticate you across both desks. Switch between them anytime using the top navigation bar or the <code>Alt + D</code> keyboard shortcut.
+          </p>
+        </details>
+
+        <details>
+          <summary>
+            <span>What happens if my CGPA or backlogs change in the academic records?</span>
+            <svg width="18" height="18"><use href="#ph-caret-down"/></svg>
+          </summary>
+          <p style="margin-top: var(--space-3); color: var(--ink-2); font-size: var(--text-sm); line-height: 1.6;">
+            The Academic Institute registrar records update directly into the Placement drive eligibility filter in real time. Whenever a grade update is approved, eligible drives immediately update on your dashboard.
+          </p>
+        </details>
+
+        <details>
+          <summary>
+            <span>How do I view my hall ticket on test day?</span>
+            <svg width="18" height="18"><use href="#ph-caret-down"/></svg>
+          </summary>
+          <p style="margin-top: var(--space-3); color: var(--ink-2); font-size: var(--text-sm); line-height: 1.6;">
+            Your perforated hall ticket activates on your Placement dashboard as soon as you qualify for that round, including the QR code for door check-in, syllabus breakdown, and reporting gate closure time.
+          </p>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <!-- PUBLIC FOOTER (Night Field) -->
+  <footer class="public-footer">
+    <div class="container">
+      <div style="display: flex; flex-direction: column; gap: var(--space-8); margin-bottom: var(--space-12);">
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
+          <div class="brand-wordmark" style="color: #FFFFFF; font-size: 1.4rem;">
+            <span class="brand-dot" style="background-color: var(--brass);"></span>
+            <span>Placement Secretariat</span>
+          </div>
+
+          <!-- Pillar Service Status Indicators -->
+          <div style="display: flex; align-items: center; gap: var(--space-4); font-size: var(--text-xs); font-family: var(--font-mono);">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="width: 6px; height: 6px; border-radius: 50%; background: #4FD1B8;"></span>
+              <span>Portal :8088</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="width: 6px; height: 6px; border-radius: 50%; background: #E0808C;"></span>
+              <span>Institute :8081</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <span style="width: 6px; height: 6px; border-radius: 50%; background: #4FD1B8;"></span>
+              <span>Placement :8082</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="height: 1px; background: #1E2D33;"></div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4); font-size: var(--text-xs); color: #6E7F85;">
+          <span>&copy; 2026 Directorate of Training and Placement. All rights reserved.</span>
+          <span>Crafted in accordance with Google Stitch Design Standard.</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SVG Sprite Inclusion -->
+  <div id="sprite-container" style="display: none;"></div>
+
+  <!-- Scripts -->
+  <script type="module">
+    import auth from '/js/core/auth.js';
+    import theme from '/js/core/theme.js';
+    import FlapBoard from '/js/motion/flap-board.js';
+
+    // Inject SVG Sprite
+    fetch('/icons/sprite.svg')
+      .then(r => r.text())
+      .then(svg => {
+        document.getElementById('sprite-container').innerHTML = svg;
+      });
+
+    // Theme toggle
+    document.getElementById('theme-btn').addEventListener('click', () => {
+      theme.toggleTheme();
+    });
+
+    // Update CTA for authenticated users
+    if (auth.isAuthenticated()) {
+      const user = auth.getUser();
+      document.getElementById('auth-cta-btn').innerHTML = `
+        <span>Workspace</span>
+        <svg width="14" height="14"><use href="#ph-arrow-right"/></svg>
+      `;
+      document.getElementById('auth-cta-btn').href = '/choose-domain.html';
+
+      document.getElementById('hero-cta-text').textContent = 'Enter Your Workspace';
+      document.getElementById('hero-main-cta').href = '/choose-domain.html';
+    }
+
+    // Split-Flap Board Initialization
+    const flap = new FlapBoard('hero-flap-board', { rows: 3, cols: 24 });
+    flap.render();
+    flap.cyclePlacements([
+      { company: 'GOOGLE INDIA', role: 'SWE L3', package: '34.0', student: 'OFFER ACCEPTED', branch: 'CSE' },
+      { company: 'MICROSOFT IDC', role: 'SDE 1', package: '28.5', student: 'OFFER ACCEPTED', branch: 'IT' },
+      { company: 'GOLDMAN SACHS', role: 'ANALYST', package: '24.0', student: 'OFFER ACCEPTED', branch: 'ECE' },
+      { company: 'ORACLE OCI', role: 'PLATFORM ENG', package: '21.0', student: 'OFFER ACCEPTED', branch: 'CSE' }
+    ]);
+
+    // Live Stats Fetch
+    fetch('/placement/api/public/highlights')
+      .then(r => r.json())
+      .then(res => {
+        const d = res.data || res;
+        if (d && d.totalPlaced) {
+          document.getElementById('stat-placed').textContent = d.totalPlaced;
+        }
+        if (d && d.totalCompanies) {
+          document.getElementById('stat-companies').textContent = d.totalCompanies;
+        }
+        if (d && d.highestPackage) {
+          document.getElementById('stat-highest').textContent = Number(d.highestPackage).toFixed(1);
+        }
+      })
+      .catch(() => {});
+
+    // Interactive Eligibility Checker Logic
+    const drivesData = [
+      { company: 'Google India', role: 'Software Engineer', minCgpa: 8.0, branches: ['CSE', 'IT'], maxBacklogs: 0, package: '34 LPA' },
+      { company: 'Microsoft IDC', role: 'Software Development Engineer', minCgpa: 7.5, branches: ['CSE', 'IT', 'ECE'], maxBacklogs: 0, package: '28.5 LPA' },
+      { company: 'Cisco Systems', role: 'Network Software Engineer', minCgpa: 7.0, branches: ['CSE', 'IT', 'ECE', 'EEE'], maxBacklogs: 1, package: '18 LPA' },
+      { company: 'TCS Digital', role: 'Systems Engineer', minCgpa: 6.5, branches: ['CSE', 'IT', 'ECE', 'EEE', 'MECH'], maxBacklogs: 1, package: '7.5 LPA' }
+    ];
+
+    const branchSelect = document.getElementById('checker-branch');
+    const cgpaSlider = document.getElementById('checker-cgpa');
+    const cgpaDisplay = document.getElementById('cgpa-val');
+    const backlogsSelect = document.getElementById('checker-backlogs');
+    const resultsContainer = document.getElementById('checker-results');
+
+    function updateChecker() {
+      const branch = branchSelect.value;
+      const cgpa = parseFloat(cgpaSlider.value);
+      const backlogs = parseInt(backlogsSelect.value, 10);
+      cgpaDisplay.textContent = cgpa.toFixed(1);
+
+      resultsContainer.innerHTML = drivesData.map(d => {
+        const branchOk = d.branches.includes(branch);
+        const cgpaOk = cgpa >= d.minCgpa;
+        const backlogOk = backlogs <= d.maxBacklogs;
+        const isEligible = branchOk && cgpaOk && backlogOk;
+
+        let reason = '';
+        if (!branchOk) reason = `Branch ${branch} not in criteria`;
+        else if (!cgpaOk) reason = `CGPA below ${d.minCgpa}`;
+        else if (!backlogOk) reason = `Backlogs exceed limit (${d.maxBacklogs})`;
+
+        return `
+          <div style="background: var(--surface); border: 1px solid var(--surface-3); border-radius: var(--radius-control); padding: var(--space-4); display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-weight: 600; color: var(--ink);">${d.company} • ${d.role}</div>
+              <div style="font-size: var(--text-xs); color: var(--muted); margin-top: 2px;">Min CGPA: ${d.minCgpa} • Package: ${d.package}</div>
+            </div>
+            <div>
+              ${isEligible ? `
+                <span class="chip chip-success"><svg width="12" height="12"><use href="#ph-check"/></svg> Eligible to Apply</span>
+              ` : `
+                <span class="chip chip-danger" title="${reason}">Not Eligible (${reason})</span>
+              `}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    branchSelect.addEventListener('change', updateChecker);
+    cgpaSlider.addEventListener('input', updateChecker);
+    backlogsSelect.addEventListener('change', updateChecker);
+    updateChecker();
+
+    // GSAP ScrollTrigger Entrances
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      gsap.registerPlugin(ScrollTrigger);
+
+      gsap.utils.toArray('.reveal-init').forEach(el => {
+        gsap.to(el, {
+          scrollTrigger: {
+            trigger: el,
+            start: 'top 88%',
+            toggleActions: 'play none none none'
+          },
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: 'power2.out'
+        });
+      });
+    }
+  </script>
+</body>
+</html>

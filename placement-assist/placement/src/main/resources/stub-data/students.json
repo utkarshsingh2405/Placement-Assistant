@@ -1,0 +1,38 @@
+[
+  {
+    "id": 5,
+    "name": "Aarav Sharma",
+    "rollNo": "21CS001",
+    "branch": "CSE",
+    "year": 4,
+    "cgpa": 8.85,
+    "backlogs": 0,
+    "placementEligible": true,
+    "email": "aarav@college.edu",
+    "phone": "+91 98765 43210"
+  },
+  {
+    "id": 6,
+    "name": "Bhavya Patel",
+    "rollNo": "21CS002",
+    "branch": "CSE",
+    "year": 4,
+    "cgpa": 8.40,
+    "backlogs": 0,
+    "placementEligible": true,
+    "email": "bhavya@college.edu",
+    "phone": "+91 98765 43211"
+  },
+  {
+    "id": 8,
+    "name": "Divya Nair",
+    "rollNo": "21IT001",
+    "branch": "IT",
+    "year": 4,
+    "cgpa": 9.15,
+    "backlogs": 0,
+    "placementEligible": true,
+    "email": "divya@college.edu",
+    "phone": "+91 98765 43212"
+  }
+]

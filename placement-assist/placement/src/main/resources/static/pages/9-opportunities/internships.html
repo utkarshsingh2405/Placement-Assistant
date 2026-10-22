@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="placement">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Opportunities Feed - Placement Assistance</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/placement/css/theme.css" rel="stylesheet">
+  <link href="/placement/css/components.css" rel="stylesheet">
+  <link href="/placement/css/domain-switcher.css" rel="stylesheet">
+  <style>
+    .opp-card {
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 12px;
+      padding: 1.5rem;
+      background: var(--surface, #ffffff);
+      transition: all 0.2s ease;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+    .opp-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.08);
+      border-color: #0d9488;
+    }
+  </style>
+</head>
+<body class="bg-surface">
+
+  <div class="app-container">
+    <div id="sidebar-container"></div>
+
+    <div class="main-wrapper">
+      <div id="topbar-container"></div>
+
+      <main class="page-content py-4 px-3 px-md-4">
+        <div class="container-fluid max-w-1200">
+
+          <!-- Header -->
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
+            <div>
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge text-uppercase" style="background-color: #0d9488; color: white;">Career Opportunities</span>
+                <span class="text-muted small">Synchronized with Institute Master</span>
+              </div>
+              <h2 class="fw-bold mt-1 mb-0">Internships &amp; Off-Campus Opportunities</h2>
+              <p class="text-muted small mb-0">Discover verified industry internships, prestigious hackathons, and exclusive off-campus roles.</p>
+            </div>
+            <a href="/institute/pages/8-internships/internship-list.html" class="btn btn-outline-primary btn-sm">
+              Manage in Institute &rarr;
+            </a>
+          </div>
+
+          <!-- Type Filter Tabs -->
+          <div class="card p-3 mb-4 shadow-sm border-0">
+            <div class="row g-3 align-items-center">
+              <div class="col-md-6">
+                <div class="btn-group" role="group">
+                  <button type="button" class="btn btn-sm btn-teal text-white active-tab-btn" style="background-color: #0d9488;" data-type="">All Opportunities</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary type-tab-btn" data-type="INTERNSHIP">Internships</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary type-tab-btn" data-type="HACKATHON">Hackathons</button>
+                  <button type="button" class="btn btn-sm btn-outline-secondary type-tab-btn" data-type="JOB">Off-Campus Jobs</button>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <input type="text" id="opp-search-input" class="form-control form-control-sm" placeholder="Search by title, company, or skills...">
+              </div>
+            </div>
+          </div>
+
+          <!-- Grid -->
+          <div class="row g-4" id="opportunities-grid">
+            <div class="col-12 text-center py-5 text-muted">
+              <div class="spinner-border text-teal mb-3" role="status" style="color: #0d9488;"></div>
+              <div>Synchronizing opportunities from Institute Pillar...</div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import auth from '/placement/js/auth.js';
+    import ui from '/placement/js/ui.js';
+    import api from '/placement/js/api.js';
+
+    if (!auth.requireAuth()) {}
+
+    ui.initLayout('opportunities');
+
+    let allOpportunities = [];
+    let currentTypeFilter = '';
+
+    async function loadOpportunities() {
+      try {
+        const res = await api.get('/opportunities');
+        allOpportunities = res?.data || [];
+        renderOpportunities();
+      } catch (err) {
+        document.getElementById('opportunities-grid').innerHTML = `
+          <div class="col-12 text-center py-5 text-danger">Failed to load opportunities feed.</div>
+        `;
+      }
+    }
+
+    function renderOpportunities() {
+      const grid = document.getElementById('opportunities-grid');
+      const search = document.getElementById('opp-search-input').value.toLowerCase().trim();
+
+      const filtered = allOpportunities.filter(opp => {
+        const title = (opp.title || '').toLowerCase();
+        const comp = (opp.company || opp.organizer || '').toLowerCase();
+        const matchesSearch = !search || title.includes(search) || comp.includes(search);
+        const matchesType = !currentTypeFilter || opp.type === currentTypeFilter;
+        return matchesSearch && matchesType;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div class="col-12">
+            <div class="card p-5 text-center text-muted border-0">
+              <div class="fs-2 mb-2">💼</div>
+              <h5>No opportunities found for the selected filter.</h5>
+              <p class="small mb-0">Check back soon for new hackathons, internships, and off-campus roles.</p>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(opp => {
+        const isHackathon = opp.type === 'HACKATHON';
+        const isJob = opp.type === 'JOB' || opp.type === 'OFFCAMPUS_JOB';
+        const typeBadge = isHackathon
+          ? '<span class="badge bg-warning-light text-warning">HACKATHON</span>'
+          : (isJob ? '<span class="badge bg-info-light text-info">OFF-CAMPUS JOB</span>' : '<span class="badge bg-success-light text-success">INTERNSHIP</span>');
+
+        const rewardText = opp.stipend || opp.prizePool || opp.salary || 'Competitive / Perks';
+        const deadline = opp.deadline ? new Date(opp.deadline).toLocaleDateString() : 'Rolling Application';
+
+        return `
+          <div class="col-md-6 col-lg-4">
+            <div class="opp-card shadow-sm">
+              <div class="d-flex justify-content-between align-items-start mb-2">
+                ${typeBadge}
+                <span class="text-muted small">📅 ${ui.escapeHtml(deadline)}</span>
+              </div>
+
+              <h5 class="fw-bold text-dark mb-1 text-truncate">${ui.escapeHtml(opp.title)}</h5>
+              <div class="text-muted small fw-semibold mb-3">${ui.escapeHtml(opp.company || opp.organizer || 'Verified Partner')}</div>
+
+              <p class="text-muted small flex-grow-1 text-truncate-2 mb-3">
+                ${ui.escapeHtml(opp.description || 'Verified student opportunity with high learning exposure, industry mentorship, and potential full-time conversion.')}
+              </p>
+
+              <div class="bg-surface-2 p-2 rounded small mb-3 d-flex justify-content-between align-items-center">
+                <span class="text-muted">${isHackathon ? 'Prize Pool:' : 'Stipend / CTC:'}</span>
+                <span class="fw-bold text-teal" style="color: #0d9488;">${ui.escapeHtml(rewardText)}</span>
+              </div>
+
+              <div class="d-flex align-items-center justify-content-between mt-auto pt-2 border-top">
+                <span class="text-muted small">${ui.escapeHtml(opp.location || 'Remote / Hybrid')}</span>
+                <a href="${opp.applyUrl || '#'}" target="_blank" class="btn btn-sm btn-teal text-white fw-semibold px-3" style="background-color: #0d9488;">
+                  Apply Now &nearr;
+                </a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    document.querySelectorAll('[data-type]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentTypeFilter = btn.getAttribute('data-type');
+        document.querySelectorAll('[data-type]').forEach(b => {
+          b.className = 'btn btn-sm btn-outline-secondary type-tab-btn';
+        });
+        btn.className = 'btn btn-sm btn-teal text-white active-tab-btn';
+        btn.style.backgroundColor = '#0d9488';
+        renderOpportunities();
+      });
+    });
+
+    document.getElementById('opp-search-input').addEventListener('input', renderOpportunities);
+
+    loadOpportunities();
+  </script>
+</body>
+</html>

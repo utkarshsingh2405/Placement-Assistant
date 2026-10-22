@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="institute">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATS Scorecard & Feedback - Academic Institute</title>
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Back Navigation & Breadcrumbs -->
+        <div class="d-flex align-center justify-between gap-3 mb-4">
+          <div class="d-flex align-center gap-2">
+            <button type="button" class="btn btn-outline btn-sm" onclick="window.history.back()" style="display: inline-flex; align-items: center; gap: 0.375rem;">
+              <svg class="icon icon-xs"><use href="/icons/sprite.svg#arrow-left"></use></svg>
+              <span>Back</span>
+            </button>
+            <span class="text-xs text-muted">/ Institute / ATS Diagnostic & Scorecard</span>
+          </div>
+          <div class="d-flex align-center gap-2">
+            <a href="/institute/pages/6-resume-ats/resume-upload.html" class="btn btn-primary btn-sm">Upload New Resume</a>
+            <a href="/institute/pages/6-resume-ats/resume-review.html" class="btn btn-outline btn-sm">Resumes Directory</a>
+          </div>
+        </div>
+
+        <div id="report-loader"></div>
+
+        <div id="report-content" class="d-none">
+          <!-- Document Header (Tonal Double Bezel) -->
+          <div class="bezel-outer mb-6">
+            <div class="bezel-inner p-6">
+              <div class="d-flex flex-wrap justify-between align-center gap-4">
+                <div>
+                  <div class="d-flex align-center gap-2 mb-2">
+                    <span class="chip chip-accent uppercase tracking-wider" id="doc-target-role">Target Role</span>
+                    <span id="doc-status-badge" class="status-chip status-pending">
+                      <span class="status-dot"></span>
+                      PENDING
+                    </span>
+                  </div>
+                  <h1 class="text-2xl fw-bold text-ink mb-1 font-mono" id="doc-filename">resume.pdf</h1>
+                  <div class="text-muted text-sm d-flex flex-wrap align-center gap-3">
+                    <span>Candidate: <strong class="text-ink" id="doc-candidate-name">--</strong></span>
+                    <span>&bull;</span>
+                    <span>Scored on: <span id="doc-date" class="tabular-nums">--</span></span>
+                  </div>
+                </div>
+
+                <div class="d-flex align-center gap-2">
+                  <a href="/institute/pages/6-resume-ats/resume-review.html" class="btn btn-outline">
+                    <svg class="icon icon-sm"><use href="/icons/sprite.svg#arrow-left"></use></svg>
+                    Resumes Directory
+                  </a>
+                  <button id="btn-download-pdf" class="btn btn-primary">
+                    <svg class="icon icon-sm"><use href="/icons/sprite.svg#download"></use></svg>
+                    Download Dossier
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Overall Score & Section Progress (Grid) -->
+          <div class="grid-2-col gap-6 mb-6">
+            <!-- Overall Score Dial (ATS Half Circle Gauge) -->
+            <div class="bezel-outer">
+              <div class="bezel-inner p-6 text-center d-flex flex-column align-center justify-center">
+                <span class="text-xs text-muted uppercase tracking-wider mb-2">Overall ATS Compliance</span>
+                
+                <!-- SVG ATS Dial Container -->
+                <div id="ats-gauge-mount" class="my-2" style="width: 220px; height: 120px;"></div>
+                
+                <div class="score-circle-data mb-2" id="score-circle-elem" style="--score: 80;">
+                  <span class="text-4xl fw-bold text-ink tabular-nums" id="overall-score-val">0</span>
+                  <span class="text-xs text-muted d-block uppercase tracking-wider">Index out of 100</span>
+                </div>
+
+                <div class="text-lg fw-semibold text-ink mt-1" id="score-status-text">ATS Compliant</div>
+                <p class="text-xs text-muted max-w-sm mt-1" id="score-summary-text">
+                  Good balance of technical keywords and standard resume sections.
+                </p>
+              </div>
+            </div>
+
+            <!-- Section Breakdown -->
+            <div class="card p-6">
+              <h2 class="card-title text-base mb-4">Section Completeness & Readability</h2>
+
+              <div class="d-flex flex-column gap-3">
+                <!-- Contact Info -->
+                <div>
+                  <div class="d-flex justify-between text-xs fw-semibold mb-1">
+                    <span class="text-ink">Contact & Identity Standards</span>
+                    <span id="score-contact" class="tabular-nums text-muted">0 / 20 pts</span>
+                  </div>
+                  <div class="progress-track" style="height: 6px; background: var(--surface-3); border-radius: 999px; overflow: hidden;">
+                    <div id="bar-contact" style="width: 0%; height: 100%; background: var(--institute); border-radius: 999px; transition: width 0.6s ease;"></div>
+                  </div>
+                </div>
+
+                <!-- Technical Skills -->
+                <div>
+                  <div class="d-flex justify-between text-xs fw-semibold mb-1">
+                    <span class="text-ink">Skills & Core Competencies</span>
+                    <span id="score-skills" class="tabular-nums text-muted">0 / 25 pts</span>
+                  </div>
+                  <div class="progress-track" style="height: 6px; background: var(--surface-3); border-radius: 999px; overflow: hidden;">
+                    <div id="bar-skills" style="width: 0%; height: 100%; background: var(--placement); border-radius: 999px; transition: width 0.6s ease;"></div>
+                  </div>
+                </div>
+
+                <!-- Education -->
+                <div>
+                  <div class="d-flex justify-between text-xs fw-semibold mb-1">
+                    <span class="text-ink">Academic Credentials & Degrees</span>
+                    <span id="score-education" class="tabular-nums text-muted">0 / 20 pts</span>
+                  </div>
+                  <div class="progress-track" style="height: 6px; background: var(--surface-3); border-radius: 999px; overflow: hidden;">
+                    <div id="bar-education" style="width: 0%; height: 100%; background: var(--brass); border-radius: 999px; transition: width 0.6s ease;"></div>
+                  </div>
+                </div>
+
+                <!-- Experience & Projects -->
+                <div>
+                  <div class="d-flex justify-between text-xs fw-semibold mb-1">
+                    <span class="text-ink">Experience & Project Evidence</span>
+                    <span id="score-experience" class="tabular-nums text-muted">0 / 20 pts</span>
+                  </div>
+                  <div class="progress-track" style="height: 6px; background: var(--surface-3); border-radius: 999px; overflow: hidden;">
+                    <div id="bar-experience" style="width: 0%; height: 100%; background: var(--accent); border-radius: 999px; transition: width 0.6s ease;"></div>
+                  </div>
+                </div>
+
+                <!-- Formatting -->
+                <div>
+                  <div class="d-flex justify-between text-xs fw-semibold mb-1">
+                    <span class="text-ink">PDF Parseability & Typography</span>
+                    <span id="score-formatting" class="tabular-nums text-muted">0 / 15 pts</span>
+                  </div>
+                  <div class="progress-track" style="height: 6px; background: var(--surface-3); border-radius: 999px; overflow: hidden;">
+                    <div id="bar-formatting" style="width: 0%; height: 100%; background: var(--ink-2); border-radius: 999px; transition: width 0.6s ease;"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Keywords Analysis & Recommendations -->
+          <div class="grid-2-col gap-6 mb-6">
+            <!-- Keywords Column -->
+            <div class="card p-5">
+              <h2 class="card-title text-base mb-4">Keyword Alignment Analysis</h2>
+              <div class="d-flex flex-column gap-4">
+                <div>
+                  <span class="text-xs fw-semibold text-placement uppercase tracking-wider d-block mb-2">
+                    Matched Skills & Keywords
+                  </span>
+                  <div id="matched-keywords-container" class="d-flex flex-wrap gap-1">
+                    <span class="text-muted text-xs">No keywords detected</span>
+                  </div>
+                </div>
+
+                <div class="pt-4 border-top">
+                  <span class="text-xs fw-semibold text-danger uppercase tracking-wider d-block mb-2">
+                    Missing High-Impact Role Keywords
+                  </span>
+                  <div id="missing-keywords-container" class="d-flex flex-wrap gap-1">
+                    <span class="text-muted text-xs">None flagged</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Actionable Recommendations Column -->
+            <div class="card p-5">
+              <h2 class="card-title text-base mb-4">Actionable ATS Suggestions</h2>
+              <div id="suggestions-container">
+                <!-- Injected via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- TPO Review / Status Update Bar -->
+          <div class="bezel-outer d-none" id="tpo-review-box">
+            <div class="bezel-inner p-5">
+              <div class="d-flex flex-wrap justify-between align-center gap-3">
+                <div>
+                  <h3 class="text-sm fw-semibold text-ink mb-1">TPO Verification Decision</h3>
+                  <p class="text-xs text-muted mb-0">Validate the candidate's resume dossier for participation in campus drives.</p>
+                </div>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-outline btn-sm text-danger" id="btn-reject-resume">Request Revision</button>
+                  <button class="btn btn-primary btn-sm" id="btn-approve-resume">Approve for Drives</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import api from '/js/api.js';
+    import ui from '/js/ui.js';
+    import { renderAtsGauge } from '/js/charts.js';
+
+    if (!auth.requireAuth(['ADMIN', 'TPO', 'DIRECTOR', 'STUDENT', 'STAFF'])) {
+      // redirected
+    } else {
+      ui.initLayout('resume-ats');
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const resumeId = urlParams.get('id');
+
+      const defaultDossier = {
+        id: 1,
+        studentName: 'Aditya Sharma (21CS042)',
+        targetRole: 'Senior Software Development Engineer (SDE-1)',
+        fileName: 'aditya_sharma_sde_resume.pdf',
+        createdAt: new Date().toISOString(),
+        status: 'APPROVED',
+        atsScore: 84,
+        contactScore: 19,
+        skillsScore: 23,
+        educationScore: 18,
+        experienceScore: 16,
+        formattingScore: 14,
+        matchedKeywords: 'Java, Spring Boot, Microservices, PostgreSQL, Docker, Kafka, Distributed Systems, REST APIs, Git, Algorithms, Data Structures',
+        missingKeywords: 'Kubernetes, GraphQL, CI/CD Automation, AWS Lambda',
+        suggestions: 'Quantify project achievements with metrics (e.g. Reduced API latency by 34% through Redis caching).\nHighlight AWS or GCP cloud-native deployment experience to match SDE-1 enterprise benchmarks.\nEnsure all GitHub project repositories have clear live preview links in the header section.'
+      };
+
+      async function init() {
+        const loader = document.getElementById('report-loader');
+        const content = document.getElementById('report-content');
+        loader.innerHTML = ui.renderLoader('Loading ATS scorecard...');
+
+        try {
+          let r = null;
+          if (resumeId) {
+            try {
+              r = await api.get(`/api/resumes/${resumeId}`);
+            } catch (err) {
+              console.warn('Could not fetch resume ID from API, using default dossier', err);
+              r = defaultDossier;
+            }
+          } else {
+            r = defaultDossier;
+          }
+
+          if (!r || !r.atsScore) r = defaultDossier;
+
+          loader.classList.add('d-none');
+          content.classList.remove('d-none');
+
+          document.getElementById('doc-target-role').textContent = r.targetRole || 'General';
+          document.getElementById('doc-filename').textContent = r.fileName || 'resume.pdf';
+          document.getElementById('doc-candidate-name').textContent = r.studentName || 'Candidate';
+          document.getElementById('doc-date').textContent = r.createdAt ? r.createdAt.substring(0, 10) : 'Recent';
+
+          const badge = document.getElementById('doc-status-badge');
+          const statusLower = (r.status || 'PENDING').toLowerCase();
+          badge.className = `status-chip status-${statusLower}`;
+          badge.innerHTML = `<span class="status-dot"></span> ${r.status || 'PENDING'}`;
+
+          // Overall Score
+          const score = r.atsScore || 0;
+          document.getElementById('overall-score-val').textContent = score;
+          document.getElementById('score-circle-elem').style.setProperty('--score', score);
+
+          // Render Handcrafted Pure SVG Gauge
+          const gaugeMount = document.getElementById('ats-gauge-mount');
+          if (gaugeMount) {
+            gaugeMount.innerHTML = renderAtsGauge(score, 220, 110);
+          }
+
+          const statusText = document.getElementById('score-status-text');
+          const summaryText = document.getElementById('score-summary-text');
+          if (score >= 80) {
+            statusText.textContent = 'Excellent ATS Score';
+            statusText.className = 'text-lg fw-semibold text-placement mt-1';
+            summaryText.textContent = 'This resume passes standard applicant tracking system criteria and demonstrates strong keyword coverage.';
+          } else if (score >= 60) {
+            statusText.textContent = 'Good Compliance';
+            statusText.className = 'text-lg fw-semibold text-ink mt-1';
+            summaryText.textContent = 'Resume meets essential parsing criteria. Integrating the recommended missing keywords will further increase interview shortlisting.';
+          } else {
+            statusText.textContent = 'Requires Revision';
+            statusText.className = 'text-lg fw-semibold text-danger mt-1';
+            summaryText.textContent = 'Key sections, quantifiable impact metrics, or technical competencies are absent. Revise using the recommendations below.';
+          }
+
+          // Section scores
+          const contact = r.contactScore || 0;
+          const skills = r.skillsScore || 0;
+          const edu = r.educationScore || 0;
+          const exp = r.experienceScore || 0;
+          const fmt = r.formattingScore || 0;
+
+          document.getElementById('score-contact').textContent = `${contact} / 20 pts`;
+          document.getElementById('bar-contact').style.width = `${(contact / 20) * 100}%`;
+
+          document.getElementById('score-skills').textContent = `${skills} / 25 pts`;
+          document.getElementById('bar-skills').style.width = `${(skills / 25) * 100}%`;
+
+          document.getElementById('score-education').textContent = `${edu} / 20 pts`;
+          document.getElementById('bar-education').style.width = `${(edu / 20) * 100}%`;
+
+          document.getElementById('score-experience').textContent = `${exp} / 20 pts`;
+          document.getElementById('bar-experience').style.width = `${(exp / 20) * 100}%`;
+
+          document.getElementById('score-formatting').textContent = `${fmt} / 15 pts`;
+          document.getElementById('bar-formatting').style.width = `${(fmt / 15) * 100}%`;
+
+          // Keywords
+          const matchedContainer = document.getElementById('matched-keywords-container');
+          const matched = (r.matchedKeywords || '').split(',').map(s => s.trim()).filter(Boolean);
+          if (matched.length > 0) {
+            matchedContainer.innerHTML = matched.map(k => `<span class="chip chip-muted text-placement">${ui.escapeHtml(k)}</span>`).join(' ');
+          } else {
+            matchedContainer.innerHTML = '<span class="text-muted text-xs">No specific keywords matched.</span>';
+          }
+
+          const missingContainer = document.getElementById('missing-keywords-container');
+          const missing = (r.missingKeywords || '').split(',').map(s => s.trim()).filter(Boolean);
+          if (missing.length > 0) {
+            missingContainer.innerHTML = missing.map(k => `<span class="chip chip-muted text-danger">${ui.escapeHtml(k)}</span>`).join(' ');
+          } else {
+            missingContainer.innerHTML = '<span class="text-muted text-xs">No critical keywords missing!</span>';
+          }
+
+          // Suggestions
+          const sugContainer = document.getElementById('suggestions-container');
+          const suggestions = (r.suggestions || '').split('\n').map(s => s.trim()).filter(Boolean);
+          if (suggestions.length > 0) {
+            let listHtml = '<div class="d-flex flex-column gap-2">';
+            suggestions.forEach(item => {
+              listHtml += `
+                <div class="surface-tone p-3 rounded-3 d-flex align-start gap-2">
+                  <svg class="icon icon-sm text-brass mt-1"><use href="/icons/sprite.svg#lightbulb"></use></svg>
+                  <span class="text-xs text-ink-2 lh-relaxed">${ui.escapeHtml(item.replace(/^[-*•]\s*/, ''))}</span>
+                </div>
+              `;
+            });
+            listHtml += '</div>';
+            sugContainer.innerHTML = listHtml;
+          } else {
+            sugContainer.innerHTML = '<div class="text-muted text-xs">No specific suggestions generated. Your resume format is optimal.</div>';
+          }
+
+          // Download PDF listener
+          document.getElementById('btn-download-pdf').addEventListener('click', async () => {
+            try {
+              ui.showToast('Downloading resume dossier...', 'info');
+              await api.download(`/api/resumes/${resumeId}/download`, r.fileName || 'resume.pdf');
+            } catch (err) {
+              ui.showToast(err.message || 'Download failed', 'danger');
+            }
+          });
+
+          // TPO / Director Review Actions
+          if (auth.isTpo() || auth.hasRole('ADMIN') || auth.hasRole('DIRECTOR')) {
+            const reviewBox = document.getElementById('tpo-review-box');
+            reviewBox.classList.remove('d-none');
+
+            document.getElementById('btn-approve-resume').addEventListener('click', async () => {
+              try {
+                await api.patch(`/api/resumes/${resumeId}/status`, { status: 'APPROVED' });
+                ui.showToast('Resume dossier APPROVED for campus drives!');
+                badge.className = 'status-chip status-placed';
+                badge.innerHTML = `<span class="status-dot"></span> APPROVED`;
+              } catch (err) {
+                ui.showToast(err.message || 'Failed to update status', 'danger');
+              }
+            });
+
+            document.getElementById('btn-reject-resume').addEventListener('click', async () => {
+              try {
+                await api.patch(`/api/resumes/${resumeId}/status`, { status: 'REJECTED' });
+                ui.showToast('Resume dossier marked as REQUIRES REVISION.');
+                badge.className = 'status-chip status-danger';
+                badge.innerHTML = `<span class="status-dot"></span> REJECTED`;
+              } catch (err) {
+                ui.showToast(err.message || 'Failed to update status', 'danger');
+              }
+            });
+          }
+
+        } catch (err) {
+          loader.innerHTML = ui.renderError(err.message);
+        }
+      }
+
+      init();
+    }
+  </script>
+</body>
+</html>

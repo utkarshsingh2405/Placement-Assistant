@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="placement">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Placement Presentation &amp; Live Q&amp;A</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="/placement/css/theme.css" rel="stylesheet">
+  <link href="/placement/css/components.css" rel="stylesheet">
+  <link href="/placement/css/domain-switcher.css" rel="stylesheet">
+  <style>
+    .video-presentation-frame {
+      background: #091e28;
+      border-radius: 12px;
+      height: 380px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #99f6e4;
+      text-align: center;
+      position: relative;
+    }
+    .qa-card {
+      border: 1px solid var(--border-color, #e2e8f0);
+      border-radius: 10px;
+      padding: 1rem;
+      background: var(--surface, #ffffff);
+      margin-bottom: 0.75rem;
+    }
+    .upvote-badge {
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s ease;
+    }
+    .upvote-badge:hover {
+      background: #0d9488 !important;
+      color: #ffffff !important;
+    }
+  </style>
+</head>
+<body class="bg-surface">
+
+  <div class="app-container">
+    <div id="sidebar-container"></div>
+
+    <div class="main-wrapper">
+      <div id="topbar-container"></div>
+
+      <main class="page-content py-4 px-3 px-md-4">
+        <div class="container-fluid max-w-1200">
+
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <a href="/placement/pages/4-talks/talk-list.html" class="text-muted small text-decoration-none d-flex align-items-center gap-1">
+              &larr; Back to Talks
+            </a>
+            <span class="text-muted small">/</span>
+            <span class="text-dark small fw-semibold" id="breadcrumb-title">Live Session</span>
+          </div>
+
+          <!-- Top Talk Card -->
+          <div class="card shadow-sm border-0 p-4 mb-4">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+              <div>
+                <div class="d-flex align-items-center gap-2 mb-1">
+                  <span class="badge bg-teal text-white small" style="background-color: #0d9488;">LIVE PPT SESSION</span>
+                  <span class="text-muted small" id="talk-date-time">--</span>
+                </div>
+                <h3 class="fw-bold mb-1 text-dark" id="talk-title">Loading Session...</h3>
+                <div class="text-muted small" id="speaker-line">Presented by --</div>
+              </div>
+              <div id="live-session-pill">
+                <span class="badge bg-success py-2 px-3 fw-semibold">● SESSION IN PROGRESS</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="row g-4">
+            <!-- Left: Presentation Viewer -->
+            <div class="col-lg-7">
+              <div class="video-presentation-frame mb-3 shadow-sm">
+                <div class="fs-1 mb-2">🖥️</div>
+                <h5 class="fw-bold mb-1 text-white">Pre-Placement Presentation Stream</h5>
+                <p class="small text-light text-opacity-75 max-w-500 mb-3 px-3">
+                  Live presentation stream active. Review company requirements, role details, and eligibility criteria directly with the recruiting panel.
+                </p>
+                <div class="d-flex gap-2">
+                  <span class="badge bg-dark border border-teal text-teal px-3 py-2">Audio/Video: Connected</span>
+                  <span class="badge bg-dark border border-secondary text-light px-3 py-2">HD 1080p</span>
+                </div>
+              </div>
+
+              <div class="card shadow-sm border-0 p-4">
+                <h5 class="fw-bold mb-2">About this Presentation</h5>
+                <p class="text-muted small mb-0" id="talk-description-full">
+                  Detailed company profile, career track information, salary structure, performance bonuses, and interview process overview.
+                </p>
+              </div>
+            </div>
+
+            <!-- Right: Interactive Live Q&A -->
+            <div class="col-lg-5">
+              <div class="card shadow-sm border-0 p-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                  <h5 class="fw-bold mb-0">Live Candidate Q&amp;A</h5>
+                  <span class="badge bg-surface-2 text-dark border small" id="questions-count-badge">0 Questions</span>
+                </div>
+
+                <!-- Ask Question Form -->
+                <form id="ask-question-form" class="mb-4">
+                  <div class="input-group">
+                    <input type="text" id="new-question-input" class="form-control" placeholder="Ask the recruiters a question..." required>
+                    <button class="btn btn-teal text-white fw-semibold" style="background-color: #0d9488;" type="submit">
+                      Ask
+                    </button>
+                  </div>
+                </form>
+
+                <!-- Questions List Container -->
+                <div id="questions-list-container" style="max-height: 480px; overflow-y: auto;">
+                  <div class="text-center py-4 text-muted small">Loading live questions...</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import auth from '/placement/js/auth.js';
+    import ui from '/placement/js/ui.js';
+    import api from '/placement/js/api.js';
+
+    if (!auth.requireAuth()) {}
+
+    const user = auth.getUser();
+    ui.initLayout('talks');
+
+    const params = new URLSearchParams(window.location.search);
+    const talkId = params.get('id') || 1;
+
+    let currentQuestions = [];
+
+    async function loadTalkDetails() {
+      try {
+        const res = await api.get(`/talks/${talkId}`);
+        const talk = res?.data || res;
+        if (talk) {
+          const displayTitle = talk.title || talk.overview || 'Campus Pre-Placement Presentation';
+          document.getElementById('breadcrumb-title').textContent = displayTitle;
+          document.getElementById('talk-title').textContent = displayTitle;
+          document.getElementById('talk-date-time').textContent = talk.scheduledAt ? new Date(talk.scheduledAt).toLocaleString() : 'Live Session';
+          document.getElementById('speaker-line').textContent = `Presented by ${talk.speakerName || 'Campus Recruiter'} (${talk.speakerTitle || talk.speakerRole || 'Talent Acquisition'})`;
+          if (talk.overview || talk.description) {
+            document.getElementById('talk-description-full').textContent = talk.overview || talk.description;
+          }
+        }
+        loadQuestions();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function loadQuestions() {
+      const container = document.getElementById('questions-list-container');
+      try {
+        const res = await api.get(`/talks/${talkId}/questions`);
+        currentQuestions = res?.data || [];
+        document.getElementById('questions-count-badge').textContent = `${currentQuestions.length} Questions`;
+        renderQuestions();
+      } catch (err) {
+        container.innerHTML = `<div class="text-center py-4 text-muted small">No questions posted yet.</div>`;
+      }
+    }
+
+    function renderQuestions() {
+      const container = document.getElementById('questions-list-container');
+      if (currentQuestions.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-4 text-muted small">
+            <div class="fs-3 mb-1">💬</div>
+            No questions asked yet. Be the first to ask!
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = currentQuestions.map(q => {
+        const upvotes = q.upvotes || 0;
+        const askedBy = q.studentName || q.askedByRollNo || 'Candidate';
+        const answer = q.answerText || q.answer;
+
+        return `
+          <div class="qa-card">
+            <div class="d-flex justify-content-between align-items-start gap-2 mb-1">
+              <div class="fw-semibold small text-dark">${ui.escapeHtml(q.questionText || q.question)}</div>
+              <span class="badge bg-surface-2 text-dark border upvote-badge px-2 py-1" data-qid="${q.id}">
+                ▲ ${upvotes}
+              </span>
+            </div>
+            <div class="text-muted small" style="font-size: 0.72rem;">Asked by ${ui.escapeHtml(askedBy)}</div>
+            ${answer ? `
+              <div class="mt-2 p-2 bg-surface-2 rounded small border-start border-3 border-teal" style="font-size: 0.8rem;">
+                <div class="fw-bold text-teal mb-1" style="color: #0d9488;">Recruiter Answer:</div>
+                <div class="text-dark">${ui.escapeHtml(answer)}</div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      // Bind upvotes
+      container.querySelectorAll('.upvote-badge').forEach(badge => {
+        badge.addEventListener('click', async () => {
+          const qid = badge.getAttribute('data-qid');
+          try {
+            await api.post(`/talks/${talkId}/questions/${qid}/upvote`);
+            loadQuestions();
+          } catch (err) {
+            ui.showToast(err.message || 'Upvote recorded', 'info');
+          }
+        });
+      });
+    }
+
+    // Submit question
+    document.getElementById('ask-question-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('new-question-input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      try {
+        await api.post(`/talks/${talkId}/questions`, {
+          question: text,
+          questionText: text,
+          rollNo: user?.rollNo || '21CS001',
+          name: user?.name || 'Candidate',
+          studentName: user?.name || 'Candidate'
+        });
+        input.value = '';
+        ui.showToast('Question submitted to recruiter panel!', 'success');
+        loadQuestions();
+      } catch (err) {
+        ui.showToast(err.message || 'Failed to submit question', 'danger');
+      }
+    });
+
+    loadTalkDetails();
+  </script>
+</body>
+</html>

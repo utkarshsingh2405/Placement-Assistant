@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="institute">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drive Dossier - Academic Institute</title>
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <div id="drive-loader"></div>
+
+        <div id="drive-content" class="d-none">
+          <!-- Navigation & Crumb Toolbar -->
+          <div class="breadcrumb-bar mb-4">
+            <a href="/institute/pages/2-company-drives/drive-list.html" class="nav-crumb">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#arrow-left"></use></svg>
+              Drives Directory
+            </a>
+            <span class="crumb-separator">/</span>
+            <span class="crumb-current">Drive Dossier</span>
+          </div>
+
+          <!-- Drive Header Poster (Tonal Double Bezel) -->
+          <div class="bezel-outer mb-6">
+            <div class="bezel-inner p-6">
+              <div class="d-flex flex-wrap justify-between align-start gap-4">
+                <div>
+                  <div class="d-flex align-center gap-2 mb-2">
+                    <span id="drive-status-badge" class="status-chip status-upcoming">
+                      <span class="status-dot"></span>
+                      UPCOMING
+                    </span>
+                    <span class="text-muted text-xs">&bull;</span>
+                    <a href="#" id="drive-company-link" class="text-institute text-sm fw-semibold text-decoration-none">
+                      Company Profile
+                    </a>
+                  </div>
+                  <h1 class="poster-title text-2xl mb-2" id="drive-title">Drive Title</h1>
+                  <div class="text-muted text-sm d-flex flex-wrap align-center gap-3">
+                    <span>Roles: <strong class="text-ink" id="drive-roles">SDE</strong></span>
+                    <span>&bull;</span>
+                    <span>Location: <span id="drive-location" class="text-ink">On Campus</span></span>
+                  </div>
+                </div>
+
+                <div class="text-end">
+                  <span class="text-xs text-muted d-block uppercase tracking-wider">Compensation Range</span>
+                  <div class="package-block my-1">
+                    <span class="package-value" id="drive-package">0 - 0 LPA</span>
+                  </div>
+                  <div id="tpo-actions" class="d-flex gap-2 justify-end mt-3 d-none">
+                    <a href="#" id="btn-edit-drive" class="btn btn-outline btn-sm">Edit Specification</a>
+                    <a href="#" id="btn-manage-rounds" class="btn btn-primary btn-sm">Manage Rounds &rarr;</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid-2-col gap-6">
+            <!-- Left Info Column -->
+            <div class="d-flex flex-column gap-6">
+              <!-- Description -->
+              <section class="card p-5">
+                <h2 class="card-title text-lg mb-3">Job Description & Hiring Overview</h2>
+                <div id="drive-description" class="text-ink-2 lh-relaxed text-sm whitespace-pre-line">
+                  No description provided.
+                </div>
+              </section>
+
+              <!-- Eligibility Breakdown -->
+              <section class="card p-5">
+                <h2 class="card-title text-lg mb-4">Academic Eligibility Criteria</h2>
+                <div class="grid-3-col gap-3 mb-4 text-center">
+                  <div class="surface-tone p-4 rounded-3">
+                    <span class="text-xs text-muted d-block">Minimum CGPA</span>
+                    <strong class="text-xl tabular-nums text-ink d-block mt-1" id="req-cgpa">--</strong>
+                  </div>
+                  <div class="surface-tone p-4 rounded-3">
+                    <span class="text-xs text-muted d-block">Max Standing Backlogs</span>
+                    <strong class="text-xl tabular-nums text-ink d-block mt-1" id="req-backlogs">0</strong>
+                  </div>
+                  <div class="surface-tone p-4 rounded-3">
+                    <span class="text-xs text-muted d-block">Allowed Batches</span>
+                    <strong class="text-xl text-ink d-block mt-1">Final Year</strong>
+                  </div>
+                </div>
+
+                <div>
+                  <span class="text-xs text-muted d-block mb-2">Eligible Academic Branches:</span>
+                  <div id="req-branches" class="d-flex flex-wrap gap-2"></div>
+                </div>
+              </section>
+
+              <!-- Drive Rounds Pipeline -->
+              <section class="card p-5">
+                <div class="d-flex justify-between align-center mb-4">
+                  <h2 class="card-title text-lg mb-0">Evaluation Rounds Pipeline</h2>
+                  <a href="#" id="link-view-all-rounds" class="btn btn-outline btn-sm">
+                    View Rounds Board
+                    <svg class="icon icon-sm"><use href="/icons/sprite.svg#arrow-right"></use></svg>
+                  </a>
+                </div>
+                <div id="rounds-container">
+                  <!-- Injected via JS -->
+                </div>
+              </section>
+            </div>
+
+            <!-- Right Sidebar / Assessment -->
+            <div class="d-flex flex-column gap-6">
+              <!-- Schedule Card -->
+              <section class="card p-5">
+                <h2 class="card-title text-lg mb-4">Operational Timetable</h2>
+                <div class="d-flex flex-column gap-3">
+                  <div class="p-3 surface-tone rounded-3">
+                    <span class="text-xs text-muted d-block">Application Cutoff</span>
+                    <strong class="text-institute text-base tabular-nums" id="date-deadline">--</strong>
+                  </div>
+                  <div class="p-3 surface-tone rounded-3">
+                    <span class="text-xs text-muted d-block">Scheduled Drive Date</span>
+                    <strong class="text-ink text-base tabular-nums" id="date-drive">--</strong>
+                  </div>
+                </div>
+              </section>
+
+              <!-- Student Eligibility Assessment Widget -->
+              <section class="card p-5" id="eligibility-assessment-card">
+                <div class="d-flex justify-between align-center mb-3">
+                  <h2 class="card-title text-base mb-0">Candidate Pre-Qualification</h2>
+                  <span id="assessment-badge" class="status-chip status-neutral">Checking...</span>
+                </div>
+                <div id="assessment-body">
+                  <div class="d-flex flex-column gap-2 text-sm" id="assessment-checklist">
+                    <!-- Dynamic checklist items -->
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import api from '/js/api.js';
+    import ui from '/js/ui.js';
+
+    if (!auth.requireAuth(['ADMIN', 'TPO', 'DIRECTOR', 'STUDENT', 'STAFF'])) {
+      // redirected
+    } else {
+      ui.initLayout('drives');
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const driveId = urlParams.get('id');
+
+      if (!driveId) {
+        window.location.href = '/institute/pages/2-company-drives/drive-list.html';
+      }
+
+      async function init() {
+        const loader = document.getElementById('drive-loader');
+        const content = document.getElementById('drive-content');
+        loader.innerHTML = ui.renderLoader('Loading drive specifications...');
+
+        try {
+          const drive = await api.get(`/api/drives/${driveId}`);
+          loader.classList.add('d-none');
+          content.classList.remove('d-none');
+
+          document.getElementById('drive-title').textContent = drive.title || '';
+          document.getElementById('drive-roles').textContent = drive.roles || 'Multiple Positions';
+          document.getElementById('drive-location').textContent = drive.location || 'Campus / Virtual';
+          document.getElementById('drive-package').textContent = `${drive.packageMin || 0} - ${drive.packageMax || 0} LPA`;
+          document.getElementById('drive-description').textContent = drive.description || 'No detailed instructions provided.';
+          document.getElementById('req-cgpa').textContent = drive.eligibilityCgpa ? Number(drive.eligibilityCgpa).toFixed(2) : 'Open';
+          document.getElementById('req-backlogs').textContent = drive.maxBacklogs !== null && drive.maxBacklogs !== undefined ? drive.maxBacklogs : 0;
+          document.getElementById('date-deadline').textContent = drive.lastDateToApply || 'TBD';
+          document.getElementById('date-drive').textContent = drive.driveDate || 'TBD';
+
+          const badge = document.getElementById('drive-status-badge');
+          const statusLower = (drive.status || 'UPCOMING').toLowerCase();
+          badge.className = `status-chip status-${statusLower}`;
+          badge.innerHTML = `<span class="status-dot"></span> ${drive.status || 'UPCOMING'}`;
+
+          const companyLink = document.getElementById('drive-company-link');
+          companyLink.textContent = drive.companyName || 'Enterprise Partner';
+          companyLink.href = `/institute/pages/2-company-drives/company-detail.html?id=${drive.companyId}`;
+
+          const branchesEl = document.getElementById('req-branches');
+          const branches = (drive.eligibleBranches || '').split(',').map(s => s.trim()).filter(Boolean);
+          if (branches.length > 0) {
+            branchesEl.innerHTML = branches.map(b => `<span class="chip chip-muted">${ui.escapeHtml(b)}</span>`).join(' ');
+          } else {
+            branchesEl.innerHTML = '<span class="chip chip-muted">Open to all branches</span>';
+          }
+
+          // TPO / Director actions
+          if (auth.isTpo() || auth.hasRole('ADMIN') || auth.hasRole('DIRECTOR')) {
+            const tpoActions = document.getElementById('tpo-actions');
+            tpoActions.classList.remove('d-none');
+            document.getElementById('btn-edit-drive').href = `/institute/pages/2-company-drives/drive-form.html?id=${drive.id}`;
+            document.getElementById('btn-manage-rounds').href = `/institute/pages/5-drive-rounds/rounds-board.html?driveId=${drive.id}`;
+          }
+
+          document.getElementById('link-view-all-rounds').href = `/institute/pages/5-drive-rounds/rounds-board.html?driveId=${drive.id}`;
+
+          // Load rounds pipeline
+          loadRounds(drive.id);
+
+          // If student, perform eligibility check
+          checkStudentEligibility(drive);
+
+        } catch (err) {
+          loader.innerHTML = ui.renderError(err.message);
+        }
+      }
+
+      async function loadRounds(id) {
+        const container = document.getElementById('rounds-container');
+        try {
+          const rounds = await api.get(`/api/rounds/drive/${id}`);
+          if (!rounds || rounds.length === 0) {
+            container.innerHTML = ui.renderEmpty('No rounds scheduled yet', 'The recruitment pipeline rounds will appear here once defined by the placement team.');
+            return;
+          }
+
+          let html = '<div class="d-flex flex-column gap-2">';
+          rounds.forEach(r => {
+            const statusClass = (r.status || 'PENDING').toLowerCase();
+            html += `
+              <div class="surface-tone p-3 rounded-3 d-flex justify-between align-center">
+                <div class="d-flex align-center gap-3">
+                  <span class="avatar avatar-sm avatar-institute tabular-nums">${r.sequence}</span>
+                  <div>
+                    <h4 class="text-sm fw-semibold text-ink mb-0">${ui.escapeHtml(r.roundName)}</h4>
+                    <span class="text-xs text-muted">${ui.escapeHtml(r.roundType || 'General')} &bull; ${r.roundDate || 'Date TBD'}</span>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <span class="status-chip status-${statusClass}">${r.status}</span>
+                  ${r.cutoffScore ? `<span class="text-xs text-muted d-block mt-1">Cutoff: ${r.cutoffScore}</span>` : ''}
+                </div>
+              </div>
+            `;
+          });
+          html += '</div>';
+          container.innerHTML = html;
+        } catch {
+          container.innerHTML = `<div class="p-3 text-muted text-sm">Could not load evaluation rounds.</div>`;
+        }
+      }
+
+      async function checkStudentEligibility(drive) {
+        const card = document.getElementById('eligibility-assessment-card');
+        const badge = document.getElementById('assessment-badge');
+        const checklist = document.getElementById('assessment-checklist');
+
+        try {
+          const student = await api.get('/api/students/me');
+          if (!student) {
+            card.classList.add('d-none');
+            return;
+          }
+
+          let eligible = true;
+          let itemsHtml = '';
+
+          // 1. Placement verification
+          const isVerified = !!student.placementEligible;
+          if (!isVerified) eligible = false;
+          itemsHtml += `
+            <div class="d-flex justify-between align-center py-1 border-bottom-subtle">
+              <span class="text-muted">Placement Status</span>
+              <span class="${isVerified ? 'text-success fw-semibold' : 'text-danger fw-semibold'}">
+                ${isVerified ? 'Verified Active' : 'Not Cleared'}
+              </span>
+            </div>
+          `;
+
+          // 2. CGPA check
+          const minCgpa = drive.eligibilityCgpa || 0;
+          const meetsCgpa = (student.cgpa || 0) >= minCgpa;
+          if (!meetsCgpa) eligible = false;
+          itemsHtml += `
+            <div class="d-flex justify-between align-center py-1 border-bottom-subtle">
+              <span class="text-muted">CGPA (&ge; ${minCgpa})</span>
+              <span class="${meetsCgpa ? 'text-success fw-semibold' : 'text-danger fw-semibold'} tabular-nums">
+                ${student.cgpa || 0}
+              </span>
+            </div>
+          `;
+
+          // 3. Backlogs check
+          const maxAllowed = drive.maxBacklogs !== null && drive.maxBacklogs !== undefined ? drive.maxBacklogs : 0;
+          const meetsBacklogs = (student.backlogs || 0) <= maxAllowed;
+          if (!meetsBacklogs) eligible = false;
+          itemsHtml += `
+            <div class="d-flex justify-between align-center py-1 border-bottom-subtle">
+              <span class="text-muted">Standing Backlogs (&le; ${maxAllowed})</span>
+              <span class="${meetsBacklogs ? 'text-success fw-semibold' : 'text-danger fw-semibold'} tabular-nums">
+                ${student.backlogs !== null && student.backlogs !== undefined ? student.backlogs : 0}
+              </span>
+            </div>
+          `;
+
+          // 4. Branch check
+          const allowedBranches = (drive.eligibleBranches || '').split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
+          const meetsBranch = allowedBranches.length === 0 || allowedBranches.includes((student.branch || '').toUpperCase());
+          if (!meetsBranch) eligible = false;
+          itemsHtml += `
+            <div class="d-flex justify-between align-center py-1">
+              <span class="text-muted">Branch Match (${student.branch})</span>
+              <span class="${meetsBranch ? 'text-success fw-semibold' : 'text-danger fw-semibold'}">
+                ${meetsBranch ? 'Matched' : 'Not Eligible'}
+              </span>
+            </div>
+          `;
+
+          checklist.innerHTML = itemsHtml;
+          if (eligible) {
+            badge.className = 'status-chip status-placed';
+            badge.textContent = 'QUALIFIED';
+          } else {
+            badge.className = 'status-chip status-danger';
+            badge.textContent = 'INELIGIBLE';
+          }
+
+        } catch {
+          card.classList.add('d-none');
+        }
+      }
+
+      init();
+    }
+  </script>
+</body>
+</html>

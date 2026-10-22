@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="institute">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Industry Internships & Research Fellowships - Academic Institute</title>
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Page Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <h1 class="page-title">Industry Internships & Summer Fellowships</h1>
+            <p class="page-subtitle">Verified software engineering, data analytics, cloud architecture, and research apprenticeships.</p>
+          </div>
+          <div class="d-flex gap-2">
+            <a href="/institute/pages/8-internships/internship-form.html" class="btn btn-primary" id="btn-add-internship">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#plus"></use></svg>
+              Post Internship
+            </a>
+          </div>
+        </header>
+
+        <!-- Filter Bar (Tonal Double Bezel) -->
+        <div class="bezel-outer mb-6">
+          <div class="bezel-inner p-4">
+            <div class="form-grid g-3 align-center">
+              <div class="form-col-5">
+                <label for="filter-search" class="form-label">Search Roles</label>
+                <div class="input-icon-wrap">
+                  <svg class="icon input-icon"><use href="/icons/sprite.svg#magnifying-glass"></use></svg>
+                  <input type="text" id="filter-search" class="form-control" placeholder="Search by role, company, or tech stack...">
+                </div>
+              </div>
+              <div class="form-col-3">
+                <label for="filter-mode" class="form-label">Work Model</label>
+                <select id="filter-mode" class="form-select">
+                  <option value="">All Work Modes</option>
+                  <option value="ONLINE">Remote (Work From Home)</option>
+                  <option value="OFFLINE">In-Office (On-Site)</option>
+                  <option value="HYBRID">Hybrid Model</option>
+                </select>
+              </div>
+              <div class="form-col-4 d-flex align-center pt-4">
+                <label class="custom-toggle d-flex align-center gap-2 cursor-pointer">
+                  <input type="checkbox" id="filter-bookmarked" class="toggle-checkbox">
+                  <span class="text-sm fw-semibold text-ink">Saved & Bookmarked Only</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Grid -->
+        <div id="internships-loading"></div>
+        <div id="internships-grid" class="bento-grid mb-6"></div>
+        <div id="pagination-container" class="mt-4"></div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import api from '/js/api.js';
+    import ui from '/js/ui.js';
+    import Pagination from '/js/pagination.js';
+
+    if (!auth.requireAuth(['ADMIN', 'TPO', 'DIRECTOR', 'STUDENT', 'STAFF'])) {
+      // redirected
+    } else {
+      ui.initLayout('internships');
+
+      if (!auth.isTpo() && !auth.hasRole('ADMIN') && !auth.hasRole('DIRECTOR')) {
+        document.getElementById('btn-add-internship')?.classList.add('d-none');
+      }
+
+      let currentPage = 0;
+      const pageSize = 9;
+
+      async function fetchInternships(page = 0) {
+        currentPage = page;
+        const loader = document.getElementById('internships-loading');
+        const grid = document.getElementById('internships-grid');
+        loader.innerHTML = ui.renderLoader('Loading internship opportunities...');
+        grid.innerHTML = '';
+
+        const search = document.getElementById('filter-search').value.trim();
+        const mode = document.getElementById('filter-mode').value;
+        const onlyBookmarked = document.getElementById('filter-bookmarked').checked;
+
+        try {
+          let list = [];
+          let totalPages = 1;
+          let totalElements = 0;
+
+          if (onlyBookmarked) {
+            const data = await api.get('/api/internships/bookmarked');
+            list = data || [];
+            totalElements = list.length;
+          } else {
+            const res = await api.get('/api/internships', {
+              page: currentPage,
+              size: pageSize,
+              search: search || undefined,
+              mode: mode || undefined
+            });
+            list = res.content || [];
+            totalPages = res.totalPages || 1;
+            totalElements = res.totalElements || 0;
+          }
+
+          loader.innerHTML = '';
+
+          if (list.length === 0) {
+            grid.innerHTML = `<div style="grid-column: 1 / -1;">${ui.renderEmpty('No internships found', 'No active internship opportunities matched your filters.')}</div>`;
+            return;
+          }
+
+          list.forEach(item => {
+            const isBookmarked = !!item.bookmarked;
+            const skills = (item.skillsRequired || '').split(',').filter(Boolean).map(s => `<span class="chip chip-muted">${ui.escapeHtml(s.trim())}</span>`).join(' ');
+
+            const card = document.createElement('article');
+            card.className = 'bezel-outer listing-stub';
+            card.innerHTML = `
+              <div class="bezel-inner p-5 d-flex flex-column h-100 justify-between">
+                <div>
+                  <div class="d-flex justify-between align-start mb-3">
+                    <span class="chip chip-accent uppercase tracking-wider text-xs">${ui.escapeHtml(item.mode || 'ONLINE')}</span>
+                    <button type="button" class="btn-icon bookmark-btn" data-id="${item.id}" title="Toggle Bookmark" aria-label="Bookmark">
+                      <svg class="icon icon-sm" style="${isBookmarked ? 'fill: var(--brass); stroke: var(--brass);' : ''}"><use href="/icons/sprite.svg#bookmark-simple"></use></svg>
+                    </button>
+                  </div>
+
+                  <h3 class="poster-title text-lg mb-1">
+                    <a href="/institute/pages/8-internships/internship-detail.html?id=${item.id}" class="text-ink text-decoration-none">
+                      ${ui.escapeHtml(item.title)}
+                    </a>
+                  </h3>
+                  
+                  <div class="text-xs text-muted mb-3 d-flex align-center gap-2">
+                    <svg class="icon icon-xs"><use href="/icons/sprite.svg#buildings"></use></svg>
+                    <span class="fw-semibold text-ink-2">${ui.escapeHtml(item.company || 'Enterprise')}</span>
+                    ${item.location ? `<span>&bull;</span> <span>${ui.escapeHtml(item.location)}</span>` : ''}
+                  </div>
+
+                  <div class="grid-2-col gap-2 mb-3 text-center">
+                    <div class="p-2 surface-tone rounded-3">
+                      <span class="text-xs text-muted d-block">Stipend</span>
+                      <strong class="text-sm text-placement tabular-nums">${ui.escapeHtml(item.stipend || 'Competitive')}</strong>
+                    </div>
+                    <div class="p-2 surface-tone rounded-3">
+                      <span class="text-xs text-muted d-block">Duration</span>
+                      <strong class="text-sm text-ink tabular-nums">${item.durationMonths ? item.durationMonths + ' Months' : 'Semester'}</strong>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <span class="text-xs text-muted d-block mb-1">Required Competencies</span>
+                    <div class="d-flex flex-wrap gap-1">
+                      ${skills || '<span class="chip chip-muted">Foundational Tech</span>'}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-4 border-top d-flex justify-between align-center">
+                  <div>
+                    <span class="text-xs text-muted d-block">Apply Cutoff</span>
+                    <strong class="text-xs text-institute tabular-nums">${ui.escapeHtml(item.registrationDeadline || 'Rolling')}</strong>
+                  </div>
+                  <a href="/institute/pages/8-internships/internship-detail.html?id=${item.id}" class="btn-pill-nested" title="View Opportunity">
+                    <span>Inspect</span>
+                    <span class="btn-nested-circle">
+                      <svg class="icon icon-xs"><use href="/icons/sprite.svg#arrow-up-right"></use></svg>
+                    </span>
+                  </a>
+                </div>
+              </div>
+            `;
+
+            const starBtn = card.querySelector('.bookmark-btn');
+            starBtn.addEventListener('click', async (e) => {
+              e.preventDefault();
+              try {
+                const res = await api.post(`/api/internships/${item.id}/bookmark`);
+                const svg = starBtn.querySelector('svg');
+                if (res.bookmarked) {
+                  svg.style.fill = 'var(--brass)';
+                  svg.style.stroke = 'var(--brass)';
+                } else {
+                  svg.style.fill = 'none';
+                  svg.style.stroke = 'currentColor';
+                }
+                ui.showToast(res.bookmarked ? 'Saved to bookmarks dossier!' : 'Removed from bookmarks');
+              } catch (err) {
+                ui.showToast(err.message || 'Bookmark error', 'danger');
+              }
+            });
+
+            grid.appendChild(card);
+          });
+
+          if (!onlyBookmarked) {
+            Pagination.render({
+              containerId: 'pagination-container',
+              currentPage: currentPage,
+              totalPages: totalPages,
+              totalElements: totalElements,
+              pageSize: pageSize,
+              onPageChange: (p) => fetchInternships(p)
+            });
+          }
+
+        } catch (err) {
+          loader.innerHTML = ui.renderError(err.message);
+        }
+      }
+
+      let timeout;
+      document.getElementById('filter-search').addEventListener('input', () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fetchInternships(0), 300);
+      });
+      document.getElementById('filter-mode').addEventListener('change', () => fetchInternships(0));
+      document.getElementById('filter-bookmarked').addEventListener('change', () => fetchInternships(0));
+
+      fetchInternships(0);
+    }
+  </script>
+</body>
+</html>

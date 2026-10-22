@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-domain="institute">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Directory — Academic Institute Pillar</title>
+  
+  <!-- Design System CSS -->
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body>
+  <!-- Paper Grain Overlay -->
+  <div class="grain-overlay"></div>
+
+  <div class="app-shell">
+    <!-- Desktop Left App Rail -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Workspace -->
+    <div class="app-main">
+      <!-- Persistent Topbar with Domain Switcher -->
+      <div id="topbar-container"></div>
+
+      <!-- Content Body -->
+      <main class="app-body">
+        <!-- Page Title & Primary Actions -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--space-4); margin-bottom: var(--space-6);">
+          <div>
+            <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-1);">
+              <span class="chip" style="background: var(--institute-tint); color: var(--institute); font-weight: 600;">
+                REGISTRY LEDGER
+              </span>
+              <span class="text-muted text-xs">Academic Roster 2026</span>
+            </div>
+            <h1 class="app-heading" style="margin-bottom: var(--space-1);">Student Directory</h1>
+            <p class="text-muted text-sm">Browse verified student records, monitor CGPA cutoffs, track backlogs, and manage placement eligibility.</p>
+          </div>
+          <div style="display: flex; gap: var(--space-3);">
+            <button id="btn-export-csv" class="btn btn-outline" title="Export current student list to CSV">
+              <svg width="15" height="15"><use href="#ph-download-simple"/></svg>
+              <span>Export CSV</span>
+            </button>
+            <button class="btn btn-primary" id="btn-add-student">
+              <svg width="15" height="15"><use href="#ph-plus"/></svg>
+              <span>Add Student</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Bar (Tonal Double-Bezel) -->
+        <div class="double-bezel" style="margin-bottom: var(--space-6);">
+          <div class="double-bezel-inner" style="padding: var(--space-4);">
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1.2fr; gap: var(--space-3);">
+              <!-- Search -->
+              <div style="position: relative; display: flex; align-items: center;">
+                <svg width="16" height="16" style="position: absolute; left: 12px; color: var(--muted);"><use href="#ph-magnifying-glass"/></svg>
+                <input type="text" id="filter-search" class="input-field" placeholder="Search by name, roll no, or email..." style="padding-left: 36px;">
+              </div>
+
+              <!-- Branch Filter -->
+              <div>
+                <select id="filter-branch" class="select-field">
+                  <option value="">All Branches</option>
+                  <option value="CSE">CSE (Computer Science)</option>
+                  <option value="IT">IT (Information Tech)</option>
+                  <option value="ECE">ECE (Electronics)</option>
+                  <option value="EEE">EEE (Electrical)</option>
+                  <option value="MECH">MECH (Mechanical)</option>
+                  <option value="CIVIL">CIVIL (Civil)</option>
+                </select>
+              </div>
+
+              <!-- Year Filter -->
+              <div>
+                <select id="filter-year" class="select-field">
+                  <option value="">All Years</option>
+                  <option value="1">1st Year</option>
+                  <option value="2">2nd Year</option>
+                  <option value="3">3rd Year</option>
+                  <option value="4">4th Year (Graduating)</option>
+                </select>
+              </div>
+
+              <!-- Eligibility Filter -->
+              <div>
+                <select id="filter-eligible" class="select-field">
+                  <option value="">All Placement Status</option>
+                  <option value="true">Eligible Only (Clean Record)</option>
+                  <option value="false">Ineligible Only</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Ledger Table -->
+        <div class="double-bezel">
+          <div class="double-bezel-inner" style="padding: 0;">
+            <div id="table-container"></div>
+            <div id="pagination-container" style="padding: var(--space-4); border-top: 1px solid var(--surface-3); display: flex; justify-content: space-between; align-items: center;"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Quick Add Student Native Dialog -->
+  <dialog class="modal-dialog" id="quickAddStudentModal">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+      <h3 style="margin-bottom: 0;">Add Student Profile</h3>
+      <button class="btn btn-sm btn-outline" id="close-modal-btn" style="padding: 6px;">
+        <svg width="16" height="16"><use href="#ph-x"/></svg>
+      </button>
+    </div>
+
+    <form id="quick-student-form">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-3);">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Full Name *</label>
+          <input type="text" name="name" class="input-field" required placeholder="Aarav Sharma">
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Roll Number *</label>
+          <input type="text" name="rollNo" class="input-field roll-no" required placeholder="22CS099" style="text-transform: uppercase;">
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--space-3); margin-bottom: var(--space-3);">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Email Address *</label>
+          <input type="email" name="email" class="input-field" required placeholder="student@college.edu">
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Phone</label>
+          <input type="tel" name="phone" class="input-field" placeholder="9876543210">
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-4);">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Branch *</label>
+          <select name="branch" class="select-field" required>
+            <option value="CSE" selected>CSE</option>
+            <option value="IT">IT</option>
+            <option value="ECE">ECE</option>
+            <option value="EEE">EEE</option>
+            <option value="MECH">MECH</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Year *</label>
+          <select name="year" class="select-field" required>
+            <option value="1">1st Year</option>
+            <option value="2">2nd Year</option>
+            <option value="3">3rd Year</option>
+            <option value="4" selected>4th Year</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">CGPA *</label>
+          <input type="number" step="0.01" min="0" max="10" name="cgpa" class="input-field" required placeholder="8.50">
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: var(--space-3); border-top: 1px solid var(--surface-3); padding-top: var(--space-4);">
+        <button type="button" class="btn btn-secondary" id="cancel-modal-btn">Cancel</button>
+        <button type="submit" class="btn btn-primary">Save Student Record</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- SVG Sprite Inclusion -->
+  <div id="sprite-container" style="display: none;"></div>
+
+  <!-- Scripts -->
+  <script type="module">
+    import auth from '/js/core/auth.js';
+    import api from '/js/core/api.js';
+    import ui from '/js/core/ui.js';
+
+    fetch('/icons/sprite.svg').then(r => r.text()).then(svg => {
+      document.getElementById('sprite-container').innerHTML = svg;
+    });
+
+    if (!auth.requireAuth()) {
+      // redirected
+    }
+
+    ui.initLayout('students');
+
+    const tableContainer = document.getElementById('table-container');
+    const paginationContainer = document.getElementById('pagination-container');
+    const searchInput = document.getElementById('filter-search');
+    const branchSelect = document.getElementById('filter-branch');
+    const yearSelect = document.getElementById('filter-year');
+    const eligibleSelect = document.getElementById('filter-eligible');
+
+    let allStudents = [];
+    let currentPage = 0;
+    const pageSize = 15;
+
+    async function loadStudents() {
+      tableContainer.innerHTML = ui.renderLoader('Loading student records from master registry...');
+      try {
+        const res = await api.get('/api/students?size=200');
+        allStudents = res?.content || (Array.isArray(res) ? res : (res?.data?.content || []));
+        renderTable();
+      } catch (err) {
+        tableContainer.innerHTML = ui.renderError(err.message, 'loadStudents');
+      }
+    }
+
+    function getFilteredStudents() {
+      const q = searchInput.value.trim().toLowerCase();
+      const b = branchSelect.value;
+      const y = yearSelect.value;
+      const e = eligibleSelect.value;
+
+      return allStudents.filter(s => {
+        const matchesQ = !q || (s.name && s.name.toLowerCase().includes(q)) ||
+          (s.rollNo && s.rollNo.toLowerCase().includes(q)) ||
+          (s.email && s.email.toLowerCase().includes(q));
+        const matchesB = !b || s.branch === b;
+        const matchesY = !y || String(s.year) === y;
+        const matchesE = !e || String(s.placementEligible) === e;
+        return matchesQ && matchesB && matchesY && matchesE;
+      });
+    }
+
+    function renderTable() {
+      const filtered = getFilteredStudents();
+      const total = filtered.length;
+      const start = currentPage * pageSize;
+      const pageSlice = filtered.slice(start, start + pageSize);
+
+      if (total === 0) {
+        tableContainer.innerHTML = ui.renderEmpty('No student records found', 'Try adjusting your search filters or add a new student profile.');
+        paginationContainer.innerHTML = '';
+        return;
+      }
+
+      tableContainer.innerHTML = `
+        <table class="ledger-table">
+          <thead>
+            <tr>
+              <th>Student Candidate</th>
+              <th>Roll Number</th>
+              <th>Branch</th>
+              <th>Year</th>
+              <th>CGPA</th>
+              <th>Backlogs</th>
+              <th>Placement Status</th>
+              <th style="text-align: right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${pageSlice.map(s => {
+              const initial = (s.name || 'U')[0].toUpperCase();
+              return `
+                <tr>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: var(--space-3);">
+                      <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--surface-2); color: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: var(--text-xs);">
+                        ${initial}
+                      </div>
+                      <div>
+                        <div style="font-weight: 600; color: var(--ink);">${ui.escapeHtml(s.name)}</div>
+                        <div style="font-size: 11px; color: var(--muted);">${ui.escapeHtml(s.email)}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="roll-no" style="font-weight: 600;">${ui.escapeHtml(s.rollNo)}</td>
+                  <td><span class="chip chip-neutral">${s.branch}</span></td>
+                  <td>Year ${s.year}</td>
+                  <td style="font-variant-numeric: tabular-nums; font-weight: 600;">${Number(s.cgpa).toFixed(2)}</td>
+                  <td>
+                    <span class="chip ${s.backlogs > 0 ? 'chip-danger' : 'chip-neutral'}">
+                      ${s.backlogs > 0 ? `${s.backlogs} Backlog` : '0 Active'}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="chip ${s.placementEligible ? 'chip-success' : 'chip-danger'}">
+                      <svg width="12" height="12"><use href="#${s.placementEligible ? 'ph-check' : 'ph-x'}"/></svg>
+                      <span>${s.placementEligible ? 'Eligible' : 'Ineligible'}</span>
+                    </span>
+                  </td>
+                  <td style="text-align: right;">
+                    <div style="display: flex; justify-content: flex-end; gap: var(--space-2);">
+                      <a href="/institute/pages/1-students/student-profile.html?id=${s.id}" class="btn btn-sm btn-outline" title="View Student ID Card">
+                        <span>Profile</span>
+                      </a>
+                      <button class="btn btn-sm btn-outline text-danger delete-btn" data-id="${s.id}" data-name="${ui.escapeHtml(s.name)}" title="Delete Student Record">
+                        <svg width="14" height="14"><use href="#ph-trash"/></svg>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+
+      // Pagination readout
+      paginationContainer.innerHTML = `
+        <div style="font-size: var(--text-xs); color: var(--muted); font-variant-numeric: tabular-nums;">
+          Showing ${start + 1} – ${Math.min(start + pageSize, total)} of ${total} students
+        </div>
+        <div style="display: flex; gap: var(--space-2);">
+          <button class="btn btn-sm btn-outline" id="prev-page" ${currentPage === 0 ? 'disabled' : ''}>Previous</button>
+          <button class="btn btn-sm btn-outline" id="next-page" ${start + pageSize >= total ? 'disabled' : ''}>Next</button>
+        </div>
+      `;
+
+      document.getElementById('prev-page')?.addEventListener('click', () => {
+        if (currentPage > 0) {
+          currentPage--;
+          renderTable();
+        }
+      });
+
+      document.getElementById('next-page')?.addEventListener('click', () => {
+        if ((currentPage + 1) * pageSize < total) {
+          currentPage++;
+          renderTable();
+        }
+      });
+
+      // Bind delete handlers
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.dataset.id;
+          const name = btn.dataset.name;
+          const confirmed = await ui.confirm(`Are you sure you want to delete student "${name}" from the Institute Master Registry? This action is logged.`, 'Confirm Student Deletion');
+          if (confirmed) {
+            try {
+              await api.delete(`/api/students/${id}`);
+              ui.toast(`Student "${name}" deleted successfully`, 'success');
+              loadStudents();
+            } catch (err) {
+              ui.toast(`Failed to delete student: ${err.message}`, 'danger');
+            }
+          }
+        });
+      });
+    }
+
+    searchInput.addEventListener('input', () => { currentPage = 0; renderTable(); });
+    branchSelect.addEventListener('change', () => { currentPage = 0; renderTable(); });
+    yearSelect.addEventListener('change', () => { currentPage = 0; renderTable(); });
+    eligibleSelect.addEventListener('change', () => { currentPage = 0; renderTable(); });
+
+    // Quick Add Modal
+    const modal = document.getElementById('quickAddStudentModal');
+    document.getElementById('btn-add-student').addEventListener('click', () => modal.showModal());
+    document.getElementById('close-modal-btn').addEventListener('click', () => modal.close());
+    document.getElementById('cancel-modal-btn').addEventListener('click', () => modal.close());
+
+    document.getElementById('quick-student-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        name: form.name.value.trim(),
+        rollNo: form.rollNo.value.trim().toUpperCase(),
+        email: form.email.value.trim().toLowerCase(),
+        phone: form.phone.value.trim(),
+        branch: form.branch.value,
+        year: parseInt(form.year.value, 10),
+        cgpa: parseFloat(form.cgpa.value),
+        backlogs: 0,
+        placementEligible: parseFloat(form.cgpa.value) >= 6.0
+      };
+
+      try {
+        await api.post('/api/students', data);
+        ui.toast('Student record saved successfully', 'success');
+        modal.close();
+        form.reset();
+        loadStudents();
+      } catch (err) {
+        ui.toast(err.message, 'danger');
+      }
+    });
+
+    // Export CSV
+    document.getElementById('btn-export-csv').addEventListener('click', async () => {
+      try {
+        const blob = await api.get('/api/students/export/csv');
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `students_registry_${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        ui.toast('Student CSV exported', 'success');
+      } catch {
+        // Fallback: client-side CSV generator
+        const filtered = getFilteredStudents();
+        let csv = 'RollNo,Name,Email,Branch,Year,CGPA,PlacementEligible\n';
+        filtered.forEach(s => {
+          csv += `"${s.rollNo}","${s.name}","${s.email}","${s.branch}",${s.year},${s.cgpa},${s.placementEligible}\n`;
+        });
+        const blob = new Blob([csv], { type: 'text/csv' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `students_registry_${new Date().toISOString().slice(0, 10)}.csv`;
+        a.click();
+        ui.toast('Student CSV exported', 'success');
+      }
+    });
+
+    loadStudents();
+  </script>
+</body>
+</html>

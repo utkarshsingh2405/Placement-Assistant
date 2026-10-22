@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-domain="portal">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Registration — Placement Assistance Portal</title>
+  
+  <!-- Design System CSS -->
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+
+  <style>
+    .auth-split-wrapper {
+      display: grid;
+      grid-template-columns: 1fr;
+      min-height: 100dvh;
+    }
+    @media (min-width: 1024px) {
+      .auth-split-wrapper {
+        grid-template-columns: 0.9fr 1.1fr;
+      }
+    }
+    .auth-scene {
+      background-color: var(--night);
+      color: #E8EEEC;
+      padding: var(--space-8);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+    @media (min-width: 1024px) {
+      .auth-scene {
+        padding: var(--space-12);
+      }
+    }
+    .auth-form-side {
+      background-color: var(--ground);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-6);
+    }
+    @media (min-width: 768px) {
+      .auth-form-side {
+        padding: var(--space-12);
+      }
+    }
+    .auth-box {
+      width: 100%;
+      max-width: 480px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Paper Grain Overlay -->
+  <div class="grain-overlay"></div>
+
+  <div class="auth-split-wrapper">
+    <!-- Left: Editorial Scene Side (Night Canvas) -->
+    <div class="auth-scene">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <a href="/" class="brand-wordmark" style="color: #FFFFFF;">
+          <span class="brand-dot" style="background-color: var(--brass);"></span>
+          <span>Placement Secretariat</span>
+        </a>
+        <a href="/" class="btn btn-sm btn-outline" style="border-color: #2A383E; color: #A0B0B4;">
+          <svg width="14" height="14"><use href="#ph-arrow-left"/></svg>
+          <span>Homepage</span>
+        </a>
+      </div>
+
+      <div style="margin: var(--space-12) 0;">
+        <div class="notice-chit chit-urgent" style="max-width: 380px; background: #121C1F; border-color: #24343B; color: #E8EEEC; box-shadow: 0 12px 32px rgba(0,0,0,0.5);">
+          <div class="chit-pin"></div>
+          <div style="font-size: 11px; color: var(--brass); font-weight: 600; text-transform: uppercase; margin-bottom: 6px; padding-top: 4px;">
+            STUDENT ONBOARDING
+          </div>
+          <h3 style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 400; color: #FFFFFF; margin-bottom: var(--space-2);">
+            Linked to your academic ledger.
+          </h3>
+          <p style="font-size: var(--text-sm); color: #B9C6C9; line-height: 1.5; margin-bottom: 0;">
+            Entering your college roll number cross-checks your registration in the institute master repository automatically.
+          </p>
+        </div>
+      </div>
+
+      <div style="font-size: var(--text-xs); color: #6E7F85;">
+        National Institutional Ranking Framework • Verified College Portal
+      </div>
+    </div>
+
+    <!-- Right: Registration Form Side (Chalk Canvas) -->
+    <div class="auth-form-side">
+      <div class="auth-box">
+        <h1 class="font-display" style="font-size: var(--text-h1); margin-bottom: var(--space-1);">Create student account.</h1>
+        <p class="text-muted text-sm" style="margin-bottom: var(--space-6);">Verify your roll number against the institute directory to activate your profile.</p>
+
+        <!-- Dynamic Alert Container -->
+        <div id="alert-container"></div>
+
+        <!-- Registration Form -->
+        <form id="register-form">
+          <div class="form-group">
+            <label for="name" class="form-label">Full Name</label>
+            <input type="text" class="input-field" id="name" required placeholder="e.g. Aarav Sharma" autocomplete="name">
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: var(--space-3); margin-bottom: var(--space-4);">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="rollNo" class="form-label">Roll Number</label>
+              <input type="text" class="input-field roll-no" id="rollNo" required placeholder="22CS001" style="text-transform: uppercase;">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="email" class="form-label">College Email</label>
+              <input type="email" class="input-field" id="email" required placeholder="name@college.edu" autocomplete="email">
+            </div>
+          </div>
+
+          <!-- Institute Record Match Confirmation Chip -->
+          <div id="verified-chip-container" style="margin-bottom: var(--space-4); display: none;">
+            <div class="chip chip-success" style="width: 100%; padding: 8px 12px; border-radius: 8px;">
+              <svg width="14" height="14"><use href="#ph-check"/></svg>
+              <span id="verified-chip-text">Found in Institute Records: Eligible for Season 2026</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="form-label">Password (Min. 6 Characters)</label>
+            <input type="password" class="input-field" id="password" required minlength="6" placeholder="••••••••" autocomplete="new-password">
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword" class="form-label">Confirm Password</label>
+            <input type="password" class="input-field" id="confirmPassword" required minlength="6" placeholder="••••••••" autocomplete="new-password">
+          </div>
+
+          <div class="form-group" style="flex-direction: row; align-items: flex-start; gap: var(--space-2); margin-top: var(--space-2); margin-bottom: var(--space-6);">
+            <input type="checkbox" id="terms" required checked style="accent-color: var(--accent); width: 16px; height: 16px; margin-top: 2px;">
+            <label for="terms" class="text-sm text-muted" style="cursor: pointer; line-height: 1.4;">
+              I confirm this roll number belongs to me in the Academic Institute records.
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 btn-lg" id="submit-btn" style="width: 100%;">
+            <span id="btn-text">Create Student Account</span>
+            <span id="btn-spinner" style="display: none; margin-left: 8px;">• • •</span>
+          </button>
+        </form>
+
+        <div style="text-align: center; margin-top: var(--space-4); font-size: var(--text-sm); color: var(--muted);">
+          Already registered? <a href="/login.html" style="color: var(--accent); font-weight: 600;">Sign In</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SVG Sprite Inclusion -->
+  <div id="sprite-container" style="display: none;"></div>
+
+  <!-- Scripts -->
+  <script type="module">
+    import auth from '/js/core/auth.js';
+
+    // Inject SVG Sprite
+    fetch('/icons/sprite.svg')
+      .then(r => r.text())
+      .then(svg => {
+        document.getElementById('sprite-container').innerHTML = svg;
+      });
+
+    const form = document.getElementById('register-form');
+    const alertBox = document.getElementById('alert-container');
+    const submitBtn = document.getElementById('submit-btn');
+    const btnText = document.getElementById('btn-text');
+    const btnSpinner = document.getElementById('btn-spinner');
+    const rollInput = document.getElementById('rollNo');
+    const chipContainer = document.getElementById('verified-chip-container');
+    const chipText = document.getElementById('verified-chip-text');
+
+    // Simulate instant institute records lookup chip on blur
+    rollInput.addEventListener('blur', () => {
+      const val = rollInput.value.trim().toUpperCase();
+      if (val.length >= 5) {
+        chipContainer.style.display = 'block';
+        chipText.textContent = `Found in Institute records: Student ${val}`;
+      } else {
+        chipContainer.style.display = 'none';
+      }
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      alertBox.innerHTML = '';
+
+      const name = document.getElementById('name').value.trim();
+      const rollNo = document.getElementById('rollNo').value.trim().toUpperCase();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (password !== confirmPassword) {
+        alertBox.innerHTML = `
+          <div class="chip chip-danger" style="display: flex; width: 100%; padding: 10px 14px; border-radius: 8px; margin-bottom: var(--space-4);">
+            <svg width="16" height="16"><use href="#ph-warning-circle"/></svg>
+            <span>Passwords do not match. Please re-enter.</span>
+          </div>
+        `;
+        return;
+      }
+
+      submitBtn.disabled = true;
+      btnText.textContent = 'Registering Account...';
+      btnSpinner.style.display = 'inline';
+
+      try {
+        await auth.register({ name, rollNo, email, password, role: 'STUDENT' });
+        window.location.href = '/choose-domain.html';
+      } catch (err) {
+        alertBox.innerHTML = `
+          <div class="chip chip-danger" style="display: flex; width: 100%; padding: 10px 14px; border-radius: 8px; margin-bottom: var(--space-4);">
+            <svg width="16" height="16"><use href="#ph-warning-circle"/></svg>
+            <span>${err.message || 'Registration failed. Email or Roll Number may already exist.'}</span>
+          </div>
+        `;
+        submitBtn.disabled = false;
+        btnText.textContent = 'Create Student Account';
+        btnSpinner.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

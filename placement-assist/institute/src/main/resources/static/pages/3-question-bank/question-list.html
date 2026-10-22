@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="institute">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Question Bank - Academic Institute</title>
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Page Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <h1 class="page-title">Placement Question Bank</h1>
+            <p class="page-subtitle">Curated repository of company-specific technical, coding, aptitude, and HR interview problems.</p>
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <a href="/institute/pages/3-question-bank/practice-mode.html" class="btn btn-primary">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#play"></use></svg>
+              Practice Mode
+            </a>
+            <button id="btn-export-csv" class="btn btn-outline">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#download"></use></svg>
+              Export CSV
+            </button>
+            <a href="/institute/pages/3-question-bank/question-form.html" class="btn btn-secondary" id="btn-add-question">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#plus"></use></svg>
+              Add Question
+            </a>
+          </div>
+        </header>
+
+        <!-- Filter Bar (Tonal Double Bezel) -->
+        <div class="bezel-outer mb-6">
+          <div class="bezel-inner p-4">
+            <div class="form-grid g-3">
+              <div class="form-col-4">
+                <label for="filter-search" class="form-label">Search Questions</label>
+                <div class="input-icon-wrap">
+                  <svg class="icon input-icon"><use href="/icons/sprite.svg#magnifying-glass"></use></svg>
+                  <input type="text" id="filter-search" class="form-control" placeholder="Search by topic, keyword, or problem title...">
+                </div>
+              </div>
+              <div class="form-col-3">
+                <label for="filter-category" class="form-label">Category</label>
+                <select id="filter-category" class="form-select">
+                  <option value="">All Categories</option>
+                  <option value="APTITUDE">Aptitude & Logical</option>
+                  <option value="CODING">Data Structures & Coding</option>
+                  <option value="TECHNICAL">Technical Core</option>
+                  <option value="HR">HR & Behavioral</option>
+                </select>
+              </div>
+              <div class="form-col-2">
+                <label for="filter-difficulty" class="form-label">Difficulty</label>
+                <select id="filter-difficulty" class="form-select">
+                  <option value="">All Levels</option>
+                  <option value="EASY">Easy</option>
+                  <option value="MEDIUM">Medium</option>
+                  <option value="HARD">Hard</option>
+                </select>
+              </div>
+              <div class="form-col-3">
+                <label for="filter-company" class="form-label">Company Tag</label>
+                <input type="text" id="filter-company" class="form-control" placeholder="Filter company (e.g. Amazon)...">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Questions Ledger Table -->
+        <div class="card p-0 overflow-hidden mb-6">
+          <div id="table-container"></div>
+          <div id="pagination-container" class="p-4 border-top"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Native Accessible Modal Dialog for Question Preview -->
+  <dialog id="questionModal" class="custom-dialog">
+    <div class="dialog-card">
+      <div class="dialog-header d-flex justify-between align-center p-4 border-bottom">
+        <h3 class="text-lg fw-semibold text-ink mb-0" id="modal-q-title">Question Detail</h3>
+        <button type="button" class="btn-icon" id="btn-close-modal" aria-label="Close dialog">
+          <svg class="icon icon-sm"><use href="/icons/sprite.svg#x"></use></svg>
+        </button>
+      </div>
+
+      <div class="dialog-body p-5">
+        <div class="d-flex align-center gap-2 mb-4">
+          <span class="chip chip-accent" id="modal-q-category">APTITUDE</span>
+          <span class="chip chip-muted" id="modal-q-difficulty">EASY</span>
+          <span class="text-xs text-muted" id="modal-q-company"></span>
+        </div>
+
+        <div class="surface-tone p-4 rounded-3 text-ink text-sm lh-relaxed mb-4 whitespace-pre-wrap font-sans" id="modal-q-text"></div>
+
+        <div id="modal-q-options" class="d-flex flex-column gap-2 mb-4 d-none">
+          <!-- MCQ Options -->
+        </div>
+
+        <div class="p-4 rounded-3 border-subtle mb-4 surface-card d-none" id="modal-q-answer-box" style="border-left: 4px solid var(--success);">
+          <span class="text-xs text-muted uppercase tracking-wider d-block mb-1">Correct Answer</span>
+          <div class="text-sm fw-semibold text-ink" id="modal-q-answer"></div>
+        </div>
+
+        <div class="p-4 rounded-3 surface-tone d-none" id="modal-q-explanation-box">
+          <span class="text-xs text-muted uppercase tracking-wider d-block mb-1">Solution Walkthrough</span>
+          <div id="modal-q-explanation" class="text-xs text-ink-2 lh-relaxed whitespace-pre-wrap"></div>
+        </div>
+      </div>
+
+      <div class="dialog-footer p-4 border-top d-flex justify-between align-center surface-ground">
+        <button type="button" class="btn btn-outline btn-sm" id="btn-toggle-answer">Reveal Answer & Solution</button>
+        <button type="button" class="btn btn-secondary btn-sm" id="btn-dismiss-modal">Close</button>
+      </div>
+    </div>
+  </dialog>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import api from '/js/api.js';
+    import ui from '/js/ui.js';
+    import DataTable from '/js/table.js';
+    import Pagination from '/js/pagination.js';
+
+    if (!auth.requireAuth(['ADMIN', 'TPO', 'DIRECTOR', 'STUDENT', 'STAFF'])) {
+      // redirected
+    } else {
+      ui.initLayout('questions');
+
+      if (!auth.isTpo() && !auth.hasRole('ADMIN') && !auth.hasRole('DIRECTOR')) {
+        document.getElementById('btn-add-question')?.classList.add('d-none');
+      }
+
+      let currentPage = 0;
+      const pageSize = 10;
+      let loadedQuestions = [];
+
+      async function fetchQuestions(page = 0) {
+        currentPage = page;
+        const container = document.getElementById('table-container');
+        container.innerHTML = ui.renderLoader('Loading question bank...');
+
+        const search = document.getElementById('filter-search').value.trim();
+        const category = document.getElementById('filter-category').value;
+        const difficulty = document.getElementById('filter-difficulty').value;
+        const company = document.getElementById('filter-company').value.trim();
+
+        const params = {
+          page: currentPage,
+          size: pageSize,
+          search: search || undefined,
+          category: category || undefined,
+          difficulty: difficulty || undefined,
+          company: company || undefined
+        };
+
+        try {
+          const res = await api.get('/api/questions', params);
+          loadedQuestions = res.content || [];
+          const totalPages = res.totalPages || 0;
+          const totalElements = res.totalElements || 0;
+
+          DataTable.render({
+            containerId: 'table-container',
+            columns: [
+              {
+                key: 'title',
+                label: 'Question / Topic',
+                render: (item, idx) => `
+                  <div>
+                    <a href="#" class="fw-semibold text-ink text-decoration-none view-q-link d-block" data-index="${idx}">
+                      ${ui.escapeHtml(item.title || (item.questionText?.substring(0, 60) + '...'))}
+                    </a>
+                    <div class="text-muted text-xs text-truncate" style="max-width: 440px;">
+                      ${ui.escapeHtml(item.questionText || '')}
+                    </div>
+                  </div>
+                `
+              },
+              {
+                key: 'category',
+                label: 'Category',
+                render: (item) => `<span class="chip chip-muted">${ui.escapeHtml(item.category || 'GENERAL')}</span>`
+              },
+              {
+                key: 'difficulty',
+                label: 'Difficulty',
+                render: (item) => {
+                  const diff = item.difficulty || 'MEDIUM';
+                  const dClass = diff === 'HARD' ? 'status-danger' : (diff === 'MEDIUM' ? 'status-warning' : 'status-placed');
+                  return `<span class="status-chip ${dClass}">${ui.escapeHtml(diff)}</span>`;
+                }
+              },
+              {
+                key: 'company',
+                label: 'Company Tag',
+                render: (item) => item.company ? `<span class="text-institute text-xs fw-semibold">${ui.escapeHtml(item.company)}</span>` : '<span class="text-muted text-xs">&mdash;</span>'
+              },
+              {
+                key: 'actions',
+                label: 'Actions',
+                className: 'text-end',
+                render: (item, idx) => `
+                  <div class="d-flex justify-end gap-1">
+                    <button class="btn btn-outline btn-sm view-q-link" data-index="${idx}" title="Preview Question">
+                      <svg class="icon icon-sm"><use href="/icons/sprite.svg#eye"></use></svg>
+                    </button>
+                    ${(auth.isTpo() || auth.hasRole('ADMIN') || auth.hasRole('DIRECTOR')) ? `
+                      <a href="/institute/pages/3-question-bank/question-form.html?id=${item.id}" class="btn btn-outline btn-sm" title="Edit Question">
+                        <svg class="icon icon-sm"><use href="/icons/sprite.svg#pencil-simple"></use></svg>
+                      </a>
+                    ` : ''}
+                  </div>
+                `
+              }
+            ],
+            data: loadedQuestions,
+            emptyMessage: 'No questions found in this category.'
+          });
+
+          // Attach click listeners for preview modal
+          document.querySelectorAll('.view-q-link').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+              e.preventDefault();
+              const idx = parseInt(btn.getAttribute('data-index'), 10);
+              openQuestionModal(loadedQuestions[idx]);
+            });
+          });
+
+          Pagination.render({
+            containerId: 'pagination-container',
+            currentPage: currentPage,
+            totalPages: totalPages,
+            totalElements: totalElements,
+            pageSize: pageSize,
+            onPageChange: (newPage) => fetchQuestions(newPage)
+          });
+
+        } catch (err) {
+          container.innerHTML = ui.renderError(err.message);
+        }
+      }
+
+      const modalEl = document.getElementById('questionModal');
+      function openQuestionModal(q) {
+        if (!q) return;
+        document.getElementById('modal-q-title').textContent = q.title || 'Question Detail';
+        document.getElementById('modal-q-category').textContent = q.category || 'APTITUDE';
+        document.getElementById('modal-q-difficulty').textContent = q.difficulty || 'EASY';
+        document.getElementById('modal-q-company').textContent = q.company ? `Company: ${q.company}` : '';
+        document.getElementById('modal-q-text').textContent = q.questionText || '';
+
+        const optionsBox = document.getElementById('modal-q-options');
+        if (q.optionA || q.optionB) {
+          optionsBox.classList.remove('d-none');
+          optionsBox.innerHTML = `
+            <div class="p-3 surface-card border-subtle rounded-3 text-xs"><strong>A:</strong> ${ui.escapeHtml(q.optionA || '-')}</div>
+            <div class="p-3 surface-card border-subtle rounded-3 text-xs"><strong>B:</strong> ${ui.escapeHtml(q.optionB || '-')}</div>
+            <div class="p-3 surface-card border-subtle rounded-3 text-xs"><strong>C:</strong> ${ui.escapeHtml(q.optionC || '-')}</div>
+            <div class="p-3 surface-card border-subtle rounded-3 text-xs"><strong>D:</strong> ${ui.escapeHtml(q.optionD || '-')}</div>
+          `;
+        } else {
+          optionsBox.classList.add('d-none');
+        }
+
+        document.getElementById('modal-q-answer-box').classList.add('d-none');
+        document.getElementById('modal-q-explanation-box').classList.add('d-none');
+        document.getElementById('modal-q-answer').textContent = q.correctAnswer || 'Answer not provided';
+        document.getElementById('modal-q-explanation').textContent = q.explanation || 'No step-by-step solution provided.';
+
+        const toggleBtn = document.getElementById('btn-toggle-answer');
+        toggleBtn.textContent = 'Reveal Answer & Solution';
+        toggleBtn.onclick = () => {
+          const ansBox = document.getElementById('modal-q-answer-box');
+          const expBox = document.getElementById('modal-q-explanation-box');
+          const isHidden = ansBox.classList.contains('d-none');
+          if (isHidden) {
+            ansBox.classList.remove('d-none');
+            expBox.classList.remove('d-none');
+            toggleBtn.textContent = 'Hide Answer';
+          } else {
+            ansBox.classList.add('d-none');
+            expBox.classList.add('d-none');
+            toggleBtn.textContent = 'Reveal Answer & Solution';
+          }
+        };
+
+        if (modalEl.showModal) {
+          modalEl.showModal();
+        } else {
+          modalEl.setAttribute('open', 'true');
+        }
+      }
+
+      document.getElementById('btn-close-modal')?.addEventListener('click', () => modalEl.close ? modalEl.close() : modalEl.removeAttribute('open'));
+      document.getElementById('btn-dismiss-modal')?.addEventListener('click', () => modalEl.close ? modalEl.close() : modalEl.removeAttribute('open'));
+
+      let timeout;
+      document.getElementById('filter-search').addEventListener('input', () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fetchQuestions(0), 300);
+      });
+      document.getElementById('filter-company').addEventListener('input', () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fetchQuestions(0), 300);
+      });
+      document.getElementById('filter-category').addEventListener('change', () => fetchQuestions(0));
+      document.getElementById('filter-difficulty').addEventListener('change', () => fetchQuestions(0));
+
+      document.getElementById('btn-export-csv').addEventListener('click', async () => {
+        try {
+          ui.showToast('Preparing questions CSV export...', 'info');
+          await api.download('/api/questions/export', 'question_bank.csv');
+          ui.showToast('Question bank exported successfully!');
+        } catch (err) {
+          ui.showToast(err.message || 'Export failed', 'danger');
+        }
+      });
+
+      fetchQuestions(0);
+    }
+  </script>
+</body>
+</html>

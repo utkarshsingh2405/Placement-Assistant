@@ -1,0 +1,190 @@
+/**
+ * Placement Assistance Platform Design System
+ * 00-tokens.css: Master Color Tokens, Typography Metrics, Spacing, Radii, and Motion
+ */
+
+:root {
+  /* ==========================================================================
+     COLOR TOKENS - LIGHT (Default)
+     ========================================================================== */
+  --ground: #F3F4F0;         /* Chalk paper background */
+  --surface: #FBFBF8;        /* Clean card / table / dialog surface */
+  --surface-2: #E9ECE6;      /* Tone step: double-bezel shells, inputs, zebra rows */
+  --surface-3: #DFE3DB;      /* Deep tone step: borders, active pressed states */
+  
+  --ink: #101820;            /* Primary typography */
+  --ink-2: #3B4752;          /* Secondary body & descriptions */
+  --muted: #5E6B75;          /* Metadata, hints, column labels (WCAG AA compliant) */
+  --night: #0C1214;          /* Nocturnal deep ground (Hero, stats band, dark canvas) */
+
+  /* Domain Identifiers */
+  --institute: #8C2433;      /* Heraldic Oxblood - Academic Ledger */
+  --institute-hover: #721C29;
+  --institute-tint: #F4E3E5;
+  --door-institute: #7F1D2C;
+
+  --placement: #0E6B5C;      /* Deep Pine - Live Recruitment Season */
+  --placement-hover: #0A5448;
+  --placement-tint: #DDF1EC;
+  --door-placement: #0D6154;
+
+  --brass: #B8892B;          /* Polished Brass - Offer Seal & Signature CTA */
+  --brass-light: #E0B552;
+  --brass-tint: #FAF3E3;
+
+  /* Semantics (Strictly Functional) */
+  --success: #2E7D4F;
+  --success-tint: #EAF5EE;
+  --warning: #B45309;
+  --warning-tint: #FEF3C7;
+  --danger: #E5484D;
+  --danger-tint: #FEECEE;
+  --info: #1E6F9F;
+  --info-tint: #E8F4FA;
+
+  /* Focus & Elevation */
+  --focus-ring: 0 0 0 3px rgba(14, 107, 92, 0.35);
+  --shadow-float: 0 16px 36px -8px rgba(16, 24, 32, 0.12), 0 4px 12px -2px rgba(16, 24, 32, 0.06);
+  --shadow-dialog: 0 24px 48px -12px rgba(16, 24, 32, 0.2), 0 8px 16px -4px rgba(16, 24, 32, 0.08);
+
+  /* Dynamic Active Accent (Defaults to Brass for Portal) */
+  --accent: var(--brass);
+  --accent-hover: #9E7422;
+  --accent-tint: var(--brass-tint);
+
+  /* ==========================================================================
+     TYPOGRAPHIC STACK
+     ========================================================================== */
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-hindi: 'Noto Sans Devanagari', 'Geist', sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Fluid Scale with clamp() */
+  --text-display-xl: clamp(3.25rem, 8.5vw, 8.5rem);
+  --text-display-lg: clamp(2.5rem, 5.5vw, 5.25rem);
+  --text-h1: clamp(2rem, 3.8vw, 3.5rem);
+  --text-h2: clamp(1.5rem, 2.6vw, 2.25rem);
+  --text-h3: clamp(1.2rem, 1.8vw, 1.5rem);
+  --text-body: clamp(1rem, 1.05vw, 1.125rem);
+  --text-sm: 0.875rem;       /* 14px */
+  --text-xs: 0.75rem;        /* 12px */
+
+  --leading-tight: 0.95;
+  --leading-snug: 1.15;
+  --leading-normal: 1.55;
+
+  /* ==========================================================================
+     RADII & SPACING
+     ========================================================================== */
+  --radius-outer: 32px;      /* Tonal double-bezel outer shell */
+  --radius-inner: 26px;      /* Tonal double-bezel inner core */
+  --radius-card: 20px;
+  --radius-control: 12px;
+  --radius-pill: 9999px;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  /* ==========================================================================
+     PHYSICAL MOTION TOKENS
+     ========================================================================== */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-settle: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --dur-fast: 160ms;
+  --dur-normal: 280ms;
+  --dur-slow: 520ms;
+  --dur-deliberate: 800ms;
+}
+
+/* ==========================================================================
+   DOMAIN MAP RESOLUTION (HTML data-domain attribute)
+   ========================================================================== */
+html[data-domain="institute"] {
+  --accent: var(--institute);
+  --accent-hover: var(--institute-hover);
+  --accent-tint: var(--institute-tint);
+  --focus-ring: 0 0 0 3px rgba(140, 36, 51, 0.35);
+}
+
+html[data-domain="placement"] {
+  --accent: var(--placement);
+  --accent-hover: var(--placement-hover);
+  --accent-tint: var(--placement-tint);
+  --focus-ring: 0 0 0 3px rgba(14, 107, 92, 0.35);
+}
+
+html[data-domain="portal"] {
+  --accent: var(--brass);
+  --accent-hover: #9E7422;
+  --accent-tint: var(--brass-tint);
+  --focus-ring: 0 0 0 3px rgba(184, 137, 43, 0.35);
+}
+
+/* ==========================================================================
+   COLOR TOKENS - DARK THEME (data-theme="dark")
+   ========================================================================== */
+html[data-theme="dark"] {
+  --ground: #0C1214;         /* Night canvas ground */
+  --surface: #121C1F;        /* Elevated dark surface */
+  --surface-2: #182529;      /* Outer shell, inputs, zebra striping */
+  --surface-3: #1F3036;      /* Deeper tone step, pressed controls, borders */
+
+  --ink: #E8EEEC;            /* Crisp light text */
+  --ink-2: #B9C6C9;          /* Secondary descriptive text */
+  --muted: #8FA0A5;          /* Metadata & hint labels (WCAG AA) */
+
+  /* Institute Dark Accent */
+  --institute: #E0808C;
+  --institute-hover: #F09CA6;
+  --institute-tint: #2A1418;
+  --door-institute: #2A0D13;
+
+  /* Placement Dark Accent */
+  --placement: #4FD1B8;
+  --placement-hover: #6EE7CF;
+  --placement-tint: #0B2A26;
+  --door-placement: #06231E;
+
+  /* Brass Dark Accent */
+  --brass: #E0B552;
+  --brass-light: #F2CA68;
+  --brass-tint: #2A2210;
+
+  /* Semantics Dark */
+  --success: #5CC389;
+  --success-tint: #0E291B;
+  --warning: #F0A04B;
+  --warning-tint: #33200A;
+  --danger: #FF7A7F;
+  --danger-tint: #331215;
+  --info: #6BB6E0;
+  --info-tint: #102533;
+
+  --focus-ring: 0 0 0 3px rgba(79, 209, 184, 0.35);
+  --shadow-float: 0 16px 36px -8px rgba(0, 0, 0, 0.45), 0 4px 12px -2px rgba(0, 0, 0, 0.25);
+  --shadow-dialog: 0 24px 48px -12px rgba(0, 0, 0, 0.6), 0 8px 16px -4px rgba(0, 0, 0, 0.3);
+}
+
+/* Reduced Motion Fallback */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms !important;
+    --dur-normal: 0ms !important;
+    --dur-slow: 0ms !important;
+    --dur-deliberate: 0ms !important;
+  }
+}

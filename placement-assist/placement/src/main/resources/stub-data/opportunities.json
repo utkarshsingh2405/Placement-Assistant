@@ -1,0 +1,35 @@
+[
+  {
+    "id": 1,
+    "title": "Software Engineering Intern - Summer 2027",
+    "organization": "Google India",
+    "type": "INTERNSHIP",
+    "location": "Bangalore",
+    "applyUrl": "https://careers.google.com/jobs",
+    "deadline": "2026-12-15",
+    "stipendOrPackage": "₹1,15,000/mo",
+    "eligibility": "Pre-final year B.Tech / M.Tech students with strong DS & Algo foundation."
+  },
+  {
+    "id": 2,
+    "title": "Smart India Hackathon (SIH 2026)",
+    "organization": "Ministry of Education & AICTE",
+    "type": "HACKATHON",
+    "location": "Nationwide",
+    "applyUrl": "https://sih.gov.in",
+    "deadline": "2026-11-30",
+    "stipendOrPackage": "₹1,00,000 Prize per Problem Statement",
+    "eligibility": "Teams of 6 students with at least 1 female teammate."
+  },
+  {
+    "id": 3,
+    "title": "Graduate Technology Associate",
+    "organization": "Morgan Stanley",
+    "type": "OFFCAMPUS_JOB",
+    "location": "Mumbai / Bangalore",
+    "applyUrl": "https://morganstanley.tal.net",
+    "deadline": "2026-12-01",
+    "stipendOrPackage": "₹26.5 LPA",
+    "eligibility": "2026 Batch Graduates, min 7.5 CGPA."
+  }
+]

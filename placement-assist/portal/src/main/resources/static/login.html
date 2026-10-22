@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-domain="portal">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — Placement Assistance Portal</title>
+  
+  <!-- Design System CSS -->
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+
+  <style>
+    .auth-split-wrapper {
+      display: grid;
+      grid-template-columns: 1fr;
+      min-height: 100dvh;
+    }
+    @media (min-width: 1024px) {
+      .auth-split-wrapper {
+        grid-template-columns: 0.9fr 1.1fr;
+      }
+    }
+    .auth-scene {
+      background-color: var(--night);
+      color: #E8EEEC;
+      padding: var(--space-8);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+    @media (min-width: 1024px) {
+      .auth-scene {
+        padding: var(--space-12);
+      }
+    }
+    .auth-form-side {
+      background-color: var(--ground);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-6);
+    }
+    @media (min-width: 768px) {
+      .auth-form-side {
+        padding: var(--space-12);
+      }
+    }
+    .auth-box {
+      width: 100%;
+      max-width: 480px;
+    }
+    .role-segmented-nav {
+      display: flex;
+      background: var(--surface-2);
+      border: 1px solid var(--surface-3);
+      border-radius: var(--radius-pill);
+      padding: 4px;
+      margin-bottom: var(--space-6);
+      gap: 4px;
+    }
+    .role-segment-btn {
+      flex: 1;
+      padding: 8px 12px;
+      font-size: var(--text-xs);
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all var(--dur-fast) var(--ease-out);
+    }
+    .role-segment-btn:hover {
+      color: var(--ink);
+    }
+    .role-segment-btn.active {
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .role-segment-btn.active.tab-student {
+      color: var(--accent);
+    }
+    .role-segment-btn.active.tab-admin {
+      color: var(--institute);
+    }
+    .role-segment-btn.active.tab-company {
+      color: var(--placement);
+    }
+  </style>
+</head>
+<body>
+  <!-- Paper Grain Overlay -->
+  <div class="grain-overlay"></div>
+
+  <div class="auth-split-wrapper">
+    <!-- Left: Editorial Scene Side (Night Canvas) -->
+    <div class="auth-scene">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <a href="/" class="brand-wordmark" style="color: #FFFFFF;">
+          <span class="brand-dot" style="background-color: var(--brass);"></span>
+          <span>Placement Secretariat</span>
+        </a>
+        <a href="/" class="btn btn-sm btn-outline" style="border-color: #2A383E; color: #A0B0B4;">
+          <svg width="14" height="14"><use href="#ph-arrow-left"/></svg>
+          <span>Homepage</span>
+        </a>
+      </div>
+
+      <div style="margin: var(--space-10) 0;">
+        <div id="scene-notice" class="notice-chit chit-urgent" style="max-width: 400px; background: #121C1F; border-color: #24343B; color: #E8EEEC; box-shadow: 0 12px 32px rgba(0,0,0,0.5);">
+          <div class="chit-pin"></div>
+          <div id="scene-badge" style="font-size: 11px; color: var(--brass); font-weight: 600; text-transform: uppercase; margin-bottom: 6px; padding-top: 4px;">
+            STUDENT CANDIDATE DESK • 2026
+          </div>
+          <h3 id="scene-title" style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 400; color: #FFFFFF; margin-bottom: var(--space-2);">
+            Round by round to your offer.
+          </h3>
+          <p id="scene-desc" style="font-size: var(--text-sm); color: #B9C6C9; line-height: 1.5; margin-bottom: var(--space-3);">
+            Access your personalized hall ticket, eligible enterprise recruitment cycles, CRT attendance, and official offer status.
+          </p>
+          <div id="scene-student-badge" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 10px 14px; font-size: 11px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span style="color: #A0B0B4;">Featured Candidate Profile:</span>
+              <span class="chip chip-success" style="font-size: 10px; padding: 1px 6px;">ELIGIBLE</span>
+            </div>
+            <div style="color: #FFFFFF; font-weight: 600;">Aarav Sharma (21CS001)</div>
+            <div style="color: #8E9FA4;">CSE &bull; CGPA: 9.42 &bull; 0 Backlogs</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size: var(--text-xs); color: #6E7F85; display: flex; justify-content: space-between; align-items: center;">
+        <span>National Institutional Ranking Framework</span>
+        <span class="chip" style="background: rgba(255,255,255,0.08); color: #A0B0B4; font-size: 10px;">SESSION 2026 ACTIVE</span>
+      </div>
+    </div>
+
+    <!-- Right: Authentication Form Side (Chalk Canvas) -->
+    <div class="auth-form-side">
+      <div class="auth-box">
+        <!-- Role Switcher Segmented Control -->
+        <div class="role-segmented-nav" id="role-nav">
+          <button type="button" class="role-segment-btn active tab-student" data-role="STUDENT">
+            <svg width="14" height="14"><use href="#ph-user"/></svg>
+            <span>Student Candidate</span>
+          </button>
+          <button type="button" class="role-segment-btn tab-admin" data-role="DIRECTOR">
+            <svg width="14" height="14"><use href="#ph-building"/></svg>
+            <span>Director / TPO</span>
+          </button>
+          <button type="button" class="role-segment-btn tab-company" data-role="COMPANY">
+            <svg width="14" height="14"><use href="#ph-briefcase"/></svg>
+            <span>Recruiter</span>
+          </button>
+        </div>
+
+        <h1 class="font-display" id="auth-title" style="font-size: var(--text-h1); margin-bottom: var(--space-1);">Student Portal.</h1>
+        <p class="text-muted text-sm" id="auth-subtitle" style="margin-bottom: var(--space-6);">Enter your college credentials to access your season desk and hall tickets.</p>
+
+        <!-- Dynamic Alert Container -->
+        <div id="alert-container"></div>
+
+        <!-- Login Form -->
+        <form id="login-form">
+          <div class="form-group">
+            <label for="email" class="form-label" id="label-email">College Email or Roll Number</label>
+            <input type="email" class="input-field" id="email" required placeholder="aarav@college.edu" autocomplete="username">
+            <span class="form-hint" id="hint-email">Personalized institutional candidate login</span>
+          </div>
+
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-1);">
+              <label for="password" class="form-label" style="margin-bottom: 0;">Password</label>
+              <a href="/forgot-password.html" class="text-sm" style="color: var(--accent); font-weight: 500;">Forgot password?</a>
+            </div>
+            <div style="position: relative; display: flex; align-items: center;">
+              <input type="password" class="input-field" id="password" required placeholder="••••••••" autocomplete="current-password" style="padding-right: 44px;">
+              <button type="button" id="toggle-password" title="Show/Hide Password" style="position: absolute; right: 12px; color: var(--muted); padding: 4px; background: none; border: none; cursor: pointer;">
+                <svg width="18" height="18" id="password-eye"><use href="#ph-file-text"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group" style="flex-direction: row; align-items: center; gap: var(--space-2); margin-top: var(--space-2); margin-bottom: var(--space-6);">
+            <input type="checkbox" id="remember-me" checked style="accent-color: var(--accent); width: 16px; height: 16px;">
+            <label for="remember-me" class="text-sm text-muted" style="cursor: pointer;">Stay signed in for 7 days</label>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 btn-lg" id="submit-btn" style="width: 100%;">
+            <span id="btn-text">Sign In to Desk</span>
+            <span id="btn-spinner" style="display: none; margin-left: 8px;">• • •</span>
+          </button>
+        </form>
+
+        <div style="text-align: center; margin-top: var(--space-4); font-size: var(--text-sm); color: var(--muted);">
+          New student? <a href="/register.html" style="color: var(--accent); font-weight: 600;">Create Candidate Account</a>
+        </div>
+
+        <div style="height: 1px; background: var(--surface-3); margin: var(--space-6) 0 var(--space-5);"></div>
+
+        <!-- Quick Fill Demo Roles -->
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
+            <span style="font-size: var(--text-xs); font-weight: 600; color: var(--muted); text-transform: uppercase;">Quick Fill Verified Credentials</span>
+            <span class="chip chip-neutral" style="font-size: 10px;">ONE-CLICK DEMO</span>
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: var(--space-2);" id="demo-chips-container">
+            <button type="button" class="demo-chip" data-role="STUDENT" data-email="aarav@college.edu" data-pass="Student@123">
+              <svg width="12" height="12"><use href="#ph-user"/></svg> Student (Aarav - 21CS001)
+            </button>
+            <button type="button" class="demo-chip" data-role="STUDENT" data-email="ananya.sharma@college.edu" data-pass="Student@123">
+              <svg width="12" height="12"><use href="#ph-user"/></svg> Student (Ananya - 21CS011)
+            </button>
+            <button type="button" class="demo-chip" data-role="DIRECTOR" data-email="director@college.edu" data-pass="Director@123">
+              <svg width="12" height="12"><use href="#ph-building"/></svg> Director (Full Access)
+            </button>
+            <button type="button" class="demo-chip" data-role="DIRECTOR" data-email="tpo@college.edu" data-pass="Tpo@123">
+              <svg width="12" height="12"><use href="#ph-briefcase"/></svg> TPO Officer
+            </button>
+            <button type="button" class="demo-chip" data-role="DIRECTOR" data-email="admin@college.edu" data-pass="Admin@123">
+              <svg width="12" height="12"><use href="#ph-lock"/></svg> Administrator
+            </button>
+            <button type="button" class="demo-chip" data-role="COMPANY" data-email="hr@google.com" data-pass="Company@123">
+              <svg width="12" height="12"><use href="#ph-briefcase"/></svg> Google Recruiter
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SVG Sprite Inclusion -->
+  <div id="sprite-container" style="display: none;"></div>
+
+  <!-- Scripts -->
+  <script type="module">
+    import auth from '/js/core/auth.js';
+
+    // Inject SVG Sprite
+    fetch('/icons/sprite.svg')
+      .then(r => r.text())
+      .then(svg => {
+        document.getElementById('sprite-container').innerHTML = svg;
+      });
+
+    // Password visibility toggle
+    const toggleBtn = document.getElementById('toggle-password');
+    const passInput = document.getElementById('password');
+    toggleBtn.addEventListener('click', () => {
+      passInput.type = passInput.type === 'password' ? 'text' : 'password';
+    });
+
+    // Segmented Navigation & Personalization
+    const roleNavButtons = document.querySelectorAll('.role-segment-btn');
+    const authTitle = document.getElementById('auth-title');
+    const authSubtitle = document.getElementById('auth-subtitle');
+    const emailInput = document.getElementById('email');
+    const sceneBadge = document.getElementById('scene-badge');
+    const sceneTitle = document.getElementById('scene-title');
+    const sceneDesc = document.getElementById('scene-desc');
+    const sceneStudentBadge = document.getElementById('scene-student-badge');
+    const labelEmail = document.getElementById('label-email');
+    const hintEmail = document.getElementById('hint-email');
+
+    function applyRolePerspective(role) {
+      roleNavButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.role === role);
+      });
+
+      if (role === 'STUDENT') {
+        authTitle.textContent = 'Student Portal.';
+        authSubtitle.textContent = 'Enter your college credentials to access your season desk and hall tickets.';
+        labelEmail.textContent = 'College Email or Roll Number';
+        emailInput.placeholder = 'aarav@college.edu';
+        hintEmail.textContent = 'Personalized institutional candidate login';
+        sceneBadge.textContent = 'STUDENT CANDIDATE DESK • 2026';
+        sceneTitle.textContent = 'Round by round to your offer.';
+        sceneDesc.textContent = 'Access your personalized hall ticket, eligible enterprise recruitment cycles, CRT attendance, and official offer status.';
+        sceneStudentBadge.style.display = 'block';
+      } else if (role === 'DIRECTOR') {
+        authTitle.textContent = 'Secretariat Desk.';
+        authSubtitle.textContent = 'Campus Director and Training & Placement Officer executive workspace with full CRUD controls.';
+        labelEmail.textContent = 'Executive Email Address';
+        emailInput.placeholder = 'director@college.edu';
+        hintEmail.textContent = 'Institutional administrative credential';
+        sceneBadge.textContent = 'DIRECTORATE & TPO EXECUTIVE OVERSIGHT';
+        sceneTitle.textContent = 'Full System Oversight & Control.';
+        sceneDesc.textContent = 'Manage master drives, candidate pipelines, eligibility criteria, test schedules, classroom sessions, and official appointments.';
+        sceneStudentBadge.style.display = 'none';
+      } else if (role === 'COMPANY') {
+        authTitle.textContent = 'Recruiter Portal.';
+        authSubtitle.textContent = 'Enterprise partner access for screening, interview shortlists, and rollouts.';
+        labelEmail.textContent = 'Corporate Recruiter Email';
+        emailInput.placeholder = 'hr@google.com';
+        hintEmail.textContent = 'Registered corporate hiring partner';
+        sceneBadge.textContent = 'ENTERPRISE TALENT ACQUISITION';
+        sceneTitle.textContent = 'Discover Top Engineering Talent.';
+        sceneDesc.textContent = 'Review candidate profiles, evaluate shortlists, conduct pre-placement talks, and issue official placement offers.';
+        sceneStudentBadge.style.display = 'none';
+      }
+    }
+
+    roleNavButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        applyRolePerspective(btn.dataset.role);
+      });
+    });
+
+    // Quick fill buttons
+    document.querySelectorAll('.demo-chip').forEach(btn => {
+      btn.addEventListener('click', () => {
+        emailInput.value = btn.dataset.email;
+        passInput.value = btn.dataset.pass;
+        if (btn.dataset.role) {
+          applyRolePerspective(btn.dataset.role);
+        }
+      });
+    });
+
+    // Form Submit
+    const form = document.getElementById('login-form');
+    const alertBox = document.getElementById('alert-container');
+    const submitBtn = document.getElementById('submit-btn');
+    const btnText = document.getElementById('btn-text');
+    const btnSpinner = document.getElementById('btn-spinner');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      alertBox.innerHTML = '';
+      submitBtn.disabled = true;
+      btnText.textContent = 'Authenticating...';
+      btnSpinner.style.display = 'inline';
+
+      const email = emailInput.value.trim();
+      const password = passInput.value;
+
+      try {
+        await auth.login(email, password);
+        const params = new URLSearchParams(window.location.search);
+        const next = params.get('next');
+        if (next && next.startsWith('/')) {
+          window.location.href = next;
+        } else {
+          window.location.href = '/choose-domain.html';
+        }
+      } catch (err) {
+        alertBox.innerHTML = `
+          <div class="chip chip-danger" style="display: flex; width: 100%; padding: 10px 14px; border-radius: 8px; margin-bottom: var(--space-4); font-size: var(--text-sm);">
+            <svg width="16" height="16" style="flex-shrink: 0;"><use href="#ph-warning-circle"/></svg>
+            <span>${err.message || 'Invalid credentials or account disabled'}</span>
+          </div>
+        `;
+        submitBtn.disabled = false;
+        btnText.textContent = 'Sign In to Desk';
+        btnSpinner.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>

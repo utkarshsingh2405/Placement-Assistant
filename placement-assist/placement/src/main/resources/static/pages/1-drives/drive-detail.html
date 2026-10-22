@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="placement">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drive Dossier — Placement Season</title>
+  
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="grain-overlay"></div>
+
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <div id="drive-loader" style="padding: var(--space-8); text-align: center;">
+          <div class="spinner-modern mb-3"></div>
+          <div class="text-muted text-sm">Retrieving campus drive dossier...</div>
+        </div>
+
+        <div id="drive-content" class="d-none">
+          <!-- Breadcrumb Navigation Bar -->
+          <div class="breadcrumb-bar mb-4">
+            <a href="/placement/pages/1-drives/drive-list.html" class="nav-crumb">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#arrow-left"></use></svg>
+              All Placement Drives
+            </a>
+            <span class="crumb-separator">/</span>
+            <span class="crumb-current" id="breadcrumb-company">Company Dossier</span>
+          </div>
+
+          <!-- Hero Drive Header Card (Double Bezel) -->
+          <div class="bezel-outer mb-6">
+            <div class="bezel-inner p-6">
+              <div class="d-flex flex-wrap justify-between align-start gap-4">
+                <div class="d-flex align-center gap-4">
+                  <span class="avatar avatar-lg avatar-placement" id="company-initial-badge" style="font-size: 1.75rem; width: 64px; height: 64px;">
+                    C
+                  </span>
+                  <div>
+                    <div class="d-flex align-center gap-2 mb-1">
+                      <span id="drive-status-badge" class="status-chip status-placed">
+                        <span class="status-dot"></span>
+                        <span id="drive-status-text">ACTIVE</span>
+                      </span>
+                      <span class="text-muted text-xs">&bull;</span>
+                      <span class="text-xs text-muted" id="drive-industry-tag">Enterprise Technology</span>
+                    </div>
+                    <h1 class="poster-title text-2xl mb-1" id="company-name-heading">Recruitment Drive</h1>
+                    <div class="text-muted text-sm d-flex flex-wrap align-center gap-3">
+                      <span>Role: <strong class="text-ink" id="job-role-subheading">Graduate Trainee</strong></span>
+                      <span>&bull;</span>
+                      <span>Location: <span id="drive-location" class="text-ink">Bengaluru / Hyderabad</span></span>
+                      <span>&bull;</span>
+                      <span>Date: <strong class="text-ink tabular-nums" id="drive-date-display">Season 2026</strong></span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-end">
+                  <span class="text-xs text-muted d-block uppercase tracking-wider">Package Details (CTC)</span>
+                  <div class="package-block my-1">
+                    <span class="package-value text-placement" id="drive-package-display">Competitive CTC</span>
+                  </div>
+                  <div id="drive-action-buttons" class="d-flex gap-2 justify-end mt-3">
+                    <!-- Populated dynamically based on role -->
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Two Column Bento Layout -->
+          <div class="bento-grid">
+            <!-- Left 7-col: Role Overview, Responsibilities, Eligibility -->
+            <div class="bento-span-7">
+              <!-- About Role Card -->
+              <div class="bezel-outer mb-6">
+                <div class="bezel-inner p-5">
+                  <h3 class="text-base fw-semibold text-ink mb-3 d-flex align-center gap-2">
+                    <svg class="icon icon-sm text-placement"><use href="/icons/sprite.svg#file-text"></use></svg>
+                    Job Specification &amp; Overview
+                  </h3>
+                  <p class="text-sm text-ink-2 lh-relaxed mb-4" id="drive-description-text">
+                    Comprehensive campus hiring for high-performance software engineering, product innovation, and systems architecture.
+                  </p>
+
+                  <h4 class="text-xs uppercase text-muted tracking-wider mb-3">Key Hiring Parameters</h4>
+                  <div class="grid-3-col gap-3">
+                    <div class="surface-tone p-3 rounded-3">
+                      <span class="text-xs text-muted d-block">Eligible Streams</span>
+                      <strong class="text-sm text-ink" id="drive-branches-tag">CSE, IT, ECE</strong>
+                    </div>
+                    <div class="surface-tone p-3 rounded-3">
+                      <span class="text-xs text-muted d-block">CGPA Cutoff</span>
+                      <strong class="text-sm text-ink tabular-nums" id="drive-cgpa-tag">7.5+ CGPA</strong>
+                    </div>
+                    <div class="surface-tone p-3 rounded-3">
+                      <span class="text-xs text-muted d-block">Max Backlogs</span>
+                      <strong class="text-sm text-ink tabular-nums" id="drive-backlogs-tag">0 Active</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Registered Pipeline / Candidates Preview (For TPO & Director) -->
+              <div class="bezel-outer" id="candidates-pipeline-section" style="display: none;">
+                <div class="bezel-inner p-5">
+                  <div class="d-flex justify-between align-center mb-3">
+                    <h3 class="text-base fw-semibold text-ink mb-0 d-flex align-center gap-2">
+                      <svg class="icon icon-sm text-accent"><use href="/icons/sprite.svg#users"></use></svg>
+                      Candidate Applications Pipeline
+                    </h3>
+                    <a href="#" id="view-all-apps-link" class="text-xs text-placement fw-semibold">Open Kanban Board &rarr;</a>
+                  </div>
+                  <div class="ledger-container">
+                    <table class="ledger-table" id="drive-candidates-table">
+                      <thead>
+                        <tr>
+                          <th>Roll No</th>
+                          <th>Student Name</th>
+                          <th>Current Stage</th>
+                          <th>Status</th>
+                          <th style="text-align: right;">ATS Score</th>
+                        </tr>
+                      </thead>
+                      <tbody id="drive-candidates-tbody">
+                        <tr><td colspan="5" class="text-center text-muted p-4">Loading applicants...</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right 5-col: Multi-Stage Journey Timeline -->
+            <div class="bento-span-5">
+              <div class="bezel-outer">
+                <div class="bezel-inner p-5">
+                  <div class="d-flex justify-between align-center mb-4">
+                    <h3 class="text-base fw-semibold text-ink mb-0 d-flex align-center gap-2">
+                      <svg class="icon icon-sm text-placement"><use href="/icons/sprite.svg#git-commit"></use></svg>
+                      Evaluation Stages Timeline
+                    </h3>
+                    <div id="stages-admin-controls" class="d-none">
+                      <a href="#" id="manage-stages-link" class="btn btn-outline btn-sm">Manage Stages</a>
+                    </div>
+                  </div>
+
+                  <div id="stages-timeline-container" class="d-flex flex-column gap-3">
+                    <div class="text-center text-muted p-4">Loading recruitment stages...</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Edit Drive Modal for Director / TPO -->
+  <dialog id="editDriveModal" class="custom-dialog">
+    <div class="dialog-card">
+      <form id="edit-drive-form">
+        <div class="dialog-header d-flex justify-between align-center p-4 border-bottom">
+          <h3 class="text-lg fw-semibold text-ink mb-0">Update Drive Specification</h3>
+          <button type="button" class="btn-icon" id="btn-close-edit-drive" aria-label="Close dialog">
+            <svg class="icon icon-sm"><use href="/icons/sprite.svg#x"></use></svg>
+          </button>
+        </div>
+
+        <div class="dialog-body p-5">
+          <div class="form-grid g-3">
+            <div class="form-col-12">
+              <label class="form-label">Campaign Title / Description *</label>
+              <input type="text" name="title" id="edit-drive-title" class="form-control" required>
+            </div>
+            <div class="form-col-6">
+              <label class="form-label">Job Roles *</label>
+              <input type="text" name="jobRoles" id="edit-drive-job-roles" class="form-control" required>
+            </div>
+            <div class="form-col-6">
+              <label class="form-label">Package Details (CTC) *</label>
+              <input type="text" name="packageDetails" id="edit-drive-package" class="form-control" required>
+            </div>
+            <div class="form-col-6">
+              <label class="form-label">Drive Lifecycle Status</label>
+              <select name="status" id="edit-drive-status" class="form-select">
+                <option value="ONGOING">ONGOING (Active Selection)</option>
+                <option value="UPCOMING">UPCOMING</option>
+                <option value="COMPLETED">COMPLETED</option>
+                <option value="CANCELLED">CANCELLED</option>
+              </select>
+            </div>
+            <div class="form-col-6">
+              <label class="form-label">Drive Scheduled Date</label>
+              <input type="date" name="driveDate" id="edit-drive-date" class="form-control">
+            </div>
+            <div class="form-col-12">
+              <label class="form-label">Full Overview &amp; Instructions</label>
+              <textarea name="description" id="edit-drive-description" class="form-control" rows="4"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="dialog-footer p-4 border-top d-flex justify-end gap-2 surface-ground">
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-cancel-edit-drive">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- SVG Sprite Inclusion -->
+  <div id="sprite-container" style="display: none;"></div>
+
+  <script type="module">
+    import auth from '/js/core/auth.js';
+    import api from '/js/core/api.js';
+    import ui from '/js/core/ui.js';
+
+    fetch('/icons/sprite.svg')
+      .then(r => r.text())
+      .then(svg => {
+        document.getElementById('sprite-container').innerHTML = svg;
+      });
+
+    if (!auth.requireAuth()) {
+      // redirected
+    }
+
+    ui.initLayout('drives');
+
+    const params = new URLSearchParams(window.location.search);
+    const driveId = params.get('id') || '1';
+    const user = auth.getUser();
+    const role = user?.role || 'STUDENT';
+    const isTpoOrDirector = role === 'TPO' || role === 'DIRECTOR' || role === 'ADMIN';
+
+    let currentDrive = null;
+    let driveStages = [];
+
+    async function loadDriveDossier() {
+      try {
+        const driveData = await api.get(`/drives/${driveId}`);
+        currentDrive = driveData?.data || driveData;
+
+        // Fetch Stages
+        try {
+          const stagesRes = await api.get(`/drives/${driveId}/stages`);
+          driveStages = Array.isArray(stagesRes) ? stagesRes : (stagesRes?.data || []);
+        } catch {
+          driveStages = [];
+        }
+
+        renderDriveHeader(currentDrive);
+        renderStagesTimeline(driveStages);
+
+        if (isTpoOrDirector) {
+          document.getElementById('candidates-pipeline-section').style.display = 'block';
+          document.getElementById('stages-admin-controls').classList.remove('d-none');
+          document.getElementById('manage-stages-link').href = `/placement/pages/3-stages/stage-management.html?driveId=${driveId}`;
+          document.getElementById('view-all-apps-link').href = `/placement/pages/2-applications/application-board.html?driveId=${driveId}`;
+          loadCandidatesPipeline();
+        }
+
+        document.getElementById('drive-loader').classList.add('d-none');
+        document.getElementById('drive-content').classList.remove('d-none');
+      } catch (err) {
+        document.getElementById('drive-loader').innerHTML = `
+          <div class="text-danger p-6">${ui.escapeHtml(err.message || 'Drive not found')}</div>
+        `;
+      }
+    }
+
+    function renderDriveHeader(d) {
+      const companyName = d.company?.name || d.companyName || d.title || 'Recruitment Partner';
+      const initial = companyName.charAt(0).toUpperCase();
+
+      document.getElementById('breadcrumb-company').textContent = companyName;
+      document.getElementById('company-initial-badge').textContent = initial;
+      document.getElementById('company-name-heading').textContent = companyName;
+      document.getElementById('job-role-subheading').textContent = d.jobRoles || d.title || 'Graduate Trainee';
+      document.getElementById('drive-location').textContent = d.location || 'Bengaluru / Hyderabad (On-Campus)';
+      document.getElementById('drive-package-display').textContent = d.packageDetails || (d.packageLpa ? `${d.packageLpa} LPA` : 'Competitive CTC');
+      document.getElementById('drive-status-text').textContent = d.status || 'ONGOING';
+      document.getElementById('drive-date-display').textContent = d.driveDate ? new Date(d.driveDate).toLocaleDateString() : 'Active Hiring Cycle';
+      document.getElementById('drive-description-text').textContent = d.description || 'Full-time graduate recruitment program.';
+
+      // Actions slot
+      const actionsSlot = document.getElementById('drive-action-buttons');
+      if (isTpoOrDirector) {
+        actionsSlot.innerHTML = `
+          <button type="button" class="btn btn-outline btn-sm" id="btn-open-edit-drive">
+            <svg class="icon icon-sm"><use href="/icons/sprite.svg#pencil"></use></svg>
+            <span>Edit Specification</span>
+          </button>
+          <button type="button" class="btn btn-outline btn-sm text-danger" id="btn-delete-drive">
+            <svg class="icon icon-sm"><use href="/icons/sprite.svg#trash"></use></svg>
+            <span>Delete</span>
+          </button>
+          <a href="/placement/pages/2-applications/application-board.html?driveId=${d.id}" class="btn btn-primary btn-sm">
+            <span>Candidates Board &rarr;</span>
+          </a>
+        `;
+
+        document.getElementById('btn-open-edit-drive')?.addEventListener('click', () => {
+          populateEditForm(d);
+          const dlg = document.getElementById('editDriveModal');
+          if (dlg.showModal) dlg.showModal();
+          else dlg.setAttribute('open', 'true');
+        });
+
+        document.getElementById('btn-delete-drive')?.addEventListener('click', async () => {
+          const confirmed = await ui.confirm('Delete Recruitment Drive', `Are you sure you want to permanently delete "${companyName}" drive?`);
+          if (!confirmed) return;
+          try {
+            await api.delete(`/drives/${d.id}`);
+            ui.showToast('Drive deleted successfully.');
+            window.location.href = '/placement/pages/1-drives/drive-list.html';
+          } catch (err) {
+            ui.showToast(err.message || 'Delete failed', 'danger');
+          }
+        });
+      } else if (role === 'STUDENT') {
+        actionsSlot.innerHTML = `
+          <button type="button" class="btn btn-primary" id="btn-student-apply">
+            <svg class="icon icon-sm"><use href="/icons/sprite.svg#check-circle"></use></svg>
+            <span>1-Click Express Apply</span>
+          </button>
+        `;
+
+        document.getElementById('btn-student-apply')?.addEventListener('click', async () => {
+          try {
+            await api.post(`/drives/${d.id}/apply`, {});
+            ui.showToast('Application successfully submitted! Hall ticket generated.', 'success');
+            setTimeout(() => {
+              window.location.href = '/placement/pages/2-applications/my-applications.html';
+            }, 1200);
+          } catch (err) {
+            ui.showToast(err.message || 'Application submitted or already in process.', 'info');
+          }
+        });
+      }
+    }
+
+    function renderStagesTimeline(stages) {
+      const container = document.getElementById('stages-timeline-container');
+      if (!stages || stages.length === 0) {
+        container.innerHTML = `
+          <div class="surface-tone p-4 rounded-3 text-center text-muted">
+            No assessment stages configured yet.
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = stages.map((st, idx) => {
+        const isCurrent = st.status === 'IN_PROGRESS';
+        const isCompleted = st.status === 'COMPLETED';
+        const chipClass = isCompleted ? 'chip-success' : (isCurrent ? 'chip-warning' : 'chip-neutral');
+
+        return `
+          <div class="surface-tone p-4 rounded-3 d-flex flex-column gap-2" style="border-left: 3px solid ${isCurrent ? 'var(--warning)' : (isCompleted ? 'var(--success)' : 'var(--surface-3)')};">
+            <div class="d-flex justify-between align-center">
+              <span class="text-xs uppercase tracking-wider text-muted">Stage ${st.stageOrder || (idx + 1)} &bull; ${st.stageType || 'ASSESSMENT'}</span>
+              <span class="chip ${chipClass}" style="font-size: 10px;">${st.status}</span>
+            </div>
+            <h4 class="text-sm fw-semibold text-ink mb-0">${ui.escapeHtml(st.stageName)}</h4>
+            <div class="text-xs text-ink-2">${ui.escapeHtml(st.instructions || 'Standard assessment proctoring and evaluation guidelines apply.')}</div>
+            <div class="text-xs text-muted d-flex align-center gap-2 mt-1">
+              <svg class="icon icon-xs"><use href="/icons/sprite.svg#map-pin"></use></svg>
+              <span>${ui.escapeHtml(st.venueOrLink || 'Placement Examination Hall / Online')}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function loadCandidatesPipeline() {
+      const tbody = document.getElementById('drive-candidates-tbody');
+      try {
+        const appsRes = await api.get(`/drives/${driveId}/applications`);
+        const apps = Array.isArray(appsRes) ? appsRes : (appsRes?.data || []);
+
+        if (apps.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted p-4">No registered candidates for this drive yet.</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = apps.slice(0, 10).map(a => `
+          <tr>
+            <td><strong class="font-mono text-xs">${ui.escapeHtml(a.rollNo)}</strong></td>
+            <td><div class="fw-semibold text-ink text-sm">${ui.escapeHtml(a.studentName)}</div></td>
+            <td><span class="chip chip-neutral" style="font-size: 10px;">${ui.escapeHtml(a.currentStage?.stageName || 'Stage 1')}</span></td>
+            <td><span class="chip chip-${a.status === 'SHORTLISTED' ? 'success' : (a.status === 'REJECTED' ? 'danger' : 'warning')}" style="font-size: 10px;">${a.status}</span></td>
+            <td style="text-align: right;"><strong class="tabular-nums text-placement">${a.atsScore || 85}%</strong></td>
+          </tr>
+        `).join('');
+      } catch {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center text-muted p-4">Unable to fetch applicant roster.</td></tr>`;
+      }
+    }
+
+    function populateEditForm(d) {
+      document.getElementById('edit-drive-title').value = d.title || '';
+      document.getElementById('edit-drive-job-roles').value = d.jobRoles || '';
+      document.getElementById('edit-drive-package').value = d.packageDetails || '';
+      document.getElementById('edit-drive-status').value = d.status || 'ONGOING';
+      document.getElementById('edit-drive-date').value = d.driveDate || '';
+      document.getElementById('edit-drive-description').value = d.description || '';
+    }
+
+    const editDialog = document.getElementById('editDriveModal');
+    document.getElementById('btn-close-edit-drive')?.addEventListener('click', () => editDialog.close ? editDialog.close() : editDialog.removeAttribute('open'));
+    document.getElementById('btn-cancel-edit-drive')?.addEventListener('click', () => editDialog.close ? editDialog.close() : editDialog.removeAttribute('open'));
+
+    document.getElementById('edit-drive-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const payload = {
+        title: form.title.value.trim(),
+        jobRoles: form.jobRoles.value.trim(),
+        packageDetails: form.packageDetails.value.trim(),
+        status: form.status.value,
+        driveDate: form.driveDate.value || null,
+        description: form.description.value.trim()
+      };
+
+      try {
+        await api.put(`/drives/${driveId}`, payload);
+        ui.showToast('Drive specifications updated successfully!');
+        if (editDialog.close) editDialog.close();
+        else editDialog.removeAttribute('open');
+        loadDriveDossier();
+      } catch (err) {
+        ui.showToast(err.message || 'Update failed', 'danger');
+      }
+    });
+
+    loadDriveDossier();
+  </script>
+</body>
+</html>

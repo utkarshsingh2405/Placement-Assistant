@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="institute">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>National Hackathons & Challenges - Academic Institute</title>
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Page Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <h1 class="page-title">National & Global Hackathons</h1>
+            <p class="page-subtitle">Verified engineering hackathons, open innovation bounties, and corporate hiring sprints.</p>
+          </div>
+          <div class="d-flex gap-2">
+            <a href="/institute/pages/7-hackathons/hackathon-form.html" class="btn btn-primary" id="btn-add-hackathon">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#plus"></use></svg>
+              Post Opportunity
+            </a>
+          </div>
+        </header>
+
+        <!-- Filter Bar (Tonal Double Bezel) -->
+        <div class="bezel-outer mb-6">
+          <div class="bezel-inner p-4">
+            <div class="form-grid g-3 align-center">
+              <div class="form-col-5">
+                <label for="filter-search" class="form-label">Search Hackathons</label>
+                <div class="input-icon-wrap">
+                  <svg class="icon input-icon"><use href="/icons/sprite.svg#magnifying-glass"></use></svg>
+                  <input type="text" id="filter-search" class="form-control" placeholder="Search by title, organizer, or tech stack...">
+                </div>
+              </div>
+              <div class="form-col-3">
+                <label for="filter-mode" class="form-label">Format / Mode</label>
+                <select id="filter-mode" class="form-select">
+                  <option value="">All Formats</option>
+                  <option value="ONLINE">Online / Virtual</option>
+                  <option value="OFFLINE">In-Person (On-Site)</option>
+                  <option value="HYBRID">Hybrid Model</option>
+                </select>
+              </div>
+              <div class="form-col-4 d-flex align-center pt-4">
+                <label class="custom-toggle d-flex align-center gap-2 cursor-pointer">
+                  <input type="checkbox" id="filter-bookmarked" class="toggle-checkbox">
+                  <span class="text-sm fw-semibold text-ink">Saved & Bookmarked Only</span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Hackathons Grid -->
+        <div id="hackathons-loading"></div>
+        <div id="hackathons-grid" class="bento-grid mb-6"></div>
+        <div id="pagination-container" class="mt-4"></div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import api from '/js/api.js';
+    import ui from '/js/ui.js';
+    import Pagination from '/js/pagination.js';
+
+    if (!auth.requireAuth(['ADMIN', 'TPO', 'DIRECTOR', 'STUDENT', 'STAFF'])) {
+      // redirected
+    } else {
+      ui.initLayout('hackathons');
+
+      if (!auth.isTpo() && !auth.hasRole('ADMIN') && !auth.hasRole('DIRECTOR')) {
+        document.getElementById('btn-add-hackathon')?.classList.add('d-none');
+      }
+
+      let currentPage = 0;
+      const pageSize = 9;
+
+      async function fetchHackathons(page = 0) {
+        currentPage = page;
+        const loader = document.getElementById('hackathons-loading');
+        const grid = document.getElementById('hackathons-grid');
+        loader.innerHTML = ui.renderLoader('Loading active competitions...');
+        grid.innerHTML = '';
+
+        const search = document.getElementById('filter-search').value.trim();
+        const mode = document.getElementById('filter-mode').value;
+        const onlyBookmarked = document.getElementById('filter-bookmarked').checked;
+
+        try {
+          let hackathons = [];
+          let totalPages = 1;
+          let totalElements = 0;
+
+          if (onlyBookmarked) {
+            const list = await api.get('/api/hackathons/bookmarked');
+            hackathons = list || [];
+            totalElements = hackathons.length;
+          } else {
+            const res = await api.get('/api/hackathons', {
+              page: currentPage,
+              size: pageSize,
+              search: search || undefined,
+              mode: mode || undefined
+            });
+            hackathons = res.content || [];
+            totalPages = res.totalPages || 1;
+            totalElements = res.totalElements || 0;
+          }
+
+          loader.innerHTML = '';
+
+          if (hackathons.length === 0) {
+            grid.innerHTML = `<div style="grid-column: 1 / -1;">${ui.renderEmpty('No competitions found', 'No active competitions matched your filters.')}</div>`;
+            return;
+          }
+
+          hackathons.forEach(h => {
+            const tags = (h.tags || '').split(',').filter(Boolean).map(t => `<span class="chip chip-muted">${ui.escapeHtml(t.trim())}</span>`).join(' ');
+            const isBookmarked = !!h.bookmarked;
+
+            const card = document.createElement('article');
+            card.className = 'bezel-outer listing-stub';
+            card.innerHTML = `
+              <div class="bezel-inner p-5 d-flex flex-column h-100 justify-between">
+                <div>
+                  <div class="d-flex justify-between align-start mb-3">
+                    <span class="chip chip-accent uppercase tracking-wider text-xs">${ui.escapeHtml(h.mode || 'ONLINE')}</span>
+                    <button type="button" class="btn-icon bookmark-btn" data-id="${h.id}" title="Toggle Bookmark" aria-label="Bookmark">
+                      <svg class="icon icon-sm" style="${isBookmarked ? 'fill: var(--brass); stroke: var(--brass);' : ''}"><use href="/icons/sprite.svg#bookmark-simple"></use></svg>
+                    </button>
+                  </div>
+
+                  <h3 class="poster-title text-lg mb-1">
+                    <a href="/institute/pages/7-hackathons/hackathon-detail.html?id=${h.id}" class="text-ink text-decoration-none">
+                      ${ui.escapeHtml(h.title)}
+                    </a>
+                  </h3>
+                  
+                  <div class="text-xs text-muted mb-3 d-flex align-center gap-2">
+                    <svg class="icon icon-xs"><use href="/icons/sprite.svg#buildings"></use></svg>
+                    <span class="fw-semibold text-ink-2">${ui.escapeHtml(h.organizer || 'Organizing Body')}</span>
+                    ${h.location ? `<span>&bull;</span> <span>${ui.escapeHtml(h.location)}</span>` : ''}
+                  </div>
+
+                  ${h.prizePool ? `
+                    <div class="p-3 surface-tone rounded-3 mb-3 text-center">
+                      <span class="text-xs text-muted d-block">Prizes & Bounties</span>
+                      <strong class="text-base text-placement tabular-nums">${ui.escapeHtml(h.prizePool)}</strong>
+                    </div>
+                  ` : ''}
+
+                  <div class="mb-3">
+                    <span class="text-xs text-muted d-block mb-1">Themes & Technologies</span>
+                    <div class="d-flex flex-wrap gap-1">
+                      ${tags || '<span class="chip chip-muted">Open Tech</span>'}
+                    </div>
+                  </div>
+                </div>
+
+                <div class="pt-4 border-top d-flex justify-between align-center">
+                  <div>
+                    <span class="text-xs text-muted d-block">Registration Closes</span>
+                    <strong class="text-xs text-institute tabular-nums">${ui.escapeHtml(h.registrationDeadline || 'Rolling')}</strong>
+                  </div>
+                  <a href="/institute/pages/7-hackathons/hackathon-detail.html?id=${h.id}" class="btn-pill-nested" title="View Specifications">
+                    <span>Inspect</span>
+                    <span class="btn-nested-circle">
+                      <svg class="icon icon-xs"><use href="/icons/sprite.svg#arrow-up-right"></use></svg>
+                    </span>
+                  </a>
+                </div>
+              </div>
+            `;
+
+            const starBtn = card.querySelector('.bookmark-btn');
+            starBtn.addEventListener('click', async (e) => {
+              e.preventDefault();
+              try {
+                const res = await api.post(`/api/hackathons/${h.id}/bookmark`);
+                const svg = starBtn.querySelector('svg');
+                if (res.bookmarked) {
+                  svg.style.fill = 'var(--brass)';
+                  svg.style.stroke = 'var(--brass)';
+                } else {
+                  svg.style.fill = 'none';
+                  svg.style.stroke = 'currentColor';
+                }
+                ui.showToast(res.bookmarked ? 'Saved to bookmarks dossier!' : 'Removed from saved bookmarks');
+              } catch (err) {
+                ui.showToast(err.message || 'Bookmark toggle failed', 'danger');
+              }
+            });
+
+            grid.appendChild(card);
+          });
+
+          if (!onlyBookmarked) {
+            Pagination.render({
+              containerId: 'pagination-container',
+              currentPage: currentPage,
+              totalPages: totalPages,
+              totalElements: totalElements,
+              pageSize: pageSize,
+              onPageChange: (p) => fetchHackathons(p)
+            });
+          }
+
+        } catch (err) {
+          loader.innerHTML = ui.renderError(err.message);
+        }
+      }
+
+      let timeout;
+      document.getElementById('filter-search').addEventListener('input', () => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => fetchHackathons(0), 300);
+      });
+      document.getElementById('filter-mode').addEventListener('change', () => fetchHackathons(0));
+      document.getElementById('filter-bookmarked').addEventListener('change', () => fetchHackathons(0));
+
+      fetchHackathons(0);
+    }
+  </script>
+</body>
+</html>

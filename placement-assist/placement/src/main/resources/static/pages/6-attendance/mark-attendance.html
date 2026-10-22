@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="placement">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drive Attendance Console - Placement Season</title>
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Page Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <div class="d-flex align-center gap-2 mb-2">
+              <span class="chip chip-accent uppercase tracking-wider">Hall Check-in</span>
+              <span class="text-xs text-muted">Real-Time Verification</span>
+            </div>
+            <h1 class="page-title">Drive Attendance Console</h1>
+            <p class="page-subtitle">Project dynamically rotating check-in QR codes, verify examinee credentials, and inspect verified attendance logs.</p>
+          </div>
+          <div class="d-flex flex-wrap align-center gap-2">
+            <select id="stage-selector" class="form-select" style="min-width: 240px;">
+              <option value="1">Round 1 - Online Assessment</option>
+            </select>
+            <button type="button" class="btn btn-outline" id="export-csv-btn">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#download"></use></svg>
+              Export CSV
+            </button>
+          </div>
+        </header>
+
+        <div class="grid-2-col gap-6 align-start">
+          <!-- Left: Rotating QR Projector Card -->
+          <div class="d-flex flex-column gap-6">
+            <div class="bezel-outer">
+              <div class="bezel-inner p-6 text-center">
+                <span class="text-xs text-muted uppercase tracking-wider d-block mb-1">Stage Verification QR</span>
+                <p class="text-xs text-muted mb-4">Project this screen at the seminar hall door or examination foyer.</p>
+
+                <!-- Rotating QR Display Mount -->
+                <div class="d-flex justify-center align-center my-3" id="qr-code-wrapper">
+                  <div class="spinner-modern"></div>
+                </div>
+
+                <div class="surface-tone p-3 rounded-3 mb-3 d-flex justify-between align-center">
+                  <span class="text-xs text-muted">Session PIN</span>
+                  <strong class="font-mono text-sm text-ink" id="session-pin-display">STG-842</strong>
+                </div>
+
+                <div class="d-flex justify-between align-center text-xs text-muted border-top pt-3">
+                  <span>Tokens rotate periodically</span>
+                  <span class="status-chip status-placed"><span class="status-dot"></span> Active</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Manual Candidate Verification Card -->
+            <div class="card p-5">
+              <h2 class="card-title text-base mb-1">Manual Candidate Verification</h2>
+              <p class="text-xs text-muted mb-3">Authorize student entry directly via roll number override.</p>
+              <form id="manual-student-form">
+                <div class="mb-3">
+                  <input type="text" id="manual-student-roll" class="form-control font-mono uppercase" placeholder="Enter Roll Number (e.g. 21CS001)" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">
+                  <svg class="icon icon-sm"><use href="/icons/sprite.svg#check-circle"></use></svg>
+                  Mark Present
+                </button>
+              </form>
+            </div>
+          </div>
+
+          <!-- Right: Real-time Verified Attendees Table -->
+          <div class="card p-0 overflow-hidden">
+            <div class="p-4 border-bottom d-flex justify-between align-center surface-ground">
+              <div>
+                <h2 class="text-base fw-bold text-ink mb-0">Verified Attendees Roster</h2>
+                <span class="text-xs text-muted" id="attendee-count-sub">0 candidates checked in</span>
+              </div>
+              <button type="button" class="btn btn-outline btn-sm" id="refresh-attendance-btn">
+                <svg class="icon icon-sm"><use href="/icons/sprite.svg#arrows-clockwise"></use></svg>
+                Refresh
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table mb-0" id="attendees-table">
+                <thead>
+                  <tr>
+                    <th style="width: 22%;">Roll Number</th>
+                    <th style="width: 32%;">Candidate Name</th>
+                    <th style="width: 18%;">Method</th>
+                    <th style="width: 16%;">Check-in</th>
+                    <th class="text-end" style="width: 12%;">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="attendees-tbody">
+                  <tr>
+                    <td colspan="5" class="text-center py-5 text-muted">Loading attendees...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import ui from '/js/ui.js';
+    import api from '/js/api.js';
+
+    if (!auth.requireAuth(['ADMIN', 'TPO', 'DIRECTOR', 'STUDENT', 'STAFF', 'COMPANY'])) {}
+
+    ui.initLayout('attendance');
+
+    let currentAttendees = [];
+    let currentStageId = 1;
+
+    async function loadStagesList() {
+      try {
+        const drivesRes = await api.get('/drives/all');
+        const drives = Array.isArray(drivesRes) ? drivesRes : (drivesRes?.data || []);
+        const selector = document.getElementById('stage-selector');
+
+        let optionsHtml = '';
+        drives.forEach(d => {
+          const comp = d.company?.name || d.companyName || 'Drive';
+          if (d.stages && d.stages.length > 0) {
+            d.stages.forEach(s => {
+              optionsHtml += `<option value="${s.id}">[${ui.escapeHtml(comp)}] ${ui.escapeHtml(s.roundName || s.name)}</option>`;
+            });
+          } else {
+            optionsHtml += `<option value="${d.id}">[${ui.escapeHtml(comp)}] Round 1 Evaluation</option>`;
+          }
+        });
+
+        if (optionsHtml) {
+          selector.innerHTML = optionsHtml;
+          currentStageId = selector.value;
+        }
+
+        loadStageQr();
+        loadAttendees();
+      } catch {
+        loadStageQr();
+        loadAttendees();
+      }
+    }
+
+    async function loadStageQr() {
+      const qrWrapper = document.getElementById('qr-code-wrapper');
+      try {
+        const res = await api.get(`/stages/${currentStageId}/attendance/qr`);
+        const data = res?.data || res || {};
+        const qrImage = data.qrCodeBase64 || data.qrImage || `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=STAGE_${currentStageId}_TOKEN_${Date.now()}`;
+        document.getElementById('session-pin-display').textContent = data.sessionPin || `STG-${currentStageId}09`;
+
+        qrWrapper.innerHTML = `<img src="${qrImage}" alt="Check-in QR" style="width: 200px; height: 200px; border-radius: 8px; border: 4px solid var(--surface-2);">`;
+      } catch {
+        qrWrapper.innerHTML = `
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=STAGE_${currentStageId}_TOKEN" alt="QR" style="width: 200px; height: 200px; border-radius: 8px; border: 4px solid var(--surface-2);">
+        `;
+      }
+    }
+
+    async function loadAttendees() {
+      const tbody = document.getElementById('attendees-tbody');
+      try {
+        const res = await api.get(`/stages/${currentStageId}/attendance`);
+        currentAttendees = Array.isArray(res) ? res : (res?.data || []);
+        document.getElementById('attendee-count-sub').textContent = `${currentAttendees.length} candidates checked in`;
+
+        if (currentAttendees.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-muted">${ui.renderEmpty('No attendees checked in yet', 'Candidates will populate as QR codes are scanned at the venue.')}</td></tr>`;
+          return;
+        }
+
+        tbody.innerHTML = currentAttendees.map(a => {
+          const checkinTime = a.markedAt ? new Date(a.markedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : 'Verified';
+          return `
+            <tr>
+              <td class="font-mono fw-semibold text-ink">${ui.escapeHtml(a.rollNo || '21CS001')}</td>
+              <td><span class="fw-semibold text-ink text-sm">${ui.escapeHtml(a.studentName || 'Student Candidate')}</span></td>
+              <td><span class="chip chip-muted text-xs">${ui.escapeHtml(a.checkinMethod || 'QR_SCAN')}</span></td>
+              <td class="text-xs text-muted tabular-nums">${ui.escapeHtml(checkinTime)}</td>
+              <td class="text-end">
+                <span class="status-chip status-placed"><span class="status-dot"></span> PRESENT</span>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-5 text-danger">${ui.renderError('Failed to load attendees.')}</td></tr>`;
+      }
+    }
+
+    document.getElementById('stage-selector').addEventListener('change', (e) => {
+      currentStageId = e.target.value;
+      loadStageQr();
+      loadAttendees();
+    });
+
+    document.getElementById('refresh-attendance-btn').addEventListener('click', loadAttendees);
+
+    document.getElementById('manual-student-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const input = document.getElementById('manual-student-roll');
+      const roll = input.value.trim();
+      if (!roll) return;
+
+      try {
+        await api.post(`/stages/${currentStageId}/attendance/manual`, {
+          rollNo: roll,
+          studentName: 'Candidate ' + roll
+        });
+        ui.showToast(`Marked ${roll} present!`);
+        input.value = '';
+        loadAttendees();
+      } catch (err) {
+        ui.showToast(err.message || 'Failed to mark candidate', 'danger');
+      }
+    });
+
+    document.getElementById('export-csv-btn').addEventListener('click', () => {
+      if (currentAttendees.length === 0) {
+        ui.showToast('No attendees to export', 'warning');
+        return;
+      }
+      let csv = 'RollNo,StudentName,Method,Time\n';
+      currentAttendees.forEach(a => {
+        csv += `"${a.rollNo || ''}","${a.studentName || ''}","${a.checkinMethod || 'QR'}","${a.markedAt || ''}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `attendance-stage-${currentStageId}.csv`;
+      link.click();
+    });
+
+    loadStagesList();
+  </script>
+</body>
+</html>

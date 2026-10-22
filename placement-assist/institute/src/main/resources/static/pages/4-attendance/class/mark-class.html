@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-domain="institute">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mark Class Attendance — Academic Institute Pillar</title>
+  
+  <!-- Design System CSS -->
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+
+  <style>
+    .status-pill-group {
+      display: inline-flex;
+      border: 1px solid var(--surface-3);
+      border-radius: var(--radius-pill);
+      padding: 2px;
+      background: var(--surface-2);
+      gap: 2px;
+    }
+    .status-pill-btn {
+      padding: 3px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      transition: all var(--dur-fast);
+      user-select: none;
+    }
+    .status-pill-btn:hover {
+      color: var(--ink);
+    }
+    .status-pill-btn.active-present {
+      background: var(--success);
+      color: #FFFFFF;
+    }
+    .status-pill-btn.active-absent {
+      background: var(--danger);
+      color: #FFFFFF;
+    }
+    .status-pill-btn.active-late {
+      background: var(--warning);
+      color: #FFFFFF;
+    }
+    .status-pill-btn.active-excused {
+      background: var(--surface-3);
+      color: var(--ink);
+    }
+  </style>
+</head>
+<body class="theme-ground">
+  <!-- Paper Grain Overlay -->
+  <div class="grain-overlay"></div>
+
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <div id="attendance-loader"></div>
+
+        <div id="attendance-content" style="display: none;">
+          <!-- Page Header -->
+          <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+            <div>
+              <div class="d-flex align-center gap-2 mb-2">
+                <a href="/institute/pages/4-attendance/class/class-sessions.html" class="nav-crumb">
+                  <svg width="14" height="14"><use href="#ph-arrow-left"/></svg>
+                  <span>Class Sessions</span>
+                </a>
+                <span class="crumb-separator">/</span>
+                <span class="crumb-current">Roster Marking</span>
+              </div>
+              <h1 class="page-title" id="session-subject">Subject Name</h1>
+              <p class="page-subtitle" id="session-meta-line">
+                Branch/Sec: <strong id="session-branch-sec">--</strong> • Faculty: <span id="session-faculty">--</span> • Date: <span id="session-date">--</span> • Slot: <span id="session-period">--</span>
+              </p>
+            </div>
+            <div class="d-flex align-center gap-2">
+              <a href="/institute/pages/4-attendance/class/class-sessions.html" class="btn btn-outline btn-sm">
+                <span>Back to Sessions</span>
+              </a>
+              <button id="btn-save-attendance" class="btn btn-primary btn-sm">
+                <svg class="icon icon-sm"><use href="/icons/sprite.svg#check"/></svg>
+                <span>Save Attendance</span>
+              </button>
+            </div>
+          </header>
+
+          <!-- Quick Controls Bar (Double Bezel) -->
+          <div class="double-bezel mb-6">
+            <div class="double-bezel-inner" style="padding: var(--space-4) var(--space-6);">
+              <div class="d-flex flex-wrap justify-between align-center gap-4">
+                <div class="d-flex align-center gap-2">
+                  <span class="text-xs font-semibold uppercase text-muted">Quick Actions:</span>
+                  <button type="button" class="btn btn-sm btn-outline" id="btn-all-present" style="border-color: var(--success); color: var(--success);">
+                    Mark All Present
+                  </button>
+                  <button type="button" class="btn btn-sm btn-outline" id="btn-all-absent" style="border-color: var(--danger); color: var(--danger);">
+                    Mark All Absent
+                  </button>
+                </div>
+                <div style="min-width: 280px;">
+                  <div class="input-icon-wrap">
+                    <svg class="input-icon"><use href="/icons/sprite.svg#magnifying-glass"/></svg>
+                    <input type="text" id="filter-roster-search" class="input input-sm" placeholder="Filter by roll number or student name...">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Roster Table (Double Bezel Ledger) -->
+          <div class="double-bezel">
+            <div class="double-bezel-inner" style="padding: 0; overflow: hidden;">
+              <table class="ledger-table" style="width: 100%;">
+                <thead>
+                  <tr>
+                    <th style="width: 18%;">Roll Number</th>
+                    <th style="width: 28%;">Student Name</th>
+                    <th style="width: 14%;">Branch</th>
+                    <th style="width: 25%;">Attendance Status</th>
+                    <th style="width: 15%;">Remarks</th>
+                  </tr>
+                </thead>
+                <tbody id="roster-tbody">
+                  <!-- Injected via JS -->
+                </tbody>
+              </table>
+
+              <div style="padding: var(--space-4) var(--space-6); background: var(--surface-2); border-top: 1px solid var(--surface-3); display: flex; justify-content: space-between; align-items: center;">
+                <span class="text-xs text-muted" id="roster-summary">Showing 0 students</span>
+                <button id="btn-save-attendance-bottom" class="btn btn-primary btn-sm">
+                  <svg class="icon icon-sm"><use href="/icons/sprite.svg#check"/></svg>
+                  <span>Save Attendance</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import auth from '/js/core/auth.js';
+    import api from '/js/core/api.js';
+    import ui from '/js/core/ui.js';
+
+    if (!auth.requireAuth()) {
+      // redirected
+    } else {
+      ui.initLayout('attendance-class');
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const sessionId = urlParams.get('sessionId');
+
+      if (!sessionId) {
+        window.location.href = '/institute/pages/4-attendance/class/class-sessions.html';
+      }
+
+      let students = [];
+      let attendanceMap = {};
+
+      async function init() {
+        const loader = document.getElementById('attendance-loader');
+        const content = document.getElementById('attendance-content');
+        loader.innerHTML = ui.renderLoader('Loading class session roster...');
+
+        try {
+          const session = await api.get(`/class-sessions/${sessionId}`);
+          document.getElementById('session-subject').textContent = session.subject || session.subjectName || 'Class Session';
+          document.getElementById('session-branch-sec').textContent = `${session.branch || 'CSE'} - Year ${session.year || session.semester || 4} (${session.section || 'A'})`;
+          document.getElementById('session-faculty').textContent = session.faculty || session.facultyName || 'Staff';
+          document.getElementById('session-date').textContent = session.sessionDate || '-';
+          document.getElementById('session-period').textContent = (session.startTime && session.endTime) ? `${session.startTime} - ${session.endTime}` : (session.period || 'Regular Slot');
+
+          // Load existing attendance
+          try {
+            const existing = await api.get(`/attendance/session/class/${sessionId}`);
+            (Array.isArray(existing) ? existing : (existing?.data || [])).forEach(r => {
+              attendanceMap[r.studentId] = { status: r.status, remarks: r.remarks || '' };
+            });
+          } catch {
+            // New attendance session without prior records
+          }
+
+          // Load students filtered by branch if available, or all
+          const studentsRes = await api.get('/students', { branch: session.branch || undefined, size: 100 });
+          students = Array.isArray(studentsRes) ? studentsRes : (studentsRes?.content || studentsRes?.data || []);
+
+          loader.style.display = 'none';
+          content.style.display = 'block';
+
+          renderRoster();
+        } catch (err) {
+          loader.innerHTML = ui.renderError(err.message, 'init');
+        }
+      }
+
+      function renderRoster(filterText = '') {
+        const tbody = document.getElementById('roster-tbody');
+        tbody.innerHTML = '';
+
+        const query = filterText.toLowerCase().trim();
+        const filtered = students.filter(s =>
+          (s.rollNo && s.rollNo.toLowerCase().includes(query)) ||
+          (s.name && s.name.toLowerCase().includes(query))
+        );
+
+        document.getElementById('roster-summary').textContent = `Showing ${filtered.length} of ${students.length} enrolled students`;
+
+        if (filtered.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="5" style="text-align: center; padding: var(--space-8); color: var(--muted);">No matching students found in this section.</td></tr>`;
+          return;
+        }
+
+        filtered.forEach(s => {
+          const currentRecord = attendanceMap[s.id] || { status: 'PRESENT', remarks: '' };
+          const status = currentRecord.status || 'PRESENT';
+          const remarks = currentRecord.remarks || '';
+
+          const tr = document.createElement('tr');
+          tr.setAttribute('data-student-id', s.id);
+          tr.innerHTML = `
+            <td>
+              <span class="font-mono font-semibold" style="color: var(--accent);">${ui.escapeHtml(s.rollNo)}</span>
+            </td>
+            <td>
+              <div class="font-semibold text-ink">${ui.escapeHtml(s.name)}</div>
+              <div class="text-xs text-muted">${ui.escapeHtml(s.email || '')}</div>
+            </td>
+            <td>
+              <span class="chip chip-neutral">${ui.escapeHtml(s.branch || 'CSE')}</span>
+            </td>
+            <td>
+              <div class="status-pill-group">
+                <button type="button" class="status-pill-btn ${status === 'PRESENT' ? 'active-present' : ''}" data-status="PRESENT">Present</button>
+                <button type="button" class="status-pill-btn ${status === 'ABSENT' ? 'active-absent' : ''}" data-status="ABSENT">Absent</button>
+                <button type="button" class="status-pill-btn ${status === 'LATE' ? 'active-late' : ''}" data-status="LATE">Late</button>
+                <button type="button" class="status-pill-btn ${status === 'EXCUSED' ? 'active-excused' : ''}" data-status="EXCUSED">Excused</button>
+              </div>
+            </td>
+            <td>
+              <input type="text" class="input input-sm remarks-input" value="${ui.escapeHtml(remarks)}" placeholder="Add note...">
+            </td>
+          `;
+
+          const pillButtons = tr.querySelectorAll('.status-pill-btn');
+          pillButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+              const newStatus = btn.getAttribute('data-status');
+              if (!attendanceMap[s.id]) attendanceMap[s.id] = {};
+              attendanceMap[s.id].status = newStatus;
+
+              pillButtons.forEach(b => {
+                b.className = 'status-pill-btn';
+              });
+              btn.classList.add(`active-${newStatus.toLowerCase()}`);
+            });
+          });
+
+          const remarksInput = tr.querySelector('.remarks-input');
+          remarksInput.addEventListener('input', () => {
+            if (!attendanceMap[s.id]) attendanceMap[s.id] = { status: 'PRESENT' };
+            attendanceMap[s.id].remarks = remarksInput.value.trim();
+          });
+
+          tbody.appendChild(tr);
+        });
+      }
+
+      document.getElementById('btn-all-present').addEventListener('click', () => {
+        students.forEach(s => {
+          if (!attendanceMap[s.id]) attendanceMap[s.id] = {};
+          attendanceMap[s.id].status = 'PRESENT';
+        });
+        renderRoster(document.getElementById('filter-roster-search').value);
+      });
+
+      document.getElementById('btn-all-absent').addEventListener('click', () => {
+        students.forEach(s => {
+          if (!attendanceMap[s.id]) attendanceMap[s.id] = {};
+          attendanceMap[s.id].status = 'ABSENT';
+        });
+        renderRoster(document.getElementById('filter-roster-search').value);
+      });
+
+      document.getElementById('filter-roster-search').addEventListener('input', (e) => {
+        renderRoster(e.target.value);
+      });
+
+      async function saveAttendance() {
+        if (!auth.canManage()) {
+          ui.showToast('You do not have permission to mark attendance.', 'warning');
+          return;
+        }
+
+        const items = students.map(s => {
+          const rec = attendanceMap[s.id] || { status: 'PRESENT', remarks: '' };
+          return {
+            studentId: s.id,
+            status: rec.status || 'PRESENT',
+            remarks: rec.remarks || null
+          };
+        });
+
+        const payload = {
+          sessionId: parseInt(sessionId, 10),
+          sessionType: 'CLASS',
+          items: items
+        };
+
+        const btn1 = document.getElementById('btn-save-attendance');
+        const btn2 = document.getElementById('btn-save-attendance-bottom');
+        btn1.disabled = true;
+        btn2.disabled = true;
+        btn1.textContent = 'Saving...';
+        btn2.textContent = 'Saving...';
+
+        try {
+          await api.post('/attendance/bulk', payload);
+          ui.showToast(`Saved attendance register for ${items.length} students!`, 'success');
+          btn1.disabled = false;
+          btn2.disabled = false;
+          btn1.innerHTML = `<svg class="icon icon-sm"><use href="/icons/sprite.svg#check"/></svg><span>Save Attendance</span>`;
+          btn2.innerHTML = `<svg class="icon icon-sm"><use href="/icons/sprite.svg#check"/></svg><span>Save Attendance</span>`;
+        } catch (err) {
+          ui.showToast(err.message || 'Failed to save attendance roster', 'danger');
+          btn1.disabled = false;
+          btn2.disabled = false;
+          btn1.innerHTML = `<svg class="icon icon-sm"><use href="/icons/sprite.svg#check"/></svg><span>Save Attendance</span>`;
+          btn2.innerHTML = `<svg class="icon icon-sm"><use href="/icons/sprite.svg#check"/></svg><span>Save Attendance</span>`;
+        }
+      }
+
+      document.getElementById('btn-save-attendance').addEventListener('click', saveAttendance);
+      document.getElementById('btn-save-attendance-bottom').addEventListener('click', saveAttendance);
+
+      init();
+    }
+  </script>
+</body>
+</html>

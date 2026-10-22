@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="institute">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRT Attendance Register & Compliance - Academic Institute</title>
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Page Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <h1 class="page-title">CRT Training Attendance Ledger</h1>
+            <p class="page-subtitle">Campus Recruitment Training attendance registry, 75% statutory compliance, and defaulter tracking.</p>
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <button id="btn-export-csv" class="btn btn-outline">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#download"></use></svg>
+              Export CSV
+            </button>
+            <a href="/institute/pages/4-attendance/crt/crt-sessions.html" class="btn btn-primary">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#calendar-blank"></use></svg>
+              Manage CRT Sessions
+            </a>
+          </div>
+        </header>
+
+        <!-- Metric Band (Tonal Double Bezels) -->
+        <div class="grid-3-col gap-4 mb-6">
+          <div class="bezel-outer">
+            <div class="bezel-inner p-5">
+              <span class="text-xs text-muted uppercase tracking-wider d-block">Total CRT Sessions</span>
+              <div class="text-3xl fw-bold text-ink tabular-nums mt-1 mb-1" id="stat-total-sessions">0</div>
+              <span class="text-xs text-muted">Specialized modules completed</span>
+            </div>
+          </div>
+
+          <div class="bezel-outer">
+            <div class="bezel-inner p-5">
+              <span class="text-xs text-muted uppercase tracking-wider d-block">Students Monitored</span>
+              <div class="text-3xl fw-bold text-ink tabular-nums mt-1 mb-1" id="stat-total-students">0</div>
+              <span class="text-xs text-muted">Active registered candidates</span>
+            </div>
+          </div>
+
+          <div class="bezel-outer">
+            <div class="bezel-inner p-5">
+              <span class="text-xs text-muted uppercase tracking-wider d-block">Attendance Shortage (&lt;75%)</span>
+              <div class="text-3xl fw-bold text-institute tabular-nums mt-1 mb-1" id="stat-shortage-students">0</div>
+              <span class="text-xs text-institute fw-semibold">Action required before drive clearance</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Bar (Tonal Double Bezel) -->
+        <div class="bezel-outer mb-6">
+          <div class="bezel-inner p-4">
+            <div class="form-grid g-3">
+              <div class="form-col-5">
+                <label for="filter-search" class="form-label">Search Student</label>
+                <div class="input-icon-wrap">
+                  <svg class="icon input-icon"><use href="/icons/sprite.svg#magnifying-glass"></use></svg>
+                  <input type="text" id="filter-search" class="form-control" placeholder="Search by roll number or student name...">
+                </div>
+              </div>
+              <div class="form-col-4">
+                <label for="filter-branch" class="form-label">Department / Branch</label>
+                <select id="filter-branch" class="form-select">
+                  <option value="">All Branches</option>
+                  <option value="CSE">CSE</option>
+                  <option value="IT">IT</option>
+                  <option value="ECE">ECE</option>
+                  <option value="EEE">EEE</option>
+                  <option value="MECH">MECH</option>
+                  <option value="CIVIL">CIVIL</option>
+                </select>
+              </div>
+              <div class="form-col-3">
+                <label for="filter-status-threshold" class="form-label">Eligibility Threshold</label>
+                <select id="filter-status-threshold" class="form-select">
+                  <option value="">All Attendance Levels</option>
+                  <option value="shortage">Shortage Only (&lt; 75%)</option>
+                  <option value="eligible">Eligible (&ge; 75%)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Attendance Ledger Table -->
+        <div class="card p-0 overflow-hidden mb-6">
+          <div id="table-container"></div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import api from '/js/api.js';
+    import ui from '/js/ui.js';
+    import DataTable from '/js/table.js';
+
+    if (!auth.requireAuth(['ADMIN', 'TPO', 'DIRECTOR', 'STUDENT', 'STAFF'])) {
+      // redirected
+    } else {
+      ui.initLayout('attendance-crt');
+
+      let studentsReportData = [];
+
+      async function init() {
+        const container = document.getElementById('table-container');
+        container.innerHTML = ui.renderLoader('Compiling attendance analytics...');
+
+        try {
+          // 1. Fetch total CRT sessions
+          const sessionsRes = await api.get('/api/crt-sessions', { size: 100 });
+          const sessions = Array.isArray(sessionsRes) ? sessionsRes : (sessionsRes?.content || sessionsRes?.data || []);
+          const totalSessions = sessions.length;
+          document.getElementById('stat-total-sessions').textContent = totalSessions;
+
+          // 2. Fetch student list
+          const studentsRes = await api.get('/api/students', { size: 100 });
+          const students = Array.isArray(studentsRes) ? studentsRes : (studentsRes?.content || studentsRes?.data || []);
+          document.getElementById('stat-total-students').textContent = students.length;
+
+          // 3. Aggregate each student's attendance summary
+          let shortageCount = 0;
+          const reportRows = await Promise.all(students.map(async (s) => {
+            try {
+              const summary = await api.get(`/api/attendance/student/${s.id}/summary`);
+              const crtAttended = summary.crtAttended !== undefined ? summary.crtAttended : (summary.attendedSessions || 0);
+              const crtTotal = summary.crtTotal !== undefined ? summary.crtTotal : (summary.totalSessions || totalSessions || 1);
+              const pct = summary.crtPercentage !== undefined ? Math.round(summary.crtPercentage) : (crtTotal > 0 ? Math.round((crtAttended / crtTotal) * 100) : 100);
+              if (pct < 75) shortageCount++;
+
+              return {
+                id: s.id,
+                rollNo: s.rollNo,
+                name: s.name,
+                branch: s.branch,
+                attended: crtAttended,
+                total: crtTotal,
+                percentage: pct
+              };
+            } catch {
+              return {
+                id: s.id,
+                rollNo: s.rollNo,
+                name: s.name,
+                branch: s.branch,
+                attended: 0,
+                total: totalSessions,
+                percentage: 0
+              };
+            }
+          }));
+
+          document.getElementById('stat-shortage-students').textContent = shortageCount;
+          studentsReportData = reportRows;
+          renderTable();
+
+        } catch (err) {
+          container.innerHTML = ui.renderError(err.message);
+        }
+      }
+
+      function renderTable() {
+        const search = document.getElementById('filter-search').value.toLowerCase().trim();
+        const branch = document.getElementById('filter-branch').value;
+        const threshold = document.getElementById('filter-status-threshold').value;
+
+        const filtered = studentsReportData.filter(item => {
+          if (search && !item.rollNo.toLowerCase().includes(search) && !item.name.toLowerCase().includes(search)) return false;
+          if (branch && item.branch !== branch) return false;
+          if (threshold === 'shortage' && item.percentage >= 75) return false;
+          if (threshold === 'eligible' && item.percentage < 75) return false;
+          return true;
+        });
+
+        DataTable.render({
+          containerId: 'table-container',
+          columns: [
+            {
+              key: 'rollNo',
+              label: 'Roll No',
+              render: (item) => `
+                <a href="/institute/pages/1-students/student-profile.html?id=${item.id}" class="fw-semibold text-ink text-decoration-none font-mono">
+                  ${ui.escapeHtml(item.rollNo)}
+                </a>
+              `
+            },
+            {
+              key: 'name',
+              label: 'Candidate Name',
+              render: (item) => {
+                const initials = (item.name || 'S').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                return `
+                  <div class="d-flex align-center gap-2">
+                    <span class="avatar avatar-sm avatar-institute">${initials}</span>
+                    <span class="fw-semibold text-ink">${ui.escapeHtml(item.name)}</span>
+                  </div>
+                `;
+              }
+            },
+            {
+              key: 'branch',
+              label: 'Branch',
+              render: (item) => `<span class="chip chip-muted">${ui.escapeHtml(item.branch)}</span>`
+            },
+            {
+              key: 'attended',
+              label: 'Sessions Attended',
+              render: (item) => `<span class="tabular-nums">${item.attended} / ${item.total}</span>`
+            },
+            {
+              key: 'percentage',
+              label: 'Compliance Metric',
+              render: (item) => {
+                const isShortage = item.percentage < 75;
+                const fillClass = isShortage ? 'var(--danger)' : 'var(--placement)';
+                return `
+                  <div class="d-flex align-center gap-3" style="max-width: 180px;">
+                    <div class="progress-track flex-grow-1" style="height: 6px; background: var(--surface-3); border-radius: 999px; overflow: hidden;">
+                      <div style="width: ${item.percentage}%; height: 100%; background: ${fillClass}; border-radius: 999px;"></div>
+                    </div>
+                    <span class="text-xs fw-bold tabular-nums ${isShortage ? 'text-danger' : 'text-placement'}">${item.percentage}%</span>
+                  </div>
+                `;
+              }
+            },
+            {
+              key: 'status',
+              label: 'Drive Clearance',
+              render: (item) => {
+                if (item.percentage >= 75) {
+                  return `
+                    <span class="status-chip status-placed">
+                      <span class="status-dot"></span>
+                      CLEARED (&ge;75%)
+                    </span>
+                  `;
+                } else {
+                  return `
+                    <span class="status-chip status-danger">
+                      <span class="status-dot"></span>
+                      SHORTAGE (&lt;75%)
+                    </span>
+                  `;
+                }
+              }
+            }
+          ],
+          data: filtered,
+          emptyMessage: 'No attendance records match your filter criteria.'
+        });
+      }
+
+      document.getElementById('filter-search').addEventListener('input', renderTable);
+      document.getElementById('filter-branch').addEventListener('change', renderTable);
+      document.getElementById('filter-status-threshold').addEventListener('change', renderTable);
+
+      document.getElementById('btn-export-csv').addEventListener('click', async () => {
+        try {
+          ui.showToast('Generating CRT attendance export...', 'info');
+          await api.download('/api/attendance/export/crt', 'crt_attendance_report.csv');
+          ui.showToast('CRT report downloaded!');
+        } catch (err) {
+          ui.showToast(err.message || 'Export failed', 'danger');
+        }
+      });
+
+      init();
+    }
+  </script>
+</body>
+</html>
