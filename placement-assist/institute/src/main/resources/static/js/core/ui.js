@@ -26,6 +26,7 @@ class UIManager {
     if (topbarContainer) {
       topbarContainer.innerHTML = this.renderTopbar(user);
       domainSwitcher.init();
+      theme.updateToggleIcons(theme.getTheme());
     }
 
     // Bind common interactions
@@ -147,8 +148,8 @@ class UIManager {
           </a>
 
           <!-- Theme Toggle Button -->
-          <button class="btn btn-sm btn-outline" id="theme-toggle-btn" title="Toggle Light/Dark Theme" style="padding: 8px;">
-            <span id="theme-icon">
+          <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light/Dark Theme" aria-label="Toggle Light/Dark Theme" style="padding: 8px;">
+            <span id="theme-icon" class="theme-icon" style="display: flex; align-items: center; justify-content: center;">
               <svg width="16" height="16"><use href="#ph-moon"/></svg>
             </span>
           </button>

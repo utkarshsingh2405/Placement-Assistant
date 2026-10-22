@@ -15,6 +15,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
   <!-- Design System CSS -->
+  <script src="/js/theme-init.js"></script>
   <link rel="stylesheet" href="/css/00-tokens.css">
   <link rel="stylesheet" href="/css/01-reset.css">
   <link rel="stylesheet" href="/css/02-typography.css">
@@ -53,8 +54,8 @@
 
     <!-- Header Actions -->
     <div style="display: flex; align-items: center; gap: var(--space-3);">
-      <button class="btn btn-sm btn-outline" id="theme-btn" title="Toggle Theme" style="border-color: #2A383E; color: #E8EEEC; padding: 8px;">
-        <span id="theme-icon">
+      <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-btn" title="Toggle Theme" aria-label="Toggle Theme" style="border-color: #2A383E; color: #E8EEEC; padding: 8px;">
+        <span id="theme-icon" class="theme-icon" style="display: flex; align-items: center; justify-content: center;">
           <svg width="16" height="16"><use href="#ph-moon"/></svg>
         </span>
       </button>

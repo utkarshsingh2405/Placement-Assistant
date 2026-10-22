@@ -15,9 +15,12 @@
 @import url('domain-switcher.css');
 
 :root {
-  /* Typography Tokens */
-  --font-heading: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-body: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  color-scheme: light;
+
+  /* Typography Tokens - Stylized Display Headings Everywhere */
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-heading: var(--font-display, 'Instrument Serif', Georgia, serif);
+  --font-body: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   /* Domain Palette - Institute (Heraldic Burgundy) */
   --institute-accent: var(--institute, #8C2433);
@@ -122,6 +125,7 @@ html[data-theme="light"] {
    Deep obsidian nocturnal ground, elevated tonal dark cards
    ============================================================================== */
 html[data-theme="dark"] {
+  color-scheme: dark;
   --bg: #0C1214;
   --bg-subtle: #121C1F;
   --surface: #121C1F;
@@ -249,12 +253,20 @@ html[data-theme="dark"] body {
                     radial-gradient(ellipse 1000px 600px at 100% 100%, rgba(13, 148, 136, 0.06), transparent 70%);
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  font-weight: 700;
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6,
+.app-heading,
+.card-title,
+.modal-title,
+.section-title,
+.page-title,
+.hero-title,
+.font-display {
+  font-family: var(--font-heading, 'Instrument Serif', Georgia, serif) !important;
+  font-weight: 400 !important;
   color: var(--text);
-  letter-spacing: -0.02em;
-  line-height: 1.25;
+  letter-spacing: -0.015em;
+  line-height: 1.15;
 }
 
 p, span, label, input, button, select, textarea {

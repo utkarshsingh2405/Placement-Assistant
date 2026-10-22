@@ -6,6 +6,7 @@
   <title>Component Gallery - Placement Assistance Design System</title>
   
   <!-- Design System CSS -->
+  <script src="/js/theme-init.js"></script>
   <link rel="stylesheet" href="/css/00-tokens.css">
   <link rel="stylesheet" href="/css/01-reset.css">
   <link rel="stylesheet" href="/css/02-typography.css">
@@ -44,7 +45,8 @@
       </div>
       <div style="display: flex; gap: var(--space-3); align-items: center;">
         <!-- Theme Toggle -->
-        <button class="btn btn-outline" id="theme-btn">
+        <button class="btn btn-outline theme-toggle-btn" id="theme-btn" title="Toggle Theme" aria-label="Toggle Theme" style="display: flex; align-items: center; gap: 8px;">
+          <span id="theme-icon" class="theme-icon" style="display: flex; align-items: center; justify-content: center;"></span>
           <span>Toggle Theme</span>
         </button>
         <!-- Domain Switcher Simulation -->

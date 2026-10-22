@@ -6,6 +6,7 @@
   <title>Security & Profile — Placement Assistance Gateway</title>
   
   <!-- Design System CSS -->
+  <script src="/js/theme-init.js"></script>
   <link rel="stylesheet" href="/css/00-tokens.css">
   <link rel="stylesheet" href="/css/01-reset.css">
   <link rel="stylesheet" href="/css/02-typography.css">
@@ -36,8 +37,10 @@
       <a href="/choose-domain.html" class="btn btn-sm btn-outline">
         <span>Workspace Doors</span>
       </a>
-      <button class="btn btn-sm btn-outline" id="theme-toggle-btn" title="Toggle Theme">
-        <svg class="icon icon-xs"><use href="/icons/sprite.svg#moon"/></svg>
+      <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-toggle-btn" title="Toggle Theme" aria-label="Toggle Theme">
+        <span id="theme-icon" class="theme-icon" style="display: flex; align-items: center; justify-content: center;">
+          <svg class="icon icon-xs"><use href="/icons/sprite.svg#moon"/></svg>
+        </span>
       </button>
       <button class="btn btn-sm btn-outline" id="logout-btn" style="border-color: var(--danger); color: var(--danger);">
         <svg class="icon icon-xs"><use href="/icons/sprite.svg#sign-out"/></svg>

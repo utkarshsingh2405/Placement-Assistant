@@ -5,6 +5,11 @@
 
 :root {
   /* ==========================================================================
+     COLOR SCHEME
+     ========================================================================== */
+  color-scheme: light;
+
+  /* ==========================================================================
      COLOR TOKENS - LIGHT (Default)
      ========================================================================== */
   --ground: #F3F4F0;         /* Chalk paper background */
@@ -16,6 +21,17 @@
   --ink-2: #3B4752;          /* Secondary body & descriptions */
   --muted: #5E6B75;          /* Metadata, hints, column labels (WCAG AA compliant) */
   --night: #0C1214;          /* Nocturnal deep ground (Hero, stats band, dark canvas) */
+
+  /* Cross-token Aliases for Global Theme Parity */
+  --bg: var(--ground);
+  --bg-subtle: var(--surface-2);
+  --surface-elevated: var(--surface);
+  --border: var(--surface-3);
+  --border-subtle: var(--surface-2);
+  --border-focus: var(--muted);
+  --text: var(--ink);
+  --text-muted: var(--ink-2);
+  --text-dim: var(--muted);
 
   /* Domain Identifiers */
   --institute: #8C2433;      /* Heraldic Oxblood - Academic Ledger */
@@ -53,9 +69,10 @@
   --accent-tint: var(--brass-tint);
 
   /* ==========================================================================
-     TYPOGRAPHIC STACK
+     TYPOGRAPHIC STACK - STYLIZED DISPLAY HEADINGS EVERYWHERE
      ========================================================================== */
   --font-display: 'Instrument Serif', Georgia, serif;
+  --font-heading: 'Instrument Serif', Georgia, serif;
   --font-body: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-hindi: 'Noto Sans Devanagari', 'Geist', sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -138,6 +155,8 @@ html[data-domain="portal"] {
    COLOR TOKENS - DARK THEME (data-theme="dark")
    ========================================================================== */
 html[data-theme="dark"] {
+  color-scheme: dark;
+
   --ground: #0C1214;         /* Night canvas ground */
   --surface: #121C1F;        /* Elevated dark surface */
   --surface-2: #182529;      /* Outer shell, inputs, zebra striping */
@@ -146,6 +165,17 @@ html[data-theme="dark"] {
   --ink: #E8EEEC;            /* Crisp light text */
   --ink-2: #B9C6C9;          /* Secondary descriptive text */
   --muted: #8FA0A5;          /* Metadata & hint labels (WCAG AA) */
+
+  /* Cross-token Aliases for Global Theme Parity */
+  --bg: var(--ground);
+  --bg-subtle: var(--surface-2);
+  --surface-elevated: var(--surface);
+  --border: var(--surface-3);
+  --border-subtle: var(--surface-2);
+  --border-focus: var(--muted);
+  --text: var(--ink);
+  --text-muted: var(--ink-2);
+  --text-dim: var(--muted);
 
   /* Institute Dark Accent */
   --institute: #E0808C;

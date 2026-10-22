@@ -15,36 +15,39 @@ body {
   color: var(--ink);
 }
 
-/* Headings */
-h1, h2, h3, h4, h5, h6 {
+/* Headings - Stylized Editorial Display Typography Everywhere */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6,
+.app-heading,
+.card-title,
+.modal-title,
+.section-title,
+.page-title,
+.hero-title,
+.font-display {
+  font-family: var(--font-display, 'Instrument Serif', Georgia, serif) !important;
+  font-weight: 400 !important;
   color: var(--ink);
-  font-weight: 600;
   line-height: var(--leading-tight);
   text-wrap: balance;
   margin-bottom: var(--space-2);
+  letter-spacing: -0.015em;
 }
 
 /* Public Editorial Display Headings */
-.font-display {
-  font-family: var(--font-display);
-  font-weight: 400;
-  letter-spacing: -0.03em;
-  line-height: var(--leading-tight);
-}
-
 .display-xl {
-  font-family: var(--font-display);
+  font-family: var(--font-display, 'Instrument Serif', Georgia, serif) !important;
   font-size: var(--text-display-xl);
-  font-weight: 400;
+  font-weight: 400 !important;
   line-height: 0.92;
   letter-spacing: -0.035em;
   text-wrap: balance;
 }
 
 .display-lg {
-  font-family: var(--font-display);
+  font-family: var(--font-display, 'Instrument Serif', Georgia, serif) !important;
   font-size: var(--text-display-lg);
-  font-weight: 400;
+  font-weight: 400 !important;
   line-height: 0.96;
   letter-spacing: -0.025em;
   text-wrap: balance;
@@ -65,12 +68,27 @@ h3, .h3 {
   letter-spacing: -0.01em;
 }
 
-/* App Interior Headings: Geist 600, Sentence Case */
+h4, .h4 {
+  font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+  letter-spacing: -0.01em;
+}
+
+h5, .h5 {
+  font-size: clamp(1.1rem, 1.4vw, 1.3rem);
+}
+
+h6, .h6 {
+  font-size: 1.05rem;
+}
+
+/* App Interior Headings: Same Stylized Display Typography */
 .app-heading {
-  font-family: var(--font-body);
-  font-weight: 600;
-  font-size: var(--text-h2);
+  font-family: var(--font-display, 'Instrument Serif', Georgia, serif) !important;
+  font-weight: 400 !important;
+  font-size: var(--text-h1);
   letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--ink);
 }
 
 /* Paragraphs & Text Measures */

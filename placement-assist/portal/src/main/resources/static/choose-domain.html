@@ -6,6 +6,7 @@
   <title>Choose Domain — Placement Assistance Gateway</title>
   
   <!-- Design System CSS -->
+  <script src="/js/theme-init.js"></script>
   <link rel="stylesheet" href="/css/00-tokens.css">
   <link rel="stylesheet" href="/css/01-reset.css">
   <link rel="stylesheet" href="/css/02-typography.css">
@@ -146,8 +147,8 @@
 
     <div style="display: flex; align-items: center; gap: var(--space-3);">
       <!-- Theme Toggle with guaranteed visible icon -->
-      <button class="btn btn-sm btn-outline" id="theme-btn" title="Toggle Light/Dark Theme" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;">
-        <span id="theme-icon" style="display: inline-flex; align-items: center;">
+      <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-btn" title="Toggle Light/Dark Theme" aria-label="Toggle Light/Dark Theme" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;">
+        <span id="theme-icon" class="theme-icon" style="display: inline-flex; align-items: center;">
           <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor">
             <path d="M216.7,152.6A96,96,0,1,1,103.4,39.3,80,80,0,0,0,216.7,152.6Z"/>
           </svg>

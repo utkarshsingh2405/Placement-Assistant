@@ -660,7 +660,9 @@ dialog.custom-dialog::backdrop {
   background-color: var(--surface-2);
   border-bottom: 1px solid var(--surface-3);
   padding: var(--space-4) var(--space-6);
-  font-weight: 600;
+  font-family: var(--font-display, 'Instrument Serif', Georgia, serif);
+  font-weight: 400;
+  font-size: 1.25rem;
   color: var(--ink);
 }
 
