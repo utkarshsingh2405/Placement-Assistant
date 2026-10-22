@@ -2,10 +2,12 @@
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# Copy root pom and module poms first for caching
+# Copy root pom and module poms for Maven reactor validation
 COPY pom.xml .
 COPY shared-lib/pom.xml shared-lib/
+COPY portal/pom.xml portal/
 COPY institute/pom.xml institute/
+COPY placement/pom.xml placement/
 
 # Copy sources
 COPY shared-lib/ shared-lib/
