@@ -9,6 +9,22 @@ The application brings together **two standalone pillars** and a **unified gatew
 
 ---
 
+## The Engineering Team
+
+Built by a dedicated core team of **5 software engineers**:
+
+| Contributor | Core Responsibility & Architectural Domain |
+| :--- | :--- |
+| **Utkarsh Singh** | **Backend Lead & Institute Pillar Architect** (Academic records, master drives, 100-pt ATS resume scorer, attendance 75% alerts, question bank, inter-pillar REST integration) |
+| **Bhavya Bhardwaj** | **Portal Gateway & Security / SSO Architect** (Spring Cloud Gateway, centralized SSO, JWT tokens, gateway downstream header mutation, domain chooser, audit logging) |
+| **Ankit Kumar** | **Lead Frontend Engineer & UI/UX Designer** (Google Stitch design system, tactile double-bezel cards, split-flap announcement board, perforated hall tickets, responsive dashboards) |
+| **Isha Bajpai** | **Placement Pillar Lead & Recruitment Engine** (Live recruitment drives, candidate stage stepper, dynamic QR attendance, PPTs with live Q&A, SSE broadcast, strictly guarded selections) |
+| **Mahak Joshi** | **Database Architect & Lead Test Engineer** (Isolated 3-database SQLite architecture with WAL mode & HikariCP serialization, schema migrations, 37/37 automated test suites) |
+
+> 📖 **Detailed Technical Specifications:** See [TEAM_ROLES.md](docs/TEAM_ROLES.md) for full individual deliverables, architecture ownership, and the technical RACI matrix.
+
+---
+
 ## Architecture Overview
 
 ```

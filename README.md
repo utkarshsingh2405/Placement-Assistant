@@ -1,4 +1,4 @@
-# Placement Assistant — Enterprise Campus Placement Platform(AI Powered)
+# Placement Assistant — Enterprise Campus Placement Platform
 
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.4-brightgreen.svg?logo=springboot)](https://spring.io/projects/spring-boot)
 [![Java](https://img.shields.io/badge/Java-17%20%7C%2025-orange.svg?logo=openjdk)](https://www.oracle.com/java/)
