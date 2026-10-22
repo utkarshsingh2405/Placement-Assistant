@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Internship Details - Placement Assist</title>
@@ -122,19 +125,21 @@
           loader.classList.add('d-none');
           content.classList.remove('d-none');
 
-          document.getElementById('i-title').textContent = item.title;
+          document.getElementById('i-title').textContent = item.role || item.title || 'Software Engineering Intern';
           document.getElementById('i-company').textContent = item.company || 'Hiring Organization';
           document.getElementById('i-mode').textContent = item.mode || 'ONLINE';
           document.getElementById('i-location').textContent = item.location || 'Remote / Office';
           document.getElementById('i-start').textContent = item.startDate || 'Flexible';
-          document.getElementById('i-stipend').textContent = item.stipend || 'Competitive';
+          const rawStipend = item.stipend;
+          document.getElementById('i-stipend').textContent = (rawStipend && !isNaN(Number(rawStipend))) ? ('₹' + Number(rawStipend).toLocaleString('en-IN') + '/mo') : (rawStipend || 'Competitive');
           document.getElementById('i-duration').textContent = `${item.durationMonths || 6} Months`;
-          document.getElementById('i-deadline').textContent = item.registrationDeadline || 'Open';
+          document.getElementById('i-deadline').textContent = item.deadline || item.registrationDeadline || 'Open';
           document.getElementById('i-description').textContent = item.description || 'Visit the official careers portal for complete job specifications.';
 
           const applyBtn = document.getElementById('btn-apply');
-          if (item.applyUrl) {
-            applyBtn.href = item.applyUrl;
+          const applyLink = item.applyUrl || item.link;
+          if (applyLink) {
+            applyBtn.href = applyLink;
           } else {
             applyBtn.classList.add('d-none');
           }

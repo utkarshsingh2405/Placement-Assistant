@@ -1,10 +1,18 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="light" data-domain="institute">
 <head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Directory — Academic Institute Pillar</title>
   
+  <!-- Preload Display Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+
   <!-- Design System CSS -->
   <link rel="stylesheet" href="/css/00-tokens.css">
   <link rel="stylesheet" href="/css/01-reset.css">
@@ -39,7 +47,7 @@
               </span>
               <span class="text-muted text-xs">Academic Roster 2026</span>
             </div>
-            <h1 class="app-heading" style="margin-bottom: var(--space-1);">Student Directory</h1>
+            <h1 class="page-title">Student Directory</h1>
             <p class="text-muted text-sm">Browse verified student records, monitor CGPA cutoffs, track backlogs, and manage placement eligibility.</p>
           </div>
           <div style="display: flex; gap: var(--space-3);">

@@ -16,6 +16,10 @@
   z-index: 9998;
 }
 
+html[data-theme="light"] .grain-overlay {
+  display: none;
+}
+
 /* Base Viewport & Containers */
 .container {
   width: 100%;
@@ -80,6 +84,23 @@
   .bento-span-6 { grid-column: span 6; }
   .bento-span-8 { grid-column: span 8; }
   .bento-span-12 { grid-column: span 12; }
+}
+
+/* Opportunities & Competitions Responsive Grid */
+.opportunities-grid,
+#hackathons-grid,
+#internships-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: var(--space-6);
+}
+
+@media (max-width: 640px) {
+  .opportunities-grid,
+  #hackathons-grid,
+  #internships-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* Editorial Split Layouts */

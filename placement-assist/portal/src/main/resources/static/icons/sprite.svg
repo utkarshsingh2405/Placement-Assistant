@@ -293,10 +293,19 @@
   </symbol>
   <symbol id="clipboard-text" viewBox="0 0 256 256"><use href="#ph-clipboard-text"/></symbol>
 
-    <!-- Play -->
-  <symbol id="ph-play" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
-      <polygon points="80 48 200 128 80 208 80 48"/>
+    <!-- Bookmark Simple -->
+  <symbol id="ph-bookmark-simple" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M192 224l-64-40-64 40V48a16 16 0 0 1 16-16h96a16 16 0 0 1 16 16Z"/>
   </symbol>
-  <symbol id="play" viewBox="0 0 256 256"><use href="#ph-play"/></symbol>
+  <symbol id="bookmark-simple" viewBox="0 0 256 256"><use href="#ph-bookmark-simple"/></symbol>
+  <symbol id="bookmark" viewBox="0 0 256 256"><use href="#ph-bookmark-simple"/></symbol>
+
+    <!-- Code (Hackathons) -->
+  <symbol id="ph-code" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="64 88 16 128 64 168"/>
+      <polyline points="192 88 240 128 192 168"/>
+      <line x1="160" y1="40" x2="96" y2="216"/>
+  </symbol>
+  <symbol id="code" viewBox="0 0 256 256"><use href="#ph-code"/></symbol>
   </defs>
 </svg>

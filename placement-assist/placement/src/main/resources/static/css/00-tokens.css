@@ -3,6 +3,19 @@
  * 00-tokens.css: Master Color Tokens, Typography Metrics, Spacing, Radii, and Motion
  */
 
+html {
+  background-color: #F8FAFC;
+  color: #0F172A;
+}
+html[data-theme="dark"] {
+  background-color: #0C1214 !important;
+  color: #E8EEEC !important;
+}
+html[data-theme="light"] {
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
 :root {
   /* ==========================================================================
      COLOR SCHEME
@@ -10,25 +23,25 @@
   color-scheme: light;
 
   /* ==========================================================================
-     COLOR TOKENS - LIGHT (Default)
+     COLOR TOKENS - LIGHT (Default: Crisp, Optimal White & Deep Slate)
      ========================================================================== */
-  --ground: #F3F4F0;         /* Chalk paper background */
-  --surface: #FBFBF8;        /* Clean card / table / dialog surface */
-  --surface-2: #E9ECE6;      /* Tone step: double-bezel shells, inputs, zebra rows */
-  --surface-3: #DFE3DB;      /* Deep tone step: borders, active pressed states */
+  --ground: #F8FAFC;         /* Crisp, clean light canvas background */
+  --surface: #FFFFFF;        /* Pure pristine white for cards, panels, topbars, rails, dialogs */
+  --surface-2: #F1F5F9;      /* Crisp tonal step: double-bezel shells, inputs, zebra rows */
+  --surface-3: #E2E8F0;      /* Clean subtle border lines & divider states */
   
-  --ink: #101820;            /* Primary typography */
-  --ink-2: #3B4752;          /* Secondary body & descriptions */
-  --muted: #5E6B75;          /* Metadata, hints, column labels (WCAG AA compliant) */
+  --ink: #0F172A;            /* Deep slate black for high-contrast primary typography */
+  --ink-2: #334155;          /* Clean dark slate for secondary body & descriptions */
+  --muted: #64748B;          /* Polished neutral slate for metadata, hints, column labels */
   --night: #0C1214;          /* Nocturnal deep ground (Hero, stats band, dark canvas) */
 
   /* Cross-token Aliases for Global Theme Parity */
   --bg: var(--ground);
   --bg-subtle: var(--surface-2);
-  --surface-elevated: var(--surface);
+  --surface-elevated: #FFFFFF;
   --border: var(--surface-3);
-  --border-subtle: var(--surface-2);
-  --border-focus: var(--muted);
+  --border-subtle: #F1F5F9;
+  --border-focus: #94A3B8;
   --text: var(--ink);
   --text-muted: var(--ink-2);
   --text-dim: var(--muted);

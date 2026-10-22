@@ -15,7 +15,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
   <!-- Design System CSS -->
-  <script src="/js/theme-init.js"></script>
+    <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
   <link rel="stylesheet" href="/css/00-tokens.css">
   <link rel="stylesheet" href="/css/01-reset.css">
   <link rel="stylesheet" href="/css/02-typography.css">

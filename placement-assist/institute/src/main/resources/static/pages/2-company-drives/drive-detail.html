@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" data-domain="institute">
 <head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Drive Dossier - Academic Institute</title>
@@ -203,7 +206,10 @@
           companyLink.href = `/institute/pages/2-company-drives/company-detail.html?id=${drive.companyId}`;
 
           const branchesEl = document.getElementById('req-branches');
-          const branches = (drive.eligibleBranches || '').split(',').map(s => s.trim()).filter(Boolean);
+          const rawBranches = Array.isArray(drive.eligibleBranches)
+            ? drive.eligibleBranches
+            : (typeof drive.eligibleBranches === 'string' ? drive.eligibleBranches.split(',') : []);
+          const branches = rawBranches.map(s => String(s).trim()).filter(Boolean);
           if (branches.length > 0) {
             branchesEl.innerHTML = branches.map(b => `<span class="chip chip-muted">${ui.escapeHtml(b)}</span>`).join(' ');
           } else {
@@ -320,7 +326,10 @@
           `;
 
           // 4. Branch check
-          const allowedBranches = (drive.eligibleBranches || '').split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
+          const rawAllowed = Array.isArray(drive.eligibleBranches)
+            ? drive.eligibleBranches
+            : (typeof drive.eligibleBranches === 'string' ? drive.eligibleBranches.split(',') : []);
+          const allowedBranches = rawAllowed.map(s => String(s).trim().toUpperCase()).filter(Boolean);
           const meetsBranch = allowedBranches.length === 0 || allowedBranches.includes((student.branch || '').toUpperCase());
           if (!meetsBranch) eligible = false;
           itemsHtml += `

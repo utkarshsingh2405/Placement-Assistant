@@ -189,7 +189,8 @@ class UIManager {
       { key: 'attendance-class', label: 'Class Attendance', icon: 'ph-calendar-check', href: '/institute/pages/4-attendance/class/class-sessions.html' },
       { key: 'attendance-crt', label: 'CRT Attendance', icon: 'ph-check-circle', href: '/institute/pages/4-attendance/crt/crt-sessions.html' },
       { key: 'resume-ats', label: 'Resume & ATS Diagnostic', icon: 'ph-file-text', href: '/institute/pages/6-resume-ats/ats-report.html' },
-      { key: 'opportunities', label: 'Hackathons & Internships', icon: 'ph-arrow-up-right', href: '/institute/pages/7-hackathons/hackathon-list.html' }
+      { key: 'hackathons', label: 'National Hackathons', icon: 'ph-code', href: '/institute/pages/7-hackathons/hackathon-list.html' },
+      { key: 'internships', label: 'Internship Opportunities', icon: 'ph-briefcase', href: '/institute/pages/8-internships/internship-list.html' }
     ];
 
     return `

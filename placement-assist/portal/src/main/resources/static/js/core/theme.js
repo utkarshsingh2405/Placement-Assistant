@@ -34,31 +34,38 @@ class ThemeManager {
   }
 
   init() {
-    let active = this.getStoredPreference();
-    if (!active) {
-      const docAttr = document.documentElement.getAttribute('data-theme');
-      if (docAttr && ['light', 'dark'].includes(docAttr)) {
-        active = docAttr;
-      } else {
-        active = this.getSystemPreference();
-      }
-    }
+    const active = this.getStoredPreference() || document.documentElement.getAttribute('data-theme') || 'light';
     this.setTheme(active, false);
   }
 
   getStoredPreference() {
     try {
-      return localStorage.getItem(this.STORAGE_KEY);
-    } catch (e) {
-      return null;
-    }
+      // 1. Check localStorage
+      const ls = localStorage.getItem(this.STORAGE_KEY);
+      if (ls === 'dark' || ls === 'light') return ls;
+
+      // 2. Check sessionStorage
+      const ss = sessionStorage.getItem(this.STORAGE_KEY);
+      if (ss === 'dark' || ss === 'light') return ss;
+
+      // 3. Check document.cookie
+      const m = document.cookie.match(new RegExp('(?:^|; )' + this.STORAGE_KEY + '=(dark|light)'));
+      if (m && m[1]) return m[1];
+
+      // 4. Check window.name (persists across all navigations in the same tab, even across file:// protocols)
+      if (window.name && window.name.indexOf('pa_theme:') !== -1) {
+        const parts = window.name.split('pa_theme:')[1];
+        if (parts) {
+          const val = parts.split(' ')[0].trim();
+          if (val === 'dark' || val === 'light') return val;
+        }
+      }
+    } catch (e) {}
+    return null;
   }
 
   getSystemPreference() {
-    if (typeof window !== 'undefined' && window.matchMedia) {
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-    return 'light';
+    return 'light'; // Always default baseline to crisp enterprise white
   }
 
   getTheme() {
@@ -66,34 +73,39 @@ class ThemeManager {
   }
 
   setTheme(theme, persist = true) {
-    const valid = ['light', 'dark', 'system'].includes(theme) ? theme : 'light';
-    let target = valid;
+    const valid = (theme === 'dark') ? 'dark' : 'light';
 
-    if (valid === 'system') {
-      target = this.getSystemPreference();
-    }
-
-    document.documentElement.setAttribute('data-theme', target);
+    document.documentElement.setAttribute('data-theme', valid);
     try {
-      document.documentElement.style.colorScheme = target;
+      document.documentElement.style.colorScheme = valid;
     } catch (e) {}
 
     if (persist) {
       try {
         localStorage.setItem(this.STORAGE_KEY, valid);
       } catch (e) {}
+      try {
+        sessionStorage.setItem(this.STORAGE_KEY, valid);
+      } catch (e) {}
+      try {
+        document.cookie = `${this.STORAGE_KEY}=${valid}; path=/; max-age=31536000; SameSite=Lax`;
+      } catch (e) {}
+      try {
+        const cleanName = (window.name || '').replace(/pa_theme:(dark|light)/g, '').trim();
+        window.name = `${cleanName} pa_theme:${valid}`.trim();
+      } catch (e) {}
     }
 
-    this.updateToggleIcons(target);
+    this.updateToggleIcons(valid);
 
     // Broadcast custom event for SVG charts, dashboards, or live canvases
-    window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: target } }));
+    window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: valid } }));
   }
 
   toggleTheme() {
     const now = Date.now();
-    // 120ms debounce lock to avoid double toggle when both delegated & inline listeners execute
-    if (this._lastToggle && now - this._lastToggle < 120) {
+    // 250ms debounce lock to avoid double toggle when both delegated & inline listeners execute
+    if (this._lastToggle && now - this._lastToggle < 250) {
       return this.getTheme();
     }
     this._lastToggle = now;
@@ -135,8 +147,10 @@ class ThemeManager {
 
     // 1. Universal Delegated Click Listener: Works on any theme toggle button anywhere, anytime
     document.addEventListener('click', (e) => {
+      if (e.__themeToggleHandled) return;
       const btn = e.target.closest('#theme-btn, #theme-toggle-btn, [data-theme-toggle], .theme-toggle-btn');
       if (btn) {
+        e.__themeToggleHandled = true;
         e.preventDefault();
         this.toggleTheme();
       }
@@ -158,16 +172,7 @@ class ThemeManager {
       }
     });
 
-    // 4. OS / Browser System Theme Change Listener
-    if (window.matchMedia) {
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        if (!this.getStoredPreference()) {
-          this.setTheme(e.matches ? 'dark' : 'light', false);
-        }
-      });
-    }
-
-    // 5. MutationObserver: Catch dynamically injected topbars, modals, or app shell layouts
+    // 4. MutationObserver: Catch dynamically injected topbars, modals, or app shell layouts
     if (typeof MutationObserver !== 'undefined') {
       let scheduled = false;
       const observer = new MutationObserver((mutations) => {
