@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="institute">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Internship Publisher — Academic Institute</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <div class="d-flex align-center gap-2 mb-1">
+              <a href="/institute/pages/8-internships/internship-list.html" class="text-xs text-muted text-decoration-none">&larr; Back to Internships</a>
+              <span class="text-xs text-muted">&bull;</span>
+              <span class="chip chip-muted uppercase text-xs">Section 08</span>
+            </div>
+            <h1 class="page-title" id="form-title">Post Industry Internship</h1>
+            <p class="page-subtitle">Publish summer internships, co-op programs, and graduate apprenticeship positions.</p>
+          </div>
+          <div class="d-flex gap-2">
+            <a href="/institute/pages/8-internships/internship-list.html" class="btn btn-secondary">Discard</a>
+          </div>
+        </header>
+
+        <!-- Form Card (Double Bezel) -->
+        <div class="bezel-outer mb-8" style="max-width: 960px; margin: 0 auto;">
+          <div class="bezel-inner p-6">
+            <form id="internship-form" novalidate>
+              <div class="form-grid g-4">
+                <!-- Title -->
+                <div class="form-col-8">
+                  <label class="form-label fw-semibold" for="title">Role Title <span class="text-danger">*</span></label>
+                  <input type="text" id="title" class="form-control" required placeholder="e.g. Software Engineer Intern (Summer 2025)">
+                </div>
+
+                <!-- Mode -->
+                <div class="form-col-4">
+                  <label class="form-label fw-semibold" for="mode">Work Mode <span class="text-danger">*</span></label>
+                  <select id="mode" class="form-select" required>
+                    <option value="ONLINE">Remote (WFH)</option>
+                    <option value="OFFLINE" selected>In-Office (On-Site)</option>
+                    <option value="HYBRID">Hybrid Model</option>
+                  </select>
+                </div>
+
+                <!-- Company -->
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="company">Hiring Organization / Company <span class="text-danger">*</span></label>
+                  <input type="text" id="company" class="form-control" required placeholder="e.g. Cisco Systems">
+                </div>
+
+                <!-- Location -->
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="location">Office Location</label>
+                  <input type="text" id="location" class="form-control" placeholder="e.g. Bengaluru, India">
+                </div>
+
+                <!-- Stipend -->
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="stipend">Monthly Stipend</label>
+                  <input type="text" id="stipend" class="form-control" placeholder="e.g. ₹45,000 / month">
+                </div>
+
+                <!-- Duration -->
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="durationMonths">Duration (Months)</label>
+                  <input type="number" id="durationMonths" class="form-control" min="1" max="24" value="6">
+                </div>
+
+                <!-- Apply URL -->
+                <div class="form-col-12">
+                  <label class="form-label fw-semibold" for="applyUrl">Official Application Portal URL <span class="text-danger">*</span></label>
+                  <input type="url" id="applyUrl" class="form-control" required placeholder="https://jobs.cisco.com/careers/...">
+                </div>
+
+                <!-- Dates -->
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="registrationDeadline">Application Deadline <span class="text-danger">*</span></label>
+                  <input type="date" id="registrationDeadline" class="form-control" required>
+                </div>
+
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="startDate">Expected Start Date</label>
+                  <input type="date" id="startDate" class="form-control">
+                </div>
+
+                <!-- Required Skills -->
+                <div class="form-col-12">
+                  <label class="form-label fw-semibold" for="skillsRequired">Required Skills & Frameworks (Comma-separated)</label>
+                  <input type="text" id="skillsRequired" class="form-control" placeholder="e.g. Java, Spring Boot, React, SQL, Git">
+                </div>
+
+                <!-- Description -->
+                <div class="form-col-12">
+                  <label class="form-label fw-semibold" for="description">Job Description & Learning Outcomes</label>
+                  <textarea id="description" class="form-control" rows="5" placeholder="Responsibilities, mentor support, eligibility qualifications, and conversion to PPO potential..."></textarea>
+                </div>
+
+                <!-- Submit Bar -->
+                <div class="form-col-12 d-flex justify-end gap-3 mt-4 pt-4 border-top">
+                  <a href="/institute/pages/8-internships/internship-list.html" class="btn btn-secondary px-5">Cancel</a>
+                  <button type="submit" class="btn btn-primary px-6" id="btn-save">Publish Internship</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import api from '/js/api.js';
+    import ui from '/js/ui.js';
+
+    if (!auth.requireAuth(['ADMIN', 'TPO'])) {
+      // restricted
+    } else {
+      ui.initLayout('internships');
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const internshipId = urlParams.get('id');
+
+      if (internshipId) {
+        document.getElementById('form-title').textContent = 'Edit Internship Details';
+        document.getElementById('btn-save').textContent = 'Update Internship';
+        loadInternship(internshipId);
+      }
+
+      async function loadInternship(id) {
+        try {
+          const item = await api.get(`/api/internships/${id}`);
+          document.getElementById('title').value = item.role || item.title || '';
+          document.getElementById('company').value = item.company || '';
+          document.getElementById('mode').value = item.mode || 'ONLINE';
+          document.getElementById('location').value = item.location || '';
+          document.getElementById('stipend').value = item.stipend || '';
+          document.getElementById('durationMonths').value = item.durationMonths || 6;
+          document.getElementById('applyUrl').value = item.applyUrl || item.link || '';
+          document.getElementById('registrationDeadline').value = item.registrationDeadline || item.deadline || '';
+          document.getElementById('startDate').value = item.startDate || '';
+          document.getElementById('skillsRequired').value = item.skillsRequired || '';
+          document.getElementById('description').value = item.description || '';
+        } catch (err) {
+          ui.showToast('Could not load internship: ' + err.message, 'danger');
+        }
+      }
+
+      document.getElementById('internship-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        const payload = {
+          title: document.getElementById('title').value.trim(),
+          company: document.getElementById('company').value.trim(),
+          mode: document.getElementById('mode').value,
+          location: document.getElementById('location').value.trim() || null,
+          stipend: document.getElementById('stipend').value.trim() || null,
+          durationMonths: parseInt(document.getElementById('durationMonths').value || 6, 10),
+          applyUrl: document.getElementById('applyUrl').value.trim(),
+          registrationDeadline: document.getElementById('registrationDeadline').value,
+          startDate: document.getElementById('startDate').value || null,
+          skillsRequired: document.getElementById('skillsRequired').value.trim() || null,
+          description: document.getElementById('description').value.trim() || null
+        };
+
+        const btn = document.getElementById('btn-save');
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+
+        try {
+          if (internshipId) {
+            await api.put(`/api/internships/${internshipId}`, payload);
+            ui.showToast('Internship updated successfully!');
+          } else {
+            await api.post('/api/internships', payload);
+            ui.showToast('Internship published successfully!');
+          }
+          setTimeout(() => {
+            window.location.href = '/institute/pages/8-internships/internship-list.html';
+          }, 600);
+        } catch (err) {
+          ui.showToast(err.message || 'Failed to save internship', 'danger');
+          btn.disabled = false;
+          btn.textContent = internshipId ? 'Update Internship' : 'Publish Internship';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

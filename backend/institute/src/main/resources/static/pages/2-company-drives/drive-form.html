@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="institute">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Recruitment Drive Editor — Academic Institute</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+  <style>
+    .modal-backdrop-custom {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1050;
+      padding: var(--space-4);
+    }
+    .modal-backdrop-custom.show {
+      display: flex;
+    }
+    .modal-dialog-custom {
+      width: 100%;
+      max-width: 520px;
+      animation: modalSlideIn var(--dur-normal) var(--ease-out);
+    }
+    @keyframes modalSlideIn {
+      from { opacity: 0; transform: translateY(-16px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+  </style>
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <div class="d-flex align-center gap-2 mb-1">
+              <a href="/institute/pages/2-company-drives/drive-list.html" class="text-xs text-muted text-decoration-none">&larr; Back to Drives</a>
+              <span class="text-xs text-muted">&bull;</span>
+              <span class="chip chip-muted uppercase text-xs">Section 02</span>
+            </div>
+            <h1 class="page-title" id="form-title">Create Campus Drive</h1>
+            <p class="page-subtitle">Configure hiring criteria, company details, package brackets, and schedule.</p>
+          </div>
+          <div class="d-flex gap-2">
+            <a href="/institute/pages/2-company-drives/drive-list.html" class="btn btn-secondary">Discard</a>
+          </div>
+        </header>
+
+        <!-- Form Card (Double Bezel) -->
+        <div class="bezel-outer mb-8" style="max-width: 960px; margin: 0 auto;">
+          <div class="bezel-inner p-6">
+            <form id="drive-form" novalidate>
+              <div class="form-grid g-4">
+                <!-- Company Selection & Quick Add -->
+                <div class="form-col-8">
+                  <label class="form-label fw-semibold" for="companyId">Recruiting Enterprise / Employer <span class="text-danger">*</span></label>
+                  <select id="companyId" class="form-select" required>
+                    <option value="">Choose Company...</option>
+                  </select>
+                </div>
+                <div class="form-col-4 d-flex align-end">
+                  <button type="button" class="btn btn-secondary w-100" id="btn-open-company-modal">
+                    <svg class="icon icon-sm"><use href="/icons/sprite.svg#plus"></use></svg>
+                    New Company
+                  </button>
+                </div>
+
+                <!-- Drive Title -->
+                <div class="form-col-12">
+                  <label class="form-label fw-semibold" for="title">Drive Official Title <span class="text-danger">*</span></label>
+                  <input type="text" id="title" class="form-control" required placeholder="e.g. Microsoft Graduate Software Engineer Hiring 2025">
+                </div>
+
+                <!-- Roles -->
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="roles">Designations / Offered Roles <span class="text-danger">*</span></label>
+                  <input type="text" id="roles" class="form-control" required placeholder="e.g. SDE-1, Cloud Associate">
+                </div>
+
+                <!-- Location -->
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="location">Drive Venue / Location</label>
+                  <input type="text" id="location" class="form-control" placeholder="e.g. Campus Seminar Hall / Virtual">
+                </div>
+
+                <!-- Package Range -->
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="packageMin">Minimum CTC (LPA)</label>
+                  <input type="number" id="packageMin" class="form-control" step="0.1" min="0" placeholder="e.g. 8.0">
+                </div>
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="packageMax">Maximum CTC (LPA)</label>
+                  <input type="number" id="packageMax" class="form-control" step="0.1" min="0" placeholder="e.g. 14.5">
+                </div>
+
+                <!-- Eligibility Criteria -->
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="eligibilityCgpa">Cutoff CGPA (0 - 10)</label>
+                  <input type="number" id="eligibilityCgpa" class="form-control" step="0.01" min="0" max="10" placeholder="e.g. 7.5">
+                </div>
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="maxBacklogs">Active Backlogs Permitted</label>
+                  <input type="number" id="maxBacklogs" class="form-control" min="0" value="0">
+                </div>
+
+                <!-- Eligible Branches -->
+                <div class="form-col-12">
+                  <label class="form-label fw-semibold d-block mb-2">Eligible Academic Streams</label>
+                  <div class="d-flex flex-wrap gap-4">
+                    <label class="d-flex align-center gap-2 cursor-pointer">
+                      <input class="branch-check" type="checkbox" value="CSE" id="branch-cse" checked>
+                      <span class="text-sm fw-semibold">CSE</span>
+                    </label>
+                    <label class="d-flex align-center gap-2 cursor-pointer">
+                      <input class="branch-check" type="checkbox" value="IT" id="branch-it" checked>
+                      <span class="text-sm fw-semibold">IT</span>
+                    </label>
+                    <label class="d-flex align-center gap-2 cursor-pointer">
+                      <input class="branch-check" type="checkbox" value="ECE" id="branch-ece">
+                      <span class="text-sm fw-semibold">ECE</span>
+                    </label>
+                    <label class="d-flex align-center gap-2 cursor-pointer">
+                      <input class="branch-check" type="checkbox" value="EEE" id="branch-eee">
+                      <span class="text-sm fw-semibold">EEE</span>
+                    </label>
+                    <label class="d-flex align-center gap-2 cursor-pointer">
+                      <input class="branch-check" type="checkbox" value="MECH" id="branch-mech">
+                      <span class="text-sm fw-semibold">MECH</span>
+                    </label>
+                    <label class="d-flex align-center gap-2 cursor-pointer">
+                      <input class="branch-check" type="checkbox" value="CIVIL" id="branch-civil">
+                      <span class="text-sm fw-semibold">CIVIL</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Dates & Status -->
+                <div class="form-col-4">
+                  <label class="form-label fw-semibold" for="lastDateToApply">Application Cutoff <span class="text-danger">*</span></label>
+                  <input type="date" id="lastDateToApply" class="form-control" required>
+                </div>
+                <div class="form-col-4">
+                  <label class="form-label fw-semibold" for="driveDate">Drive Date</label>
+                  <input type="date" id="driveDate" class="form-control">
+                </div>
+                <div class="form-col-4">
+                  <label class="form-label fw-semibold" for="status">Workflow Status</label>
+                  <select id="status" class="form-select">
+                    <option value="UPCOMING" selected>UPCOMING</option>
+                    <option value="ONGOING">ONGOING</option>
+                    <option value="COMPLETED">COMPLETED</option>
+                    <option value="CANCELLED">CANCELLED</option>
+                  </select>
+                </div>
+
+                <!-- Description -->
+                <div class="form-col-12">
+                  <label class="form-label fw-semibold" for="description">Drive Description & Instructions</label>
+                  <textarea id="description" class="form-control" rows="5" placeholder="Detailed job description, hiring rounds overview, dress code, bond terms, etc."></textarea>
+                </div>
+
+                <!-- Actions -->
+                <div class="form-col-12 d-flex justify-end gap-3 mt-4 pt-4 border-top">
+                  <a href="/institute/pages/2-company-drives/drive-list.html" class="btn btn-secondary px-5">Cancel</a>
+                  <button type="submit" class="btn btn-primary px-6" id="btn-save">Save Drive</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- New Company Custom Modal (Double Bezel) -->
+  <div class="modal-backdrop-custom" id="newCompanyModal">
+    <div class="modal-dialog-custom">
+      <div class="bezel-outer">
+        <div class="bezel-inner p-6">
+          <div class="d-flex justify-between align-center mb-4">
+            <h2 class="text-base fw-bold text-ink">Add Recruiting Enterprise</h2>
+            <button type="button" class="btn-icon" id="btn-close-company-modal" aria-label="Close">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#x"></use></svg>
+            </button>
+          </div>
+          <form id="new-company-form">
+            <div class="form-grid g-3">
+              <div class="form-col-12">
+                <label class="form-label fw-semibold" for="modal-company-name">Company Name <span class="text-danger">*</span></label>
+                <input type="text" id="modal-company-name" class="form-control" required placeholder="e.g. Google India">
+              </div>
+              <div class="form-col-12">
+                <label class="form-label fw-semibold" for="modal-company-website">Website</label>
+                <input type="url" id="modal-company-website" class="form-control" placeholder="https://google.com">
+              </div>
+              <div class="form-col-12">
+                <label class="form-label fw-semibold" for="modal-company-industry">Industry / Domain</label>
+                <input type="text" id="modal-company-industry" class="form-control" placeholder="e.g. Information Technology & Services">
+              </div>
+              <div class="form-col-6">
+                <label class="form-label fw-semibold" for="modal-company-contact">HR Contact Person</label>
+                <input type="text" id="modal-company-contact" class="form-control" placeholder="e.g. Priya Sharma">
+              </div>
+              <div class="form-col-6">
+                <label class="form-label fw-semibold" for="modal-company-email">Contact Email</label>
+                <input type="email" id="modal-company-email" class="form-control" placeholder="recruitment@company.com">
+              </div>
+              <div class="form-col-12 d-flex justify-end gap-2 mt-4 pt-3 border-top">
+                <button type="button" class="btn btn-secondary" id="btn-cancel-company-modal">Cancel</button>
+                <button type="submit" class="btn btn-primary" id="btn-create-company">Create Company</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import api from '/js/api.js';
+    import ui from '/js/ui.js';
+
+    if (!auth.requireAuth(['ADMIN', 'TPO'])) {
+      // restricted
+    } else {
+      ui.initLayout('drives');
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const driveId = urlParams.get('id');
+
+      const companyModal = document.getElementById('newCompanyModal');
+      document.getElementById('btn-open-company-modal').addEventListener('click', () => {
+        companyModal.classList.add('show');
+      });
+      document.getElementById('btn-close-company-modal').addEventListener('click', () => {
+        companyModal.classList.remove('show');
+      });
+      document.getElementById('btn-cancel-company-modal').addEventListener('click', () => {
+        companyModal.classList.remove('show');
+      });
+
+      async function init() {
+        await loadCompanies();
+
+        if (driveId) {
+          document.getElementById('form-title').textContent = 'Edit Campus Drive';
+          document.getElementById('btn-save').textContent = 'Update Drive';
+          await loadDriveDetails(driveId);
+        }
+      }
+
+      async function loadCompanies(selectedId = null) {
+        try {
+          const companies = await api.get('/api/companies');
+          const select = document.getElementById('companyId');
+          select.innerHTML = '<option value="">Choose Company...</option>';
+          companies.forEach(c => {
+            const opt = document.createElement('option');
+            opt.value = c.id;
+            opt.textContent = c.name;
+            if (selectedId && c.id == selectedId) opt.selected = true;
+            select.appendChild(opt);
+          });
+        } catch (err) {
+          ui.showToast('Could not load companies: ' + err.message, 'danger');
+        }
+      }
+
+      async function loadDriveDetails(id) {
+        try {
+          const drive = await api.get(`/api/drives/${id}`);
+          document.getElementById('companyId').value = drive.companyId || '';
+          document.getElementById('title').value = drive.title || '';
+          document.getElementById('roles').value = drive.roles || '';
+          document.getElementById('location').value = drive.location || '';
+          document.getElementById('packageMin').value = drive.packageMin || '';
+          document.getElementById('packageMax').value = drive.packageMax || '';
+          document.getElementById('eligibilityCgpa').value = drive.eligibilityCgpa || '';
+          document.getElementById('maxBacklogs').value = drive.maxBacklogs || 0;
+          document.getElementById('lastDateToApply').value = drive.lastDateToApply || '';
+          document.getElementById('driveDate').value = drive.driveDate || '';
+          document.getElementById('status').value = drive.status || 'UPCOMING';
+          document.getElementById('description').value = drive.description || '';
+
+          const rawBranches = Array.isArray(drive.eligibleBranches)
+            ? drive.eligibleBranches
+            : (typeof drive.eligibleBranches === 'string' ? drive.eligibleBranches.split(',') : []);
+          const branches = rawBranches.map(s => String(s).trim());
+          document.querySelectorAll('.branch-check').forEach(cb => {
+            cb.checked = branches.includes(cb.value);
+          });
+        } catch (err) {
+          ui.showToast('Failed to load drive: ' + err.message, 'danger');
+        }
+      }
+
+      // Quick add company
+      document.getElementById('new-company-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const payload = {
+          name: document.getElementById('modal-company-name').value.trim(),
+          website: document.getElementById('modal-company-website').value.trim() || null,
+          industry: document.getElementById('modal-company-industry').value.trim() || null,
+          contactPerson: document.getElementById('modal-company-contact').value.trim() || null,
+          contactEmail: document.getElementById('modal-company-email').value.trim() || null
+        };
+
+        try {
+          const created = await api.post('/api/companies', payload);
+          ui.showToast(`Company "${created.name}" created successfully!`);
+          companyModal.classList.remove('show');
+          await loadCompanies(created.id);
+        } catch (err) {
+          ui.showToast(err.message || 'Failed to create company', 'danger');
+        }
+      });
+
+      // Submit Drive Form
+      document.getElementById('drive-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        const selectedBranches = Array.from(document.querySelectorAll('.branch-check:checked')).map(cb => cb.value).join(',');
+
+        const payload = {
+          companyId: parseInt(document.getElementById('companyId').value, 10),
+          title: document.getElementById('title').value.trim(),
+          description: document.getElementById('description').value.trim() || null,
+          roles: document.getElementById('roles').value.trim(),
+          packageMin: document.getElementById('packageMin').value ? parseFloat(document.getElementById('packageMin').value) : null,
+          packageMax: document.getElementById('packageMax').value ? parseFloat(document.getElementById('packageMax').value) : null,
+          eligibilityCgpa: document.getElementById('eligibilityCgpa').value ? parseFloat(document.getElementById('eligibilityCgpa').value) : null,
+          eligibleBranches: selectedBranches || null,
+          maxBacklogs: document.getElementById('maxBacklogs').value ? parseInt(document.getElementById('maxBacklogs').value, 10) : 0,
+          driveDate: document.getElementById('driveDate').value || null,
+          lastDateToApply: document.getElementById('lastDateToApply').value,
+          location: document.getElementById('location').value.trim() || null,
+          status: document.getElementById('status').value
+        };
+
+        const saveBtn = document.getElementById('btn-save');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+
+        try {
+          if (driveId) {
+            await api.put(`/api/drives/${driveId}`, payload);
+            ui.showToast('Drive updated successfully!');
+          } else {
+            await api.post('/api/drives', payload);
+            ui.showToast('Campus drive published successfully!');
+          }
+          setTimeout(() => {
+            window.location.href = '/institute/pages/2-company-drives/drive-list.html';
+          }, 600);
+        } catch (err) {
+          ui.showToast(err.message || 'Failed to save drive', 'danger');
+          saveBtn.disabled = false;
+          saveBtn.textContent = driveId ? 'Update Drive' : 'Save Drive';
+        }
+      });
+
+      init();
+    }
+  </script>
+</body>
+</html>

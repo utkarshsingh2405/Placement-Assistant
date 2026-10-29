@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="institute">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Classroom Attendance Compliance — Academic Institute</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <div class="d-flex align-center gap-2 mb-1">
+              <a href="/institute/pages/4-attendance/class/class-sessions.html" class="text-xs text-muted text-decoration-none">&larr; Back to Sessions</a>
+              <span class="text-xs text-muted">&bull;</span>
+              <span class="chip chip-muted uppercase text-xs">Section 04</span>
+            </div>
+            <h1 class="page-title">Classroom Attendance Compliance</h1>
+            <p class="page-subtitle">Departmental subject attendance compliance, percentage analytics, and 75% condonation alerts.</p>
+          </div>
+          <div class="d-flex gap-2">
+            <button id="btn-export-csv" class="btn btn-secondary">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#download-simple"></use></svg>
+              Export CSV
+            </button>
+            <a href="/institute/pages/4-attendance/class/class-sessions.html" class="btn btn-primary">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#calendar"></use></svg>
+              Class Timetable
+            </a>
+          </div>
+        </header>
+
+        <!-- Metric Bento (Double Bezel) -->
+        <div class="bento-grid mb-6">
+          <div class="bezel-outer">
+            <div class="bezel-inner p-4 text-center">
+              <span class="text-xs text-muted d-block mb-1">Total Class Sessions</span>
+              <strong class="text-2xl text-ink tabular-nums" id="stat-total-sessions">0</strong>
+              <span class="text-xs text-muted d-block mt-1">Conducted Lectures & Labs</span>
+            </div>
+          </div>
+          <div class="bezel-outer">
+            <div class="bezel-inner p-4 text-center">
+              <span class="text-xs text-muted d-block mb-1">Students Enrolled</span>
+              <strong class="text-2xl text-institute tabular-nums" id="stat-total-students">0</strong>
+              <span class="text-xs text-muted d-block mt-1">Across Registered Branches</span>
+            </div>
+          </div>
+          <div class="bezel-outer">
+            <div class="bezel-inner p-4 text-center">
+              <span class="text-xs text-muted d-block mb-1">Below 75% Threshold</span>
+              <strong class="text-2xl text-danger tabular-nums" id="stat-shortage-students">0</strong>
+              <span class="text-xs text-danger d-block mt-1 fw-semibold">Actionable Shortage Dossier</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="bezel-outer mb-6">
+          <div class="bezel-inner p-4">
+            <div class="form-grid g-3 align-center">
+              <div class="form-col-5">
+                <label for="filter-search" class="form-label">Search Student</label>
+                <div class="input-icon-wrap">
+                  <svg class="icon input-icon"><use href="/icons/sprite.svg#magnifying-glass"></use></svg>
+                  <input type="text" id="filter-search" class="form-control" placeholder="Search by roll number or candidate name...">
+                </div>
+              </div>
+              <div class="form-col-4">
+                <label for="filter-branch" class="form-label">Academic Department</label>
+                <select id="filter-branch" class="form-select">
+                  <option value="">All Engineering Branches</option>
+                  <option value="CSE">CSE</option>
+                  <option value="IT">IT</option>
+                  <option value="ECE">ECE</option>
+                  <option value="EEE">EEE</option>
+                  <option value="MECH">MECH</option>
+                  <option value="CIVIL">CIVIL</option>
+                </select>
+              </div>
+              <div class="form-col-3">
+                <label for="filter-status-threshold" class="form-label">Eligibility Filter</label>
+                <select id="filter-status-threshold" class="form-select">
+                  <option value="">All Attendance Levels</option>
+                  <option value="shortage">Below 75% (Shortage Warning)</option>
+                  <option value="eligible">75% &amp; Above (Clearance)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Report Table -->
+        <div class="bezel-outer mb-6">
+          <div class="bezel-inner p-0 overflow-hidden">
+            <div id="table-container"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import api from '/js/api.js';
+    import ui from '/js/ui.js';
+    import DataTable from '/js/table.js';
+
+    if (!auth.requireAuth()) {
+      // redirected
+    } else {
+      ui.initLayout('attendance-class');
+
+      let studentsReportData = [];
+
+      async function init() {
+        const container = document.getElementById('table-container');
+        container.innerHTML = ui.renderLoader('Compiling classroom attendance analytics...');
+
+        try {
+          const sessionsRes = await api.get('/api/class-sessions', { size: 100 });
+          const sessions = Array.isArray(sessionsRes) ? sessionsRes : (sessionsRes?.content || sessionsRes?.data || []);
+          const totalSessions = sessions.length;
+          document.getElementById('stat-total-sessions').textContent = totalSessions;
+
+          const studentsRes = await api.get('/api/students', { size: 100 });
+          const students = Array.isArray(studentsRes) ? studentsRes : (studentsRes?.content || studentsRes?.data || []);
+          document.getElementById('stat-total-students').textContent = students.length;
+
+          let shortageCount = 0;
+          const reportRows = await Promise.all(students.map(async (s) => {
+            try {
+              const summary = await api.get(`/api/attendance/student/${s.id}/summary`);
+              const classAttended = summary.classAttended !== undefined ? summary.classAttended : (summary.attendedSessions || 0);
+              const classTotal = summary.classTotal !== undefined ? summary.classTotal : (summary.totalSessions || totalSessions || 1);
+              const pct = summary.classPercentage !== undefined ? Math.round(summary.classPercentage) : (classTotal > 0 ? Math.round((classAttended / classTotal) * 100) : 100);
+              if (pct < 75) shortageCount++;
+
+              return {
+                id: s.id,
+                rollNo: s.rollNo,
+                name: s.name,
+                branch: s.branch,
+                attended: classAttended,
+                total: classTotal,
+                percentage: pct
+              };
+            } catch {
+              return {
+                id: s.id,
+                rollNo: s.rollNo,
+                name: s.name,
+                branch: s.branch,
+                attended: 0,
+                total: totalSessions,
+                percentage: 0
+              };
+            }
+          }));
+
+          document.getElementById('stat-shortage-students').textContent = shortageCount;
+          studentsReportData = reportRows;
+          renderTable();
+
+        } catch (err) {
+          container.innerHTML = ui.renderError(err.message);
+        }
+      }
+
+      function renderTable() {
+        const search = document.getElementById('filter-search').value.toLowerCase().trim();
+        const branch = document.getElementById('filter-branch').value;
+        const threshold = document.getElementById('filter-status-threshold').value;
+
+        const filtered = studentsReportData.filter(item => {
+          if (search && !item.rollNo.toLowerCase().includes(search) && !item.name.toLowerCase().includes(search)) return false;
+          if (branch && item.branch !== branch) return false;
+          if (threshold === 'shortage' && item.percentage >= 75) return false;
+          if (threshold === 'eligible' && item.percentage < 75) return false;
+          return true;
+        });
+
+        DataTable.render({
+          containerId: 'table-container',
+          columns: [
+            {
+              key: 'rollNo',
+              label: 'Roll No',
+              render: (item) => `<a href="/institute/pages/1-students/student-profile.html?id=${item.id}" class="fw-bold text-decoration-none text-institute tabular-nums">${ui.escapeHtml(item.rollNo)}</a>`
+            },
+            {
+              key: 'name',
+              label: 'Student Name',
+              render: (item) => `<span class="fw-semibold text-ink">${ui.escapeHtml(item.name)}</span>`
+            },
+            {
+              key: 'branch',
+              label: 'Branch',
+              render: (item) => `<span class="chip chip-muted text-xs uppercase">${ui.escapeHtml(item.branch)}</span>`
+            },
+            {
+              key: 'attended',
+              label: 'Classes Attended',
+              render: (item) => `<span class="tabular-nums text-ink-2">${item.attended} / ${item.total}</span>`
+            },
+            {
+              key: 'percentage',
+              label: 'Compliance Track',
+              render: (item) => {
+                const isShortage = item.percentage < 75;
+                const barColor = isShortage ? 'var(--status-danger)' : 'var(--status-success)';
+                return `
+                  <div class="d-flex align-center gap-3" style="max-width: 200px;">
+                    <div style="flex: 1; height: 6px; background: var(--surface-3); border-radius: 3px; overflow: hidden;">
+                      <div style="width: ${item.percentage}%; height: 100%; background: ${barColor};"></div>
+                    </div>
+                    <span class="text-xs fw-bold tabular-nums" style="color: ${barColor}; min-width: 38px;">${item.percentage}%</span>
+                  </div>
+                `;
+              }
+            },
+            {
+              key: 'status',
+              label: 'Examination Clearance',
+              render: (item) => {
+                if (item.percentage >= 75) {
+                  return `<span class="chip chip-success text-xs">Eligible (&ge; 75%)</span>`;
+                } else {
+                  return `<span class="chip chip-danger text-xs">Shortage (&lt; 75%)</span>`;
+                }
+              }
+            }
+          ],
+          data: filtered,
+          emptyMessage: 'No attendance records match your filters.'
+        });
+      }
+
+      document.getElementById('filter-search').addEventListener('input', renderTable);
+      document.getElementById('filter-branch').addEventListener('change', renderTable);
+      document.getElementById('filter-status-threshold').addEventListener('change', renderTable);
+
+      document.getElementById('btn-export-csv').addEventListener('click', async () => {
+        try {
+          ui.showToast('Generating class attendance export...', 'info');
+          await api.download('/api/attendance/export/class', 'class_attendance_report.csv');
+          ui.showToast('Class attendance report downloaded!');
+        } catch (err) {
+          ui.showToast(err.message || 'Export failed', 'danger');
+        }
+      });
+
+      init();
+    }
+  </script>
+</body>
+</html>

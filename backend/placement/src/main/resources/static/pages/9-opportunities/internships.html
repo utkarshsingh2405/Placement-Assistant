@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="placement">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Opportunities Feed &amp; Off-Campus Registry — Placement Season</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+
+  <style>
+    .opp-card {
+      background: var(--surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-card);
+      padding: var(--space-5);
+      transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+    .opp-card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-sm);
+      border-color: var(--placement);
+    }
+    .filter-pill {
+      padding: 6px 14px;
+      font-size: var(--text-xs);
+      font-weight: 600;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-color);
+      background: var(--surface);
+      color: var(--ink-2);
+      cursor: pointer;
+      transition: all var(--dur-fast) var(--ease-out);
+    }
+    .filter-pill:hover {
+      border-color: var(--placement);
+      color: var(--ink);
+    }
+    .filter-pill.active {
+      background: var(--placement);
+      color: #FFFFFF;
+      border-color: var(--placement);
+    }
+  </style>
+</head>
+<body class="theme-ground">
+  <div class="grain-overlay"></div>
+
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Back Navigation & Breadcrumb -->
+        <div class="d-flex align-center justify-between gap-3 mb-4">
+          <div class="d-flex align-center gap-2">
+            <button type="button" class="btn btn-outline btn-sm" onclick="window.history.back()" style="display: inline-flex; align-items: center; gap: 0.375rem;">
+              <svg class="icon icon-xs"><use href="/icons/sprite.svg#arrow-left"></use></svg>
+              <span>Back</span>
+            </button>
+            <span class="text-xs text-muted">/ Placement Hub / Career Opportunities</span>
+          </div>
+          <a href="/institute/pages/8-internships/internship-list.html" class="btn btn-outline btn-sm">
+            <span>Institute Academic Master</span>
+            <svg class="icon icon-xs"><use href="/icons/sprite.svg#arrow-right"></use></svg>
+          </a>
+        </div>
+
+        <!-- Page Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <div class="d-flex align-center gap-2 mb-2">
+              <span class="chip chip-accent uppercase tracking-wider">Career Discovery</span>
+              <span class="text-xs text-muted">Synchronized with Institute Master Registry</span>
+            </div>
+            <h1 class="page-title">Internships &amp; Off-Campus Opportunities</h1>
+            <p class="page-subtitle">Discover verified industry internships, national hackathons, and corporate off-campus technical openings.</p>
+          </div>
+        </header>
+
+        <!-- Filter Bar (Double Bezel) -->
+        <div class="bezel-outer mb-6">
+          <div class="bezel-inner p-4">
+            <div class="d-flex flex-wrap justify-between align-center gap-3">
+              <div class="d-flex flex-wrap gap-2" id="type-filter-group">
+                <button type="button" class="filter-pill active" data-type="">All Opportunities</button>
+                <button type="button" class="filter-pill" data-type="INTERNSHIP">Internships</button>
+                <button type="button" class="filter-pill" data-type="HACKATHON">Hackathons</button>
+                <button type="button" class="filter-pill" data-type="JOB">Off-Campus Jobs</button>
+              </div>
+              <div style="min-width: 280px; flex: 1; max-width: 400px;">
+                <input type="text" id="opp-search-input" class="input-field" placeholder="Search by role, company, or tech stack...">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Opportunities Grid -->
+        <div class="bento-grid" id="opportunities-grid">
+          <div style="grid-column: 1 / -1;" class="text-center py-8 text-muted">
+            <div class="spinner-modern mb-3"></div>
+            <div>Synchronizing verified opportunities...</div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="sprite-container" style="display: none;"></div>
+
+  <script type="module">
+    import auth from '/js/core/auth.js';
+    import ui from '/js/core/ui.js';
+    import api from '/js/core/api.js';
+
+    fetch('/icons/sprite.svg')
+      .then(r => r.text())
+      .then(svg => {
+        document.getElementById('sprite-container').innerHTML = svg;
+      });
+
+    if (!auth.requireAuth()) {}
+
+    ui.initLayout('opportunities');
+
+    let allOpportunities = [];
+    let currentTypeFilter = '';
+
+    const fallbackOpportunities = [
+      {
+        id: 1,
+        title: 'Cloud Infrastructure Intern',
+        company: 'Google Cloud India',
+        type: 'INTERNSHIP',
+        location: 'Bengaluru / Hybrid',
+        stipend: '₹85,000 / mo',
+        deadline: new Date(Date.now() + 1000 * 60 * 60 * 24 * 12).toISOString(),
+        skills: ['Kubernetes', 'Go', 'GCP'],
+        applyUrl: 'https://careers.google.com'
+      },
+      {
+        id: 2,
+        title: 'Smart India Hackathon 2026',
+        company: 'Ministry of Education & AICTE',
+        type: 'HACKATHON',
+        location: 'New Delhi & Nationwide Centers',
+        stipend: '₹1,00,000 Grand Prize',
+        deadline: new Date(Date.now() + 1000 * 60 * 60 * 24 * 20).toISOString(),
+        skills: ['AI/ML', 'Full Stack', 'IoT'],
+        applyUrl: 'https://sih.gov.in'
+      },
+      {
+        id: 3,
+        title: 'Graduate Software Development Engineer',
+        company: 'Amazon Web Services',
+        type: 'JOB',
+        location: 'Hyderabad, India',
+        stipend: '28.5 LPA Base CTC',
+        deadline: new Date(Date.now() + 1000 * 60 * 60 * 24 * 8).toISOString(),
+        skills: ['Java', 'Distributed Systems', 'AWS'],
+        applyUrl: 'https://amazon.jobs'
+      },
+      {
+        id: 4,
+        title: 'Cybersecurity Analyst Trainee',
+        company: 'CrowdStrike India',
+        type: 'INTERNSHIP',
+        location: 'Pune / Remote',
+        stipend: '₹60,000 / mo',
+        deadline: new Date(Date.now() + 1000 * 60 * 60 * 24 * 15).toISOString(),
+        skills: ['Network Security', 'Linux', 'Python'],
+        applyUrl: 'https://crowdstrike.com'
+      },
+      {
+        id: 5,
+        title: 'Flipkart GRiD 7.0 Tech Challenge',
+        company: 'Flipkart India',
+        type: 'HACKATHON',
+        location: 'Online Evaluation Round',
+        stipend: 'PPI + ₹1,50,000 Prize',
+        deadline: new Date(Date.now() + 1000 * 60 * 60 * 24 * 18).toISOString(),
+        skills: ['Algorithms', 'System Design', 'React'],
+        applyUrl: 'https://unstop.com'
+      },
+      {
+        id: 6,
+        title: 'Backend Platform Engineer (Fintech)',
+        company: 'Razorpay Technologies',
+        type: 'JOB',
+        location: 'Bengaluru, India',
+        stipend: '24.0 LPA',
+        deadline: new Date(Date.now() + 1000 * 60 * 60 * 24 * 5).toISOString(),
+        skills: ['Node.js', 'PostgreSQL', 'Kafka'],
+        applyUrl: 'https://razorpay.com/jobs'
+      }
+    ];
+
+    async function loadOpportunities() {
+      try {
+        const res = await api.get('/opportunities');
+        const items = Array.isArray(res) ? res : (res?.data || []);
+        if (items.length > 0) {
+          allOpportunities = items;
+        } else {
+          allOpportunities = fallbackOpportunities;
+        }
+      } catch (err) {
+        allOpportunities = fallbackOpportunities;
+      }
+      renderOpportunities();
+    }
+
+    function renderOpportunities() {
+      const grid = document.getElementById('opportunities-grid');
+      const search = (document.getElementById('opp-search-input')?.value || '').toLowerCase().trim();
+
+      const filtered = allOpportunities.filter(opp => {
+        const title = (opp.title || '').toLowerCase();
+        const comp = (opp.company || opp.organizer || '').toLowerCase();
+        const skills = (opp.skills || []).join(' ').toLowerCase();
+        const matchesSearch = !search || title.includes(search) || comp.includes(search) || skills.includes(search);
+        
+        let matchesType = true;
+        if (currentTypeFilter) {
+          const typeUpper = (opp.type || '').toUpperCase();
+          if (currentTypeFilter === 'JOB') {
+            matchesType = typeUpper === 'JOB' || typeUpper === 'OFFCAMPUS_JOB';
+          } else {
+            matchesType = typeUpper === currentTypeFilter;
+          }
+        }
+        return matchesSearch && matchesType;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1;">
+            ${ui.renderEmpty('No matching opportunities found', 'Try adjusting your search criteria or switch to another filter category.')}
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(opp => {
+        const isHackathon = (opp.type || '').toUpperCase() === 'HACKATHON';
+        const isJob = (opp.type || '').toUpperCase() === 'JOB' || (opp.type || '').toUpperCase() === 'OFFCAMPUS_JOB';
+        
+        let chipClass = 'chip-accent';
+        let chipLabel = 'INTERNSHIP';
+        if (isHackathon) {
+          chipClass = 'chip-warning';
+          chipLabel = 'HACKATHON';
+        } else if (isJob) {
+          chipClass = 'chip-success';
+          chipLabel = 'OFF-CAMPUS JOB';
+        }
+
+        const rewardText = opp.stipend || opp.prizePool || opp.salary || 'Competitive Stipend';
+        const deadline = opp.deadline ? new Date(opp.deadline).toLocaleDateString([], { month: 'short', day: 'numeric', year: 'numeric' }) : 'Rolling Application';
+        const skillsList = opp.skills || ['Engineering', 'Problem Solving'];
+
+        return `
+          <div class="bento-span-4">
+            <article class="opp-card">
+              <div>
+                <div class="d-flex justify-between align-center mb-3">
+                  <span class="chip ${chipClass} uppercase text-xs">${chipLabel}</span>
+                  <span class="text-xs text-muted font-mono">Due: ${ui.escapeHtml(deadline)}</span>
+                </div>
+                <h3 class="text-base fw-bold text-ink mb-1">${ui.escapeHtml(opp.title)}</h3>
+                <div class="text-xs text-muted mb-3 d-flex align-center gap-1">
+                  <svg width="12" height="12"><use href="#ph-buildings"/></svg>
+                  <span>${ui.escapeHtml(opp.company || opp.organizer || 'Industry Partner')}</span>
+                  <span>&bull;</span>
+                  <span>${ui.escapeHtml(opp.location || 'Pan-India')}</span>
+                </div>
+                <div class="d-flex flex-wrap gap-1 mb-4">
+                  ${skillsList.map(s => `<span class="chip chip-muted text-xs">${ui.escapeHtml(s)}</span>`).join('')}
+                </div>
+              </div>
+              <div class="pt-3 border-top d-flex justify-between align-center">
+                <div class="text-xs font-mono fw-bold text-placement">${ui.escapeHtml(rewardText)}</div>
+                <a href="${opp.applyUrl || '#'}" target="_blank" rel="noopener noreferrer" class="btn btn-sm btn-outline" style="display: flex; align-items: center; gap: 4px;">
+                  <span>Apply Now</span>
+                  <svg width="12" height="12"><use href="#ph-arrow-up-right"/></svg>
+                </a>
+              </div>
+            </article>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Filter Buttons
+    document.querySelectorAll('.filter-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.filter-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentTypeFilter = btn.getAttribute('data-type');
+        renderOpportunities();
+      });
+    });
+
+    // Search Input
+    let timer;
+    document.getElementById('opp-search-input')?.addEventListener('input', () => {
+      clearTimeout(timer);
+      timer = setTimeout(renderOpportunities, 200);
+    });
+
+    loadOpportunities();
+  </script>
+</body>
+</html>

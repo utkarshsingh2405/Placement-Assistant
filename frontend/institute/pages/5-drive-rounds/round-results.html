@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="institute">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Round Results &amp; Shortlisting — Academic Institute Pillar</title>
+  
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <div id="results-loader"></div>
+
+        <div id="results-content" class="d-none">
+          <!-- Back Navigation & Breadcrumbs -->
+          <div class="d-flex align-center justify-between gap-3 mb-4">
+            <div class="d-flex align-center gap-2">
+              <a href="#" id="link-back-board" class="btn btn-outline btn-sm" style="display: inline-flex; align-items: center; gap: 0.375rem;">
+                <svg class="icon icon-xs"><use href="/icons/sprite.svg#arrow-left"></use></svg>
+                <span>Back to Pipeline</span>
+              </a>
+              <span class="text-xs text-muted">/ Institute / Rounds / Results Dossier</span>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm d-flex align-center gap-1" id="btn-open-modal">
+              <svg class="icon icon-xs"><use href="/icons/sprite.svg#plus"></use></svg>
+              <span>Record Result</span>
+            </button>
+          </div>
+
+          <!-- Round Header Banner (Double Bezel) -->
+          <div class="bezel-outer mb-6">
+            <div class="bezel-inner p-6">
+              <div class="d-flex flex-wrap justify-between align-center gap-4">
+                <div>
+                  <span class="chip chip-accent uppercase tracking-wider mb-2 font-mono" id="round-seq-type">Round 1 • ONLINE TEST</span>
+                  <h1 class="poster-title text-2xl mb-1 text-ink" id="round-name">Round Evaluation</h1>
+                  <div class="text-muted text-xs d-flex align-center gap-2 flex-wrap">
+                    <span>Drive: <strong class="text-ink" id="round-drive-title">--</strong></span>
+                    <span>&bull;</span>
+                    <span>Date: <strong class="text-ink" id="round-date">--</strong></span>
+                    <span>&bull;</span>
+                    <span>Cutoff: <strong class="text-institute fw-bold" id="round-cutoff">--</strong></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Summary Metric Cards (Bento) -->
+          <div class="bento-grid mb-6">
+            <div class="bento-span-4 bezel-outer">
+              <div class="bezel-inner p-4 text-center">
+                <span class="text-xs text-muted uppercase font-mono fw-semibold d-block">Candidates Evaluated</span>
+                <div class="text-2xl fw-bold text-ink mt-1 tabular-nums" id="stat-total">0</div>
+              </div>
+            </div>
+            <div class="bento-span-4 bezel-outer">
+              <div class="bezel-inner p-4 text-center">
+                <span class="text-xs text-muted uppercase font-mono fw-semibold d-block">Shortlisted / Passed</span>
+                <div class="text-2xl fw-bold text-placement mt-1 tabular-nums" id="stat-passed">0</div>
+              </div>
+            </div>
+            <div class="bento-span-4 bezel-outer">
+              <div class="bezel-inner p-4 text-center">
+                <span class="text-xs text-muted uppercase font-mono fw-semibold d-block">Eliminated / Failed</span>
+                <div class="text-2xl fw-bold text-danger mt-1 tabular-nums" id="stat-failed">0</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Filter Bar (Double Bezel) -->
+          <div class="bezel-outer mb-6">
+            <div class="bezel-inner p-4">
+              <div class="form-grid g-3 align-center">
+                <div class="form-col-8">
+                  <div class="input-icon-wrap">
+                    <svg class="icon input-icon"><use href="/icons/sprite.svg#magnifying-glass"></use></svg>
+                    <input type="text" id="filter-search" class="form-control" placeholder="Search by student name or roll number...">
+                  </div>
+                </div>
+                <div class="form-col-4">
+                  <select id="filter-status" class="form-select">
+                    <option value="">All Statuses</option>
+                    <option value="PASSED">Passed / Shortlisted Only</option>
+                    <option value="FAILED">Failed Only</option>
+                    <option value="PENDING">Pending Evaluation</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Results Table (Double Bezel) -->
+          <div class="bezel-outer mb-6">
+            <div class="bezel-inner p-4">
+              <div id="table-container"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Record Candidate Result Modal (Custom Stitch Modal) -->
+  <div id="candidateModal" class="modal-backdrop" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px);">
+    <div class="bezel-outer" style="max-width: 500px; width: 90%; margin: auto;">
+      <div class="bezel-inner p-6">
+        <div class="d-flex justify-between align-center mb-4 border-bottom pb-3">
+          <h3 class="text-lg fw-bold mb-0 text-ink">Record Candidate Result</h3>
+          <button type="button" class="btn-icon" id="btn-close-modal" aria-label="Close">
+            <svg class="icon icon-sm"><use href="/icons/sprite.svg#x"></use></svg>
+          </button>
+        </div>
+        <form id="add-candidate-form">
+          <div class="form-grid g-3">
+            <div class="form-col-12">
+              <label for="modal-student-id" class="form-label fw-semibold">Select Student <span class="text-danger">*</span></label>
+              <select id="modal-student-id" class="form-select" required>
+                <option value="">Choose student...</option>
+              </select>
+            </div>
+            <div class="form-col-6">
+              <label for="modal-score" class="form-label fw-semibold">Score / Marks</label>
+              <input type="number" id="modal-score" class="form-control font-mono" step="0.5" min="0" placeholder="e.g. 85.0">
+            </div>
+            <div class="form-col-6">
+              <label for="modal-status" class="form-label fw-semibold">Status <span class="text-danger">*</span></label>
+              <select id="modal-status" class="form-select font-mono" required>
+                <option value="PASSED">PASSED (Shortlisted)</option>
+                <option value="FAILED">FAILED (Eliminated)</option>
+                <option value="PENDING" selected>PENDING</option>
+              </select>
+            </div>
+            <div class="form-col-12">
+              <label for="modal-feedback" class="form-label fw-semibold">Interviewer Feedback / Notes</label>
+              <textarea id="modal-feedback" class="form-control" rows="3" placeholder="Performance feedback, technical strengths, recommendations..."></textarea>
+            </div>
+            <div class="form-col-12 d-flex justify-end gap-2 pt-3 border-top">
+              <button type="button" class="btn btn-outline" id="btn-cancel-modal">Cancel</button>
+              <button type="submit" class="btn btn-primary px-4" id="btn-save-candidate">Save Result</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import api from '/js/api.js';
+    import ui from '/js/ui.js';
+    import DataTable from '/js/table.js';
+
+    if (!auth.requireAuth()) {
+      // redirected
+    } else {
+      ui.initLayout('rounds');
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const roundId = urlParams.get('roundId');
+
+      if (!roundId) {
+        window.location.href = '/institute/pages/2-company-drives/drive-list.html';
+      }
+
+      if (!auth.isTpo()) {
+        document.getElementById('btn-open-modal')?.classList.add('d-none');
+      }
+
+      let allResults = [];
+      let roundData = null;
+
+      const modalEl = document.getElementById('candidateModal');
+      document.getElementById('btn-open-modal')?.addEventListener('click', () => {
+        modalEl.style.display = 'flex';
+      });
+      document.getElementById('btn-close-modal')?.addEventListener('click', () => {
+        modalEl.style.display = 'none';
+      });
+      document.getElementById('btn-cancel-modal')?.addEventListener('click', () => {
+        modalEl.style.display = 'none';
+      });
+
+      async function init() {
+        const loader = document.getElementById('results-loader');
+        const content = document.getElementById('results-content');
+        loader.innerHTML = ui.renderLoader('Loading round evaluation results...');
+
+        try {
+          roundData = await api.get(`/api/rounds/${roundId}`);
+          document.getElementById('round-name').textContent = roundData.roundName;
+          document.getElementById('round-seq-type').textContent = `Round ${roundData.sequence} • ${roundData.roundType}`;
+          document.getElementById('round-date').textContent = roundData.roundDate || 'TBD';
+          document.getElementById('round-cutoff').textContent = roundData.cutoffScore ? `${roundData.cutoffScore} marks` : 'None';
+
+          document.getElementById('link-back-board').href = `/institute/pages/5-drive-rounds/rounds-board.html?driveId=${roundData.driveId}`;
+
+          // Load drive details for name
+          const drive = await api.get(`/api/drives/${roundData.driveId}`);
+          document.getElementById('round-drive-title').textContent = `${drive.title || drive.roles} (${drive.companyName || drive.company?.name || 'Company'})`;
+
+          // Load student options for modal
+          loadStudentsDropdown();
+
+          // Load results
+          await fetchResults();
+
+          loader.classList.add('d-none');
+          content.classList.remove('d-none');
+
+        } catch (err) {
+          loader.innerHTML = ui.renderError(err.message);
+        }
+      }
+
+      async function loadStudentsDropdown() {
+        try {
+          const res = await api.get('/api/students', { size: 100 });
+          const students = res.content || res.data?.content || res || [];
+          const select = document.getElementById('modal-student-id');
+          select.innerHTML = '<option value="">Choose student...</option>';
+          students.forEach(s => {
+            const opt = document.createElement('option');
+            opt.value = s.id;
+            opt.textContent = `${s.rollNo} - ${s.name} (${s.branch})`;
+            select.appendChild(opt);
+          });
+        } catch {}
+      }
+
+      async function fetchResults() {
+        try {
+          const results = await api.get(`/api/rounds/${roundId}/results`);
+          allResults = results || [];
+
+          let passed = 0;
+          let failed = 0;
+          allResults.forEach(r => {
+            if (r.status === 'PASSED') passed++;
+            if (r.status === 'FAILED') failed++;
+          });
+
+          document.getElementById('stat-total').textContent = allResults.length;
+          document.getElementById('stat-passed').textContent = passed;
+          document.getElementById('stat-failed').textContent = failed;
+
+          renderTable();
+        } catch (err) {
+          ui.showToast('Could not load results: ' + err.message, 'danger');
+        }
+      }
+
+      function renderTable() {
+        const search = document.getElementById('filter-search').value.toLowerCase().trim();
+        const status = document.getElementById('filter-status').value;
+
+        const filtered = allResults.filter(r => {
+          if (search && !((r.studentRollNo && r.studentRollNo.toLowerCase().includes(search)) ||
+                          (r.studentName && r.studentName.toLowerCase().includes(search)))) return false;
+          if (status && r.status !== status) return false;
+          return true;
+        });
+
+        DataTable.render({
+          containerId: 'table-container',
+          columns: [
+            {
+              key: 'studentRollNo',
+              label: 'Roll No',
+              render: (item) => `<a href="/institute/pages/1-students/student-profile.html?id=${item.studentId}" class="fw-bold font-mono text-institute text-decoration-none">${ui.escapeHtml(item.studentRollNo || 'STU')}</a>`
+            },
+            {
+              key: 'studentName',
+              label: 'Candidate Name',
+              render: (item) => `<span class="fw-semibold text-ink">${ui.escapeHtml(item.studentName || 'Student')}</span>`
+            },
+            {
+              key: 'score',
+              label: 'Score',
+              render: (item) => item.score !== null ? `<strong class="tabular-nums font-mono">${Number(item.score).toFixed(1)}</strong>` : '<span class="text-muted">-</span>'
+            },
+            {
+              key: 'status',
+              label: 'Status',
+              render: (item) => `<span class="chip chip-${item.status === 'PASSED' ? 'success' : (item.status === 'FAILED' ? 'danger' : 'neutral')} uppercase font-mono">${ui.escapeHtml(item.status)}</span>`
+            },
+            {
+              key: 'feedback',
+              label: 'Feedback / Remarks',
+              render: (item) => `<span class="text-xs text-muted">${ui.escapeHtml(item.feedback || '-')}</span>`
+            }
+          ],
+          data: filtered,
+          emptyMessage: 'No candidate results recorded for this round yet.'
+        });
+      }
+
+      document.getElementById('filter-search').addEventListener('input', renderTable);
+      document.getElementById('filter-status').addEventListener('change', renderTable);
+
+      // Add candidate result modal form submit
+      document.getElementById('add-candidate-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const studentId = document.getElementById('modal-student-id').value;
+        if (!studentId) {
+          ui.showToast('Please select a student', 'warning');
+          return;
+        }
+
+        const payload = {
+          studentId: parseInt(studentId, 10),
+          score: document.getElementById('modal-score').value ? parseFloat(document.getElementById('modal-score').value) : null,
+          status: document.getElementById('modal-status').value,
+          feedback: document.getElementById('modal-feedback').value.trim() || null
+        };
+
+        const btn = document.getElementById('btn-save-candidate');
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+
+        try {
+          await api.post(`/api/rounds/${roundId}/results`, payload);
+          ui.showToast('Candidate evaluation recorded successfully!');
+          modalEl.style.display = 'none';
+          document.getElementById('add-candidate-form').reset();
+          btn.disabled = false;
+          btn.textContent = 'Save Result';
+          fetchResults();
+        } catch (err) {
+          ui.showToast(err.message || 'Failed to save result', 'danger');
+          btn.disabled = false;
+          btn.textContent = 'Save Result';
+        }
+      });
+
+      init();
+    }
+  </script>
+</body>
+</html>

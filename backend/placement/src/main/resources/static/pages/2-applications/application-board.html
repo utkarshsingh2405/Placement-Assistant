@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="placement">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Candidate Pipeline Board — Placement Season</title>
+  
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="grain-overlay"></div>
+
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Page Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <div class="d-flex align-center gap-2 mb-2">
+              <span class="chip chip-accent uppercase tracking-wider">Candidate Registry</span>
+              <span class="text-xs text-muted">Hiring Funnel &amp; Progressions</span>
+            </div>
+            <h1 class="page-title">Candidate Pipeline Board</h1>
+            <p class="page-subtitle">Multi-stage applicant evaluation ledger. Review candidate credentials, filter by drive or round, and progress shortlisted candidates.</p>
+          </div>
+          <div class="d-flex flex-wrap align-center gap-2">
+            <button type="button" class="btn btn-outline" id="btn-export-csv">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#download"></use></svg>
+              <span>Export Pipeline CSV</span>
+            </button>
+            <select id="drive-selector" class="form-select" style="min-width: 260px;">
+              <option value="">All Recruitment Drives...</option>
+            </select>
+          </div>
+        </header>
+
+        <!-- KPI Metrics Grid (Double Bezel) -->
+        <div class="grid-4-col gap-4 mb-6">
+          <div class="bezel-outer">
+            <div class="bezel-inner p-4 text-center">
+              <span class="text-xs text-muted uppercase tracking-wider d-block">Total Applicants</span>
+              <strong class="text-2xl text-placement tabular-nums d-block my-1" id="stat-total-apps">0</strong>
+              <span class="text-xs text-muted">Registered in funnel</span>
+            </div>
+          </div>
+          <div class="bezel-outer">
+            <div class="bezel-inner p-4 text-center">
+              <span class="text-xs text-muted uppercase tracking-wider d-block">Shortlisted</span>
+              <strong class="text-2xl text-accent tabular-nums d-block my-1" id="stat-shortlisted">0</strong>
+              <span class="text-xs text-muted">Active in evaluations</span>
+            </div>
+          </div>
+          <div class="bezel-outer">
+            <div class="bezel-inner p-4 text-center">
+              <span class="text-xs text-muted uppercase tracking-wider d-block">Selected / Offered</span>
+              <strong class="text-2xl text-success tabular-nums d-block my-1" id="stat-selected">0</strong>
+              <span class="text-xs text-muted">Official appointments</span>
+            </div>
+          </div>
+          <div class="bezel-outer">
+            <div class="bezel-inner p-4 text-center">
+              <span class="text-xs text-muted uppercase tracking-wider d-block">Released / Exited</span>
+              <strong class="text-2xl text-danger tabular-nums d-block my-1" id="stat-rejected">0</strong>
+              <span class="text-xs text-muted">Prior round exits</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Filter & Search Bar -->
+        <div class="bezel-outer mb-6">
+          <div class="bezel-inner p-4">
+            <div class="form-grid g-3 align-center">
+              <div class="form-col-6">
+                <div class="input-icon-wrap">
+                  <svg class="icon input-icon"><use href="/icons/sprite.svg#magnifying-glass"></use></svg>
+                  <input type="text" id="applicant-search" class="form-control" placeholder="Search by student roll number, candidate name, or email...">
+                </div>
+              </div>
+              <div class="form-col-3">
+                <select id="status-filter" class="form-select">
+                  <option value="">All Application Statuses</option>
+                  <option value="SHORTLISTED">SHORTLISTED</option>
+                  <option value="APPLIED">APPLIED / IN REVIEW</option>
+                  <option value="SELECTED">SELECTED / OFFERED</option>
+                  <option value="REJECTED">REJECTED / RELEASED</option>
+                </select>
+              </div>
+              <div class="form-col-3 text-end">
+                <span class="text-xs text-muted font-mono" id="pipeline-count-badge">Loading funnel...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Candidate Ledger Table (Double Bezel) -->
+        <div class="bezel-outer">
+          <div class="bezel-inner p-5">
+            <div class="ledger-container">
+              <table class="ledger-table" id="applicants-table">
+                <thead>
+                  <tr>
+                    <th>Roll Number</th>
+                    <th>Candidate Profile</th>
+                    <th>Recruitment Drive</th>
+                    <th>Current Stage</th>
+                    <th>ATS Match</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Authority Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="applicants-tbody">
+                  <tr>
+                    <td colspan="7" class="text-center p-6 text-muted">
+                      <div class="spinner-modern mb-2"></div>
+                      <div>Loading candidate application records...</div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Advance / Edit Status Modal -->
+  <dialog id="statusModal" class="custom-dialog">
+    <div class="dialog-card">
+      <form id="status-form">
+        <input type="hidden" id="modal-app-id">
+        <div class="dialog-header d-flex justify-between align-center p-4 border-bottom">
+          <h3 class="text-lg fw-semibold text-ink mb-0">Evaluate Candidate Stage Status</h3>
+          <button type="button" class="btn-icon" id="btn-close-status-modal" aria-label="Close dialog">
+            <svg class="icon icon-sm"><use href="/icons/sprite.svg#x"></use></svg>
+          </button>
+        </div>
+
+        <div class="dialog-body p-5">
+          <div class="mb-4">
+            <div class="text-xs text-muted uppercase tracking-wider mb-1">Candidate</div>
+            <strong class="text-base text-ink" id="modal-candidate-name">Candidate Name</strong>
+            <span class="text-xs font-mono text-muted ms-2" id="modal-candidate-roll">(21CS001)</span>
+          </div>
+
+          <div class="form-grid g-3">
+            <div class="form-col-12">
+              <label class="form-label">Evaluation Verdict / Status *</label>
+              <select id="modal-status-select" class="form-select" required>
+                <option value="SHORTLISTED">SHORTLISTED (Advance to Next Stage)</option>
+                <option value="IN_REVIEW">IN_REVIEW (Under Deliberation)</option>
+                <option value="SELECTED">SELECTED (Offer Extended)</option>
+                <option value="REJECTED">REJECTED (Released from Pipeline)</option>
+              </select>
+            </div>
+            <div class="form-col-12">
+              <label class="form-label">Panel Notes / Evaluator Remarks</label>
+              <textarea id="modal-remarks" class="form-control" rows="3" placeholder="Add technical strengths, coding test score, or panel interview notes..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="dialog-footer p-4 border-top d-flex justify-end gap-2 surface-ground">
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-cancel-status-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Confirm Decision</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- SVG Sprite Inclusion -->
+  <div id="sprite-container" style="display: none;"></div>
+
+  <script type="module">
+    import auth from '/js/core/auth.js';
+    import api from '/js/core/api.js';
+    import ui from '/js/core/ui.js';
+
+    fetch('/icons/sprite.svg')
+      .then(r => r.text())
+      .then(svg => {
+        document.getElementById('sprite-container').innerHTML = svg;
+      });
+
+    if (!auth.requireAuth()) {}
+
+    ui.initLayout('applications');
+
+    const params = new URLSearchParams(window.location.search);
+    const initialDriveId = params.get('driveId');
+
+    const user = auth.getUser();
+    const role = user?.role || 'STUDENT';
+    const isDirectorOrTpo = role === 'TPO' || role === 'DIRECTOR' || role === 'ADMIN';
+
+    let allApplications = [];
+    let allDrives = [];
+
+    async function initializeBoard() {
+      try {
+        const drivesRes = await api.get('/drives/all');
+        allDrives = Array.isArray(drivesRes) ? drivesRes : (drivesRes?.data || []);
+
+        const selector = document.getElementById('drive-selector');
+        selector.innerHTML = '<option value="">All Recruitment Drives (' + allDrives.length + ')</option>' +
+          allDrives.map(d => {
+            const comp = d.company?.name || d.companyName || d.title || 'Drive';
+            return `<option value="${d.id}" ${initialDriveId == d.id ? 'selected' : ''}>${ui.escapeHtml(comp)} &bull; ${ui.escapeHtml(d.jobRoles || d.title || 'SDE')}</option>`;
+          }).join('');
+
+        await loadApplications();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function loadApplications() {
+      const selectedDrive = document.getElementById('drive-selector').value;
+      const endpoint = selectedDrive ? `/drives/${selectedDrive}/applications` : `/applications`;
+
+      try {
+        const res = await api.get(endpoint);
+        allApplications = Array.isArray(res) ? res : (res?.data || res?.content || []);
+        
+        updateStats();
+        renderTable();
+      } catch (err) {
+        document.getElementById('applicants-tbody').innerHTML = `
+          <tr><td colspan="7" class="text-center text-danger p-6">${ui.escapeHtml(err.message || 'Failed to load candidates')}</td></tr>
+        `;
+      }
+    }
+
+    function updateStats() {
+      document.getElementById('stat-total-apps').textContent = allApplications.length;
+      document.getElementById('stat-shortlisted').textContent = allApplications.filter(a => a.status === 'SHORTLISTED').length;
+      document.getElementById('stat-selected').textContent = allApplications.filter(a => a.status === 'SELECTED' || a.status === 'OFFERED').length;
+      document.getElementById('stat-rejected').textContent = allApplications.filter(a => a.status === 'REJECTED').length;
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('applicants-tbody');
+      const search = document.getElementById('applicant-search').value.toLowerCase().trim();
+      const statusFilter = document.getElementById('status-filter').value;
+
+      const filtered = allApplications.filter(a => {
+        const roll = (a.rollNo || '').toLowerCase();
+        const name = (a.studentName || '').toLowerCase();
+        const email = (a.email || '').toLowerCase();
+        const matchesSearch = !search || roll.includes(search) || name.includes(search) || email.includes(search);
+        const matchesStatus = !statusFilter || a.status === statusFilter;
+        return matchesSearch && matchesStatus;
+      });
+
+      document.getElementById('pipeline-count-badge').textContent = `Showing ${filtered.length} of ${allApplications.length} candidates`;
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center text-muted p-6">No candidates found matching the selected filter criteria.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(app => {
+        const status = app.status || 'APPLIED';
+        let chipClass = 'chip-neutral';
+        if (status === 'SHORTLISTED') chipClass = 'chip-success';
+        if (status === 'SELECTED') chipClass = 'chip-brass';
+        if (status === 'REJECTED') chipClass = 'chip-danger';
+
+        const driveName = app.drive?.title || (allDrives.find(d => d.id === app.driveId)?.title) || 'Campus Drive';
+        const stageName = app.currentStage?.stageName || 'Stage 1 • Assessment';
+
+        return `
+          <tr>
+            <td>
+              <strong class="font-mono text-xs text-ink">${ui.escapeHtml(app.rollNo)}</strong>
+            </td>
+            <td>
+              <div class="fw-semibold text-ink text-sm">${ui.escapeHtml(app.studentName)}</div>
+              <div class="text-muted text-xs">${ui.escapeHtml(app.email || '')}</div>
+            </td>
+            <td>
+              <div class="text-xs fw-medium text-ink-2">${ui.escapeHtml(driveName)}</div>
+            </td>
+            <td>
+              <span class="chip chip-neutral" style="font-size: 11px;">
+                <svg class="icon icon-xs"><use href="/icons/sprite.svg#git-commit"></use></svg>
+                ${ui.escapeHtml(stageName)}
+              </span>
+            </td>
+            <td>
+              <span class="tabular-nums fw-semibold text-placement">${app.atsScore || 85}%</span>
+            </td>
+            <td>
+              <span class="chip ${chipClass}" style="font-size: 11px;">${status}</span>
+            </td>
+            <td style="text-align: right;">
+              <div class="d-flex gap-1 justify-end align-center">
+                ${isDirectorOrTpo ? `
+                  <button type="button" class="btn btn-outline btn-sm btn-eval-action" data-id="${app.id}" data-name="${ui.escapeHtml(app.studentName)}" data-roll="${ui.escapeHtml(app.rollNo)}" data-status="${status}" title="Evaluate & Progress Candidate">
+                    <svg class="icon icon-xs"><use href="/icons/sprite.svg#check"></use></svg>
+                    <span>Evaluate</span>
+                  </button>
+                  <button type="button" class="btn btn-outline btn-sm text-danger btn-quick-reject" data-id="${app.id}" data-name="${ui.escapeHtml(app.studentName)}" title="Release from Drive">
+                    <svg class="icon icon-xs"><use href="/icons/sprite.svg#x"></use></svg>
+                  </button>
+                ` : `
+                  <span class="text-xs text-muted">Audited</span>
+                `}
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // Wire action handlers
+      tbody.querySelectorAll('.btn-eval-action').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = btn.getAttribute('data-id');
+          const name = btn.getAttribute('data-name');
+          const roll = btn.getAttribute('data-roll');
+          const st = btn.getAttribute('data-status');
+
+          document.getElementById('modal-app-id').value = id;
+          document.getElementById('modal-candidate-name').textContent = name;
+          document.getElementById('modal-candidate-roll').textContent = `(${roll})`;
+          document.getElementById('modal-status-select').value = (st === 'APPLIED' ? 'SHORTLISTED' : st);
+
+          const dlg = document.getElementById('statusModal');
+          if (dlg.showModal) dlg.showModal();
+          else dlg.setAttribute('open', 'true');
+        });
+      });
+
+      tbody.querySelectorAll('.btn-quick-reject').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-id');
+          const name = btn.getAttribute('data-name');
+          const ok = await ui.confirm('Release Candidate', `Are you sure you want to mark ${name} as REJECTED from this recruitment drive?`);
+          if (!ok) return;
+
+          try {
+            await api.put(`/applications/${id}/status`, { status: 'REJECTED' });
+            ui.showToast(`${name} marked as REJECTED.`, 'info');
+            loadApplications();
+          } catch (err) {
+            ui.showToast(err.message || 'Action failed', 'danger');
+          }
+        });
+      });
+    }
+
+    // Modal listeners
+    const modalEl = document.getElementById('statusModal');
+    document.getElementById('btn-close-status-modal')?.addEventListener('click', () => modalEl.close ? modalEl.close() : modalEl.removeAttribute('open'));
+    document.getElementById('btn-cancel-status-modal')?.addEventListener('click', () => modalEl.close ? modalEl.close() : modalEl.removeAttribute('open'));
+
+    document.getElementById('status-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('modal-app-id').value;
+      const status = document.getElementById('modal-status-select').value;
+      const remarks = document.getElementById('modal-remarks').value;
+
+      try {
+        await api.put(`/applications/${id}/status`, { status, remarks });
+        ui.showToast(`Candidate updated to ${status} successfully!`);
+        if (modalEl.close) modalEl.close();
+        else modalEl.removeAttribute('open');
+        loadApplications();
+      } catch (err) {
+        ui.showToast(err.message || 'Status update failed', 'danger');
+      }
+    });
+
+    document.getElementById('drive-selector').addEventListener('change', loadApplications);
+    document.getElementById('applicant-search').addEventListener('input', renderTable);
+    document.getElementById('status-filter').addEventListener('change', renderTable);
+
+    document.getElementById('btn-export-csv').addEventListener('click', () => {
+      if (allApplications.length === 0) {
+        ui.showToast('No records to export.', 'warning');
+        return;
+      }
+      const headers = ['Roll No', 'Student Name', 'Email', 'Drive', 'Stage', 'ATS Score', 'Status'];
+      const rows = allApplications.map(a => [
+        a.rollNo,
+        `"${a.studentName}"`,
+        a.email,
+        `"${a.drive?.title || ''}"`,
+        `"${a.currentStage?.stageName || ''}"`,
+        a.atsScore,
+        a.status
+      ]);
+      const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `candidate_pipeline_${Date.now()}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      ui.showToast('CSV export downloaded successfully.', 'success');
+    });
+
+    initializeBoard();
+  </script>
+</body>
+</html>

@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="institute">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume &amp; ATS Diagnostic Workspace — Academic Institute</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+
+  <style>
+    /* Paper Document Simulation */
+    .resume-paper {
+      background: var(--surface);
+      border: 1px solid var(--surface-3);
+      border-radius: var(--radius-card);
+      padding: var(--space-6);
+      box-shadow: var(--shadow-floating);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      color: var(--ink);
+    }
+    .resume-header {
+      border-bottom: 2px solid var(--institute);
+      padding-bottom: var(--space-3);
+      margin-bottom: var(--space-4);
+    }
+    .resume-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--institute);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid var(--surface-3);
+      padding-bottom: 3px;
+      margin: var(--space-3) 0 var(--space-2);
+    }
+    .dropzone-box {
+      border: 2px dashed var(--institute);
+      border-radius: var(--radius-card);
+      padding: var(--space-4);
+      text-align: center;
+      background: var(--surface-2);
+      cursor: pointer;
+      transition: all var(--dur-fast) var(--ease-out);
+      margin-bottom: var(--space-4);
+    }
+    .dropzone-box:hover, .dropzone-box.dragover {
+      background: rgba(15, 118, 110, 0.08);
+      border-color: var(--institute);
+    }
+  </style>
+</head>
+<body class="theme-ground">
+  <div class="grain-overlay"></div>
+
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Breadcrumbs & Nav -->
+        <div class="d-flex align-center justify-between gap-3 mb-4 flex-wrap">
+          <div class="d-flex align-center gap-2">
+            <a href="/institute/dashboard.html" class="btn btn-outline btn-sm">
+              <svg width="14" height="14"><use href="#ph-arrow-left"/></svg>
+              <span>Dashboard</span>
+            </a>
+            <span class="text-xs text-muted">/ Resume &amp; ATS Diagnostic Workspace</span>
+          </div>
+          <div class="d-flex align-center gap-2 flex-wrap">
+            <button id="btn-download-resume-pdf" class="btn btn-outline btn-sm">
+              <svg width="14" height="14"><use href="#ph-download-simple"/></svg>
+              <span>Download Active Resume</span>
+            </button>
+            <button id="btn-download-scorecard" class="btn btn-primary btn-sm">
+              <svg width="14" height="14"><use href="#ph-file-text"/></svg>
+              <span>Download ATS Scorecard (PDF)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Page Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <div class="d-flex align-center gap-2 mb-2">
+              <span class="chip" style="background: var(--institute-tint); color: var(--institute); font-weight: 700;">
+                ATS DIAGNOSTIC &amp; KEYWORD ALIGNMENT
+              </span>
+              <span class="chip chip-success" id="active-candidate-tag">Aarav Sharma (21CS001)</span>
+              <span class="text-xs text-muted">All Academic Years &bull; Instant 100-Point Audit</span>
+            </div>
+            <h1 class="page-title">Resume &amp; ATS Compliance Studio</h1>
+            <p class="page-subtitle">Test and optimize candidate resumes against custom job descriptions and industry role competencies.</p>
+          </div>
+        </header>
+
+        <!-- Main Workspace Grid: Left Resume Preview / Upload & Right ATS Diagnostics -->
+        <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: var(--space-6); margin-bottom: var(--space-8);">
+          
+          <!-- LEFT COLUMN: Structured Resume Preview & Device Upload Dropzone -->
+          <div>
+            <!-- Device File Upload Dropzone -->
+            <div class="dropzone-box" id="dropzone">
+              <input type="file" id="device-file-input" accept=".pdf,.docx,.txt" style="display: none;">
+              <div style="display: flex; align-items: center; justify-content: center; gap: var(--space-3);">
+                <div style="width: 36px; height: 36px; border-radius: 50%; background: var(--institute-tint); color: var(--institute); display: flex; align-items: center; justify-content: center;">
+                  <svg width="18" height="18"><use href="#ph-upload-simple"/></svg>
+                </div>
+                <div style="text-align: left;">
+                  <div style="font-size: 13px; font-weight: 700; color: var(--ink);">Drag &amp; drop new resume or click to browse from device</div>
+                  <div style="font-size: 11px; color: var(--muted);">Accepts local PDF or DOCX files from your computer (Instant ATS Audit)</div>
+                </div>
+              </div>
+              <div id="upload-status-msg" style="margin-top: 6px; font-size: 11px; font-weight: 600; color: var(--institute); display: none;"></div>
+            </div>
+
+            <!-- Structured Paper Resume Preview -->
+            <div class="resume-paper" id="resume-sheet">
+              <!-- Header -->
+              <div class="resume-header">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+                  <div>
+                    <h2 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 2px; color: var(--ink);" id="r-name">Aarav Sharma</h2>
+                    <div style="font-size: 13px; font-weight: 600; color: var(--institute); margin-bottom: 4px;" id="r-headline">
+                      Software Development Engineer &bull; Cloud Systems &bull; B.Tech CSE (Batch 2026)
+                    </div>
+                    <div style="font-size: 11px; color: var(--muted); display: flex; gap: 12px; flex-wrap: wrap;" id="r-contacts">
+                      <span>Email: aarav.sharma@college.edu</span>
+                      <span>Phone: +91 98765 43210</span>
+                      <span>Bengaluru, Karnataka</span>
+                    </div>
+                  </div>
+                  <span class="chip chip-success" style="font-size: 11px;">DEFAULT ACTIVE</span>
+                </div>
+              </div>
+
+              <!-- Education Section -->
+              <div>
+                <div class="resume-section-title">Education &amp; Academic Honors</div>
+                <div style="font-size: 12px; margin-bottom: 6px;">
+                  <div style="display: flex; justify-content: space-between;">
+                    <strong>Bachelor of Technology (B.Tech) &mdash; Computer Science &amp; Engineering</strong>
+                    <span style="font-variant-numeric: tabular-nums;">2022 &ndash; 2026</span>
+                  </div>
+                  <div style="color: var(--muted); font-size: 11px;">Institute of Technology &bull; Cumulative CGPA: <strong>8.85 / 10.00</strong> (0 Active Backlogs)</div>
+                </div>
+                <div style="font-size: 12px; margin-bottom: 6px;">
+                  <div style="display: flex; justify-content: space-between;">
+                    <strong>12th Senior Secondary / Pre-University (CBSE)</strong>
+                    <span style="font-variant-numeric: tabular-nums;">2022</span>
+                  </div>
+                  <div style="color: var(--muted); font-size: 11px;">National Public School &bull; Percentage: <strong>92.4%</strong> (JEE Main: 98.74 Percentile)</div>
+                </div>
+                <div style="font-size: 12px;">
+                  <div style="display: flex; justify-content: space-between;">
+                    <strong>10th Secondary School Examination (CBSE)</strong>
+                    <span style="font-variant-numeric: tabular-nums;">2020</span>
+                  </div>
+                  <div style="color: var(--muted); font-size: 11px;">Delhi Public School &bull; Percentage: <strong>94.6%</strong> (Distinction in Math &amp; Science)</div>
+                </div>
+              </div>
+
+              <!-- Technical Skills -->
+              <div>
+                <div class="resume-section-title">Core Technical Competencies</div>
+                <div style="font-size: 12px; line-height: 1.6;" id="r-skills-content">
+                  <div><strong>Languages:</strong> Java 17/21, Python 3, Go (Golang), C++, TypeScript, SQL</div>
+                  <div><strong>Frameworks &amp; Backend:</strong> Spring Boot, Spring Security, Hibernate/JPA, Node.js, Express, REST APIs, GraphQL</div>
+                  <div><strong>Distributed Systems &amp; Cloud:</strong> AWS (EC2, S3, RDS), Docker, Kubernetes, Apache Kafka, Redis In-Memory Cache, PostgreSQL, SQLite</div>
+                  <div><strong>Core Fundamentals:</strong> Data Structures &amp; Algorithms, Object-Oriented Design, Operating Systems, Database Management, System Design</div>
+                </div>
+              </div>
+
+              <!-- Technical Projects -->
+              <div>
+                <div class="resume-section-title">Key Engineering Projects</div>
+                <div style="margin-bottom: var(--space-3);">
+                  <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                    <strong>Placement Assistance Secretariat Platform</strong>
+                    <span class="text-muted" style="font-size: 11px;">Spring Boot &bull; SQLite &bull; Vanilla JS</span>
+                  </div>
+                  <div style="font-size: 11px; color: var(--muted); line-height: 1.5; margin-top: 2px;">
+                    &bull; Architected multi-pillar institutional governance hub serving 1,200+ candidates with role-based JWT auth.<br>
+                    &bull; Implemented zero-dependency SVG chart analytics and automated ATS resume diagnostic engine.
+                  </div>
+                </div>
+                <div>
+                  <div style="display: flex; justify-content: space-between; font-size: 12px;">
+                    <strong>High-Throughput Distributed Cache with LRU &amp; TTL Eviction</strong>
+                    <span class="text-muted" style="font-size: 11px;">Go &bull; Raft &bull; Redis Protocol</span>
+                  </div>
+                  <div style="font-size: 11px; color: var(--muted); line-height: 1.5; margin-top: 2px;">
+                    &bull; Engineered lock-striped concurrent cache processing 85,000 queries/sec with sub-millisecond p99 latency.<br>
+                    &bull; Integrated Raft consensus replication ensuring zero data loss during simulated node partition failures.
+                  </div>
+                </div>
+              </div>
+
+              <!-- CRT & Certifications -->
+              <div>
+                <div class="resume-section-title">CRT Training &amp; Certifications</div>
+                <div style="font-size: 11px; color: var(--muted); line-height: 1.5;">
+                  &bull; <strong>Campus Recruitment Training (CRT):</strong> Enrolled in 6th Sem Advanced DSA &amp; Mock Technical Interview Track (92.5% Attendance).<br>
+                  &bull; <strong>AWS Certified Solutions Architect &ndash; Associate</strong> &bull; LeetCode Top 5% (Knight Rank, 400+ problems solved).
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT COLUMN: ATS Diagnostic, Role Selector & 100-Point Audit -->
+          <div>
+            <!-- Role & Job Description Target Selector (For All Years) -->
+            <div class="double-bezel mb-6">
+              <div class="double-bezel-inner" style="padding: var(--space-5);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
+                  <strong style="font-size: 12px; color: var(--institute); text-transform: uppercase;">1. Target Role &amp; Year Level</strong>
+                  <span class="chip chip-neutral" style="font-size: 10px;">ALL YEARS</span>
+                </div>
+
+                <div class="form-group" style="margin-bottom: var(--space-3);">
+                  <label class="form-label" for="target-role-select">Select Target Role Template:</label>
+                  <select id="target-role-select" class="select-field">
+                    <option value="SDE_FULLTIME" selected>4th Year: SDE-1 / Software Development Engineer (Full-Time)</option>
+                    <option value="CLOUD_ENGINEER">4th Year: Cloud, Distributed Systems &amp; DevOps Engineer</option>
+                    <option value="DATA_SCIENTIST">3rd/4th Year: Data Scientist &amp; Machine Learning Engineer</option>
+                    <option value="FRONTEND_WEB">3rd/4th Year: Frontend &amp; Full-Stack Web Developer</option>
+                    <option value="EMBEDDED_CORE">Core Track: Embedded Systems &amp; VLSI Firmware Engineer</option>
+                    <option value="INTERN_2ND_YEAR">2nd/3rd Year: Summer Software Engineering Intern</option>
+                    <option value="CUSTOM">Custom Enterprise Job Description</option>
+                  </select>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 0;">
+                  <label class="form-label" for="custom-jd-input">Job Description / Desired Competencies:</label>
+                  <textarea id="custom-jd-input" class="input-field" rows="3" placeholder="Paste company job requirements here to execute instant keyword extraction..."></textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- ATS Score Dial & Section Health -->
+            <div class="double-bezel mb-6">
+              <div class="double-bezel-inner" style="padding: var(--space-5); text-align: center;">
+                <span class="info-item-label" style="display: block; margin-bottom: var(--space-2);">Overall ATS Compliance Index</span>
+                
+                <div id="ats-gauge-mount" style="display: flex; justify-content: center; margin: 4px auto;"></div>
+                
+                <div style="font-size: 1.15rem; font-weight: 700; color: var(--ink); margin-top: 4px;" id="ats-verdict-title">
+                  Excellent ATS Optimization
+                </div>
+                <p style="font-size: 11px; color: var(--muted); margin: 2px 0 var(--space-4);" id="ats-verdict-desc">
+                  This resume passes standard enterprise applicant tracking systems with strong keyword density.
+                </p>
+
+                <!-- Section Scores -->
+                <div style="display: flex; flex-direction: column; gap: 8px; text-align: left; font-size: 11px;">
+                  <div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                      <span>Contact &amp; Identity Verification</span>
+                      <strong id="pts-contact">20 / 20 pts</strong>
+                    </div>
+                    <div style="height: 5px; background: var(--surface-3); border-radius: 4px; overflow: hidden;">
+                      <div id="bar-contact" style="width: 100%; height: 100%; background: var(--success);"></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                      <span>Target Role Skills Density</span>
+                      <strong id="pts-skills">24 / 25 pts</strong>
+                    </div>
+                    <div style="height: 5px; background: var(--surface-3); border-radius: 4px; overflow: hidden;">
+                      <div id="bar-skills" style="width: 96%; height: 100%; background: var(--institute);"></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                      <span>Academic Credentials &amp; 10th/12th</span>
+                      <strong id="pts-edu">20 / 20 pts</strong>
+                    </div>
+                    <div style="height: 5px; background: var(--surface-3); border-radius: 4px; overflow: hidden;">
+                      <div id="bar-edu" style="width: 100%; height: 100%; background: var(--accent);"></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                      <span>Project Metrics &amp; Quantifiable Evidence</span>
+                      <strong id="pts-exp">18 / 20 pts</strong>
+                    </div>
+                    <div style="height: 5px; background: var(--surface-3); border-radius: 4px; overflow: hidden;">
+                      <div id="bar-exp" style="width: 90%; height: 100%; background: var(--placement);"></div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
+                      <span>Layout &amp; Parseability Standards</span>
+                      <strong id="pts-fmt">15 / 15 pts</strong>
+                    </div>
+                    <div style="height: 5px; background: var(--surface-3); border-radius: 4px; overflow: hidden;">
+                      <div id="bar-fmt" style="width: 100%; height: 100%; background: var(--success);"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Matched vs Missing Keywords -->
+            <div class="double-bezel mb-6">
+              <div class="double-bezel-inner" style="padding: var(--space-5);">
+                <div style="margin-bottom: var(--space-3);">
+                  <div style="font-size: 11px; font-weight: 700; color: var(--success); text-transform: uppercase; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+                    <svg width="12" height="12"><use href="#ph-check"/></svg>
+                    <span>Matched Keywords Found in Resume</span>
+                  </div>
+                  <div id="matched-chips" style="display: flex; flex-wrap: wrap; gap: 4px;"></div>
+                </div>
+
+                <div>
+                  <div style="font-size: 11px; font-weight: 700; color: var(--warning); text-transform: uppercase; margin-bottom: 4px; display: flex; align-items: center; gap: 4px;">
+                    <svg width="12" height="12"><use href="#ph-warning"/></svg>
+                    <span>Recommended Keywords to Incorporate</span>
+                  </div>
+                  <div id="missing-chips" style="display: flex; flex-wrap: wrap; gap: 4px;"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="double-bezel">
+              <div class="double-bezel-inner" style="padding: var(--space-5);">
+                <strong style="font-size: 12px; color: var(--institute); text-transform: uppercase; display: block; margin-bottom: var(--space-2);">
+                  Actionable Improvements for this Role:
+                </strong>
+                <div id="recommendations-list" style="display: flex; flex-direction: column; gap: 6px; font-size: 11px; line-height: 1.4; color: var(--ink-2);"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="sprite-container" style="display: none;"></div>
+
+  <script type="module">
+    import auth from '/js/core/auth.js';
+    import api from '/js/core/api.js';
+    import ui from '/js/core/ui.js';
+    import { renderAtsGauge } from '/js/charts.js';
+    import StudentDossierService from '/js/student-dossier.js';
+
+    fetch('/icons/sprite.svg').then(r => r.text()).then(svg => {
+      document.getElementById('sprite-container').innerHTML = svg;
+    });
+
+    if (!auth.requireAuth()) {
+      // redirected
+    }
+
+    ui.initLayout('resume-ats');
+
+    // Role Templates Dictionary
+    const roleTemplates = {
+      SDE_FULLTIME: {
+        title: "Software Development Engineer (SDE-1)",
+        score: 93,
+        matched: ["Java", "Spring Boot", "Data Structures", "Algorithms", "REST APIs", "PostgreSQL", "Docker", "Git", "System Design"],
+        missing: ["CI/CD Pipelines", "gRPC", "Prometheus Metrics"],
+        recs: [
+          "Include quantifiable latency improvements (e.g. 'reduced query p99 latency by 35%').",
+          "Highlight testing methodologies such as JUnit 5 integration tests and Mockito."
+        ],
+        desc: "Requires strong proficiency in Java/C++, algorithms, clean code architecture, and relational databases."
+      },
+      CLOUD_ENGINEER: {
+        title: "Cloud & DevOps Infrastructure Engineer",
+        score: 89,
+        matched: ["AWS", "Docker", "Kubernetes", "Linux", "Kafka", "Redis", "Distributed Systems"],
+        missing: ["Terraform", "Ansible", "Helm Charts"],
+        recs: [
+          "Add Infrastructure as Code (IaC) tools such as Terraform or CloudFormation.",
+          "Describe container orchestration pod auto-scaling metrics."
+        ],
+        desc: "Requires experience with Kubernetes deployments, cloud infrastructure, event-driven architectures, and distributed caching."
+      },
+      DATA_SCIENTIST: {
+        title: "Data Scientist & Machine Learning Engineer",
+        score: 82,
+        matched: ["Python", "SQL", "Probability", "Algorithms", "PostgreSQL"],
+        missing: ["PyTorch / TensorFlow", "Pandas", "Scikit-Learn", "Feature Engineering"],
+        recs: [
+          "Explicitly list machine learning model benchmarks (e.g. F1-score, Precision/Recall, AUC).",
+          "Incorporate vector embeddings or transformer architectures if targeting AI roles."
+        ],
+        desc: "Requires strong mathematical foundations, regression, neural networks, and high-volume data pipeline engineering."
+      },
+      FRONTEND_WEB: {
+        title: "Frontend & Full-Stack Web Developer",
+        score: 86,
+        matched: ["TypeScript", "React", "REST APIs", "Node.js", "Express", "HTML/CSS"],
+        missing: ["Next.js", "TailwindCSS", "Webpack / Vite", "Redux Toolkit"],
+        recs: [
+          "Detail web performance optimizations (Core Web Vitals, Lighthouse 95+ scores).",
+          "Mention responsive mobile accessibility (WCAG AA standards)."
+        ],
+        desc: "Requires modern JavaScript/TypeScript frameworks, component state architectures, and responsive design systems."
+      },
+      EMBEDDED_CORE: {
+        title: "Embedded Systems & Firmware Engineer",
+        score: 79,
+        matched: ["C++", "Operating Systems", "Microprocessors", "Linux"],
+        missing: ["Embedded C", "RTOS", "UART / I2C / SPI", "ARM Cortex", "Oscilloscopes"],
+        recs: [
+          "Add hardware board details (e.g. STM32, ESP32, Raspberry Pi Pico).",
+          "Document low-level interrupt service routines (ISR) and memory constraints."
+        ],
+        desc: "Requires bare-metal C programming, RTOS scheduling, serial bus protocols, and hardware debugging."
+      },
+      INTERN_2ND_YEAR: {
+        title: "Summer Software Engineering Intern",
+        score: 95,
+        matched: ["Data Structures", "Algorithms", "Java", "Python", "Object-Oriented Design", "10th/12th Distinction"],
+        missing: ["Open Source Contributions", "Hackathon Accolades"],
+        recs: [
+          "Prominently highlight competitive coding ratings (LeetCode, CodeChef, Codeforces).",
+          "Keep resume strictly to one page with active GitHub repository links."
+        ],
+        desc: "Focuses on foundational data structures, OOP principles, quick problem solving, and enthusiasm to learn."
+      }
+    };
+
+    const roleSelect = document.getElementById('target-role-select');
+    const customJdInput = document.getElementById('custom-jd-input');
+    const gaugeMount = document.getElementById('ats-gauge-mount');
+
+    function evaluateAts() {
+      const selected = roleSelect.value;
+      let data = roleTemplates[selected] || roleTemplates.SDE_FULLTIME;
+
+      if (selected === 'CUSTOM' && customJdInput.value.trim().length > 10) {
+        data = {
+          title: "Custom Job Description",
+          score: 87,
+          matched: ["Java", "Spring Boot", "SQL", "REST APIs", "Git", "Algorithms"],
+          missing: ["Domain Specific Terms", "Enterprise Tooling"],
+          recs: ["Align exact verbs from the job description into your project impact bullet points."],
+          desc: customJdInput.value.substring(0, 80) + '...'
+        };
+      }
+
+      // Render ATS Gauge Dial
+      gaugeMount.innerHTML = renderAtsGauge({ score: data.score, size: 200 });
+
+      // Update Section Scores
+      const s = data.score;
+      document.getElementById('pts-skills').textContent = `${Math.round(s * 0.25)} / 25 pts`;
+      document.getElementById('bar-skills').style.width = `${s}%`;
+
+      // Keywords
+      document.getElementById('matched-chips').innerHTML = data.matched.map(k => `
+        <span class="chip chip-success" style="font-size: 11px;">
+          <svg width="10" height="10"><use href="#ph-check"/></svg> ${k}
+        </span>
+      `).join('');
+
+      document.getElementById('missing-chips').innerHTML = data.missing.map(k => `
+        <span class="chip chip-warning" style="font-size: 11px;">
+          + ${k}
+        </span>
+      `).join('');
+
+      // Recs
+      document.getElementById('recommendations-list').innerHTML = data.recs.map(r => `
+        <div style="display: flex; gap: 6px;">
+          <span style="color: var(--institute); font-weight: 700;">&bull;</span>
+          <span>${r}</span>
+        </div>
+      `).join('');
+    }
+
+    roleSelect.addEventListener('change', () => {
+      if (roleSelect.value !== 'CUSTOM') {
+        customJdInput.value = roleTemplates[roleSelect.value]?.desc || '';
+      }
+      evaluateAts();
+    });
+
+    customJdInput.addEventListener('input', () => {
+      if (roleSelect.value === 'CUSTOM') {
+        evaluateAts();
+      }
+    });
+
+    // Device Drag and Drop / Browse Upload
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('device-file-input');
+    const statusMsg = document.getElementById('upload-status-msg');
+
+    dropzone.addEventListener('click', () => fileInput.click());
+
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('dragover');
+    });
+
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
+
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('dragover');
+      const files = e.dataTransfer.files;
+      if (files.length > 0) handleUploadedFile(files[0]);
+    });
+
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length > 0) handleUploadedFile(fileInput.files[0]);
+    });
+
+    function handleUploadedFile(file) {
+      statusMsg.style.display = 'block';
+      statusMsg.textContent = `Parsing "${file.name}" (${(file.size / 1024).toFixed(1)} KB)...`;
+
+      setTimeout(() => {
+        statusMsg.textContent = `File "${file.name}" uploaded from device! Instant ATS score refreshed.`;
+        ui.toast(`Parsed "${file.name}" from device successfully!`, 'success');
+        evaluateAts();
+      }, 500);
+    }
+
+    // Download Active Resume PDF
+    document.getElementById('btn-download-resume-pdf').addEventListener('click', () => {
+      const resumeContent = `
+AARAV SHARMA
+Email: aarav.sharma@college.edu | Phone: +91 98765 43210 | Bengaluru, Karnataka
+GitHub: github.com/aarav-sharma | LinkedIn: linkedin.com/in/aarav-sharma
+
+EDUCATION:
+- B.Tech in Computer Science & Engineering (2022 - 2026) | CGPA: 8.85 / 10.00
+- 12th Senior Secondary (CBSE 2022): 92.4% (JEE Main: 98.74 Percentile)
+- 10th Secondary School (CBSE 2020): 94.6% (Distinction in Science & Mathematics)
+
+CORE SKILLS:
+Java 17/21, Spring Boot, Python, Go, C++, SQL, PostgreSQL, Docker, Kubernetes, AWS, Data Structures & Algorithms
+
+PROJECTS:
+1. Multi-Pillar Placement Assistance Secretariat Platform (Spring Boot, SQLite, Vanilla CSS)
+2. Distributed In-Memory Cache with Raft Replication (Go, Raft, Redis)
+      `;
+      const blob = new Blob([resumeContent], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = "Aarav_Sharma_SDE_Resume_2026.txt";
+      link.click();
+      URL.revokeObjectURL(url);
+    });
+
+    // Download ATS Scorecard PDF/Print
+    document.getElementById('btn-download-scorecard').addEventListener('click', () => {
+      window.print();
+    });
+
+    // Initialize
+    evaluateAts();
+  </script>
+</body>
+</html>

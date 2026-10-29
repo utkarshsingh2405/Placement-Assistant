@@ -2,10 +2,15 @@ target/
 scratch/
 **/scratch/
 data/
-*.db
 *.db-wal
 *.db-shm
 *.log
 logs/
 .DS_Store
 Thumbs.db
+.vscode/
+
+# Keep root or temporary databases ignored except database/
+*.db
+!database/*.db
+

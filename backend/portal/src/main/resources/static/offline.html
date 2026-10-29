@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-domain="portal">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Offline — Placement Assistance Portal</title>
+  
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+</head>
+<body style="display: flex; align-items: center; justify-content: center; min-height: 100dvh; padding: var(--space-6);">
+  <div class="grain-overlay"></div>
+
+  <div class="double-bezel" style="max-width: 480px; width: 100%;">
+    <div class="double-bezel-inner" style="text-align: center; padding: var(--space-8);">
+      <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--surface-2); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4); color: var(--muted);">
+        <svg width="28" height="28"><use href="#ph-broadcast"/></svg>
+      </div>
+
+      <h1 class="font-display" style="font-size: var(--text-h2); margin-bottom: var(--space-2);">You are offline.</h1>
+      <p class="text-muted text-sm" style="margin-bottom: var(--space-6);">
+        Campus local network or internet connection is currently unreachable. Cached cached records remain available locally.
+      </p>
+
+      <button class="btn btn-primary btn-lg" onclick="window.location.reload()" style="width: 100%;">
+        <svg width="16" height="16"><use href="#ph-clock"/></svg>
+        <span>Retry Connection</span>
+      </button>
+    </div>
+  </div>
+
+  <div id="sprite-container" style="display: none;"></div>
+  <script>
+    fetch('/icons/sprite.svg').then(r => r.text()).then(svg => {
+      document.getElementById('sprite-container').innerHTML = svg;
+    });
+  </script>
+</body>
+</html>

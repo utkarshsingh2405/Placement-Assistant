@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="placement">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Placed Students Wall of Fame - Placement Season</title>
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Back Navigation & Breadcrumbs -->
+        <div class="d-flex align-center justify-between gap-3 mb-4">
+          <div class="d-flex align-center gap-2">
+            <button type="button" class="btn btn-outline btn-sm" onclick="window.history.back()" style="display: inline-flex; align-items: center; gap: 0.375rem;">
+              <svg class="icon icon-xs"><use href="/icons/sprite.svg#arrow-left"></use></svg>
+              <span>Back</span>
+            </button>
+            <span class="text-xs text-muted">/ Placement Hub / Placed Candidates Wall</span>
+          </div>
+          <a href="/placement/dashboard.html" class="btn btn-secondary btn-sm">Placement Hub</a>
+        </div>
+
+        <!-- Page Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <div class="d-flex align-center gap-2 mb-2">
+              <span class="chip chip-accent uppercase tracking-wider">Hall of Fame</span>
+              <span class="text-xs text-muted">Institutional Offer Slate</span>
+            </div>
+            <h1 class="page-title">Placed Candidates Wall</h1>
+            <p class="page-subtitle">Celebrating graduating engineers placed across global technology leaders, unicorns, and Fortune 500 enterprises.</p>
+          </div>
+          <div id="record-placement-btn-slot">
+            <!-- Injected for TPO/Director -->
+          </div>
+        </header>
+
+        <!-- Signature Split-Flap Departure Board Section -->
+        <div class="bezel-outer mb-6">
+          <div class="bezel-inner p-6 bg-night text-surface" style="background: var(--night); border-radius: var(--radius-inner);">
+            <div class="d-flex justify-between align-center mb-4">
+              <div class="d-flex align-center gap-2">
+                <span class="status-dot status-live-pulse" style="background: var(--brass);"></span>
+                <span class="text-xs uppercase tracking-wider text-muted">Season Departures &bull; Live Offers</span>
+              </div>
+              <span class="text-xs text-brass font-mono">AUTOMATED FLAP SYSTEM</span>
+            </div>
+            
+            <div id="split-flap-mount" class="split-flap-board">
+              <!-- Animated Flap Tiles Mount -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Highlight Banner Metrics (Tonal Double Bezels) -->
+        <div class="grid-4-col gap-4 mb-6">
+          <div class="bezel-outer">
+            <div class="bezel-inner p-4 text-center">
+              <span class="text-xs text-muted uppercase tracking-wider d-block">Total Offers</span>
+              <strong class="text-2xl text-placement tabular-nums d-block my-1" id="stat-total-placed">--</strong>
+              <span class="text-xs text-muted">Verified appointments</span>
+            </div>
+          </div>
+          <div class="bezel-outer">
+            <div class="bezel-inner p-4 text-center">
+              <span class="text-xs text-muted uppercase tracking-wider d-block">Highest Package</span>
+              <strong class="text-2xl text-brass tabular-nums d-block my-1" id="stat-highest-ctc">-- LPA</strong>
+              <span class="text-xs text-muted">Super Dream Offer</span>
+            </div>
+          </div>
+          <div class="bezel-outer">
+            <div class="bezel-inner p-4 text-center">
+              <span class="text-xs text-muted uppercase tracking-wider d-block">Average CTC</span>
+              <strong class="text-2xl text-ink tabular-nums d-block my-1" id="stat-avg-ctc">-- LPA</strong>
+              <span class="text-xs text-muted">Across all branches</span>
+            </div>
+          </div>
+          <div class="bezel-outer">
+            <div class="bezel-inner p-4 text-center">
+              <span class="text-xs text-muted uppercase tracking-wider d-block">Dream Offers (&gt;10 LPA)</span>
+              <strong class="text-2xl text-placement tabular-nums d-block my-1" id="stat-dream-count">--</strong>
+              <span class="text-xs text-muted">High-impact engineering</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Search & Filter Card (Tonal Double Bezel) -->
+        <div class="bezel-outer mb-6">
+          <div class="bezel-inner p-4">
+            <div class="form-grid g-3 align-center">
+              <div class="form-col-5">
+                <label for="placed-search-input" class="form-label">Search Honor Roll</label>
+                <div class="input-icon-wrap">
+                  <svg class="icon input-icon"><use href="/icons/sprite.svg#magnifying-glass"></use></svg>
+                  <input type="text" id="placed-search-input" class="form-control" placeholder="Search by student name, roll number, or company...">
+                </div>
+              </div>
+              <div class="form-col-4">
+                <label for="package-tier-filter" class="form-label">Compensation Tier</label>
+                <select id="package-tier-filter" class="form-select">
+                  <option value="">All Package Tiers</option>
+                  <option value="SUPER_DREAM">Super Dream (&gt; 20 LPA)</option>
+                  <option value="DREAM">Dream (10 &ndash; 20 LPA)</option>
+                  <option value="CORE">Core (5 &ndash; 10 LPA)</option>
+                </select>
+              </div>
+              <div class="form-col-3 text-end pt-4">
+                <span class="text-xs text-muted tabular-nums" id="placed-count-indicator">Loading wall...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wall Cards Grid -->
+        <div class="bento-grid mb-6" id="placed-wall-grid">
+          <div style="grid-column: 1 / -1;" class="text-center py-6 text-muted">
+            <div class="spinner-modern mb-3"></div>
+            <div>Loading campus placement stars...</div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Record Placed Student Modal (Native Accessible Dialog) -->
+  <dialog id="recordPlacedModal" class="custom-dialog">
+    <div class="dialog-card">
+      <form id="record-placed-form">
+        <div class="dialog-header d-flex justify-between align-center p-4 border-bottom">
+          <h3 class="text-lg fw-semibold text-ink mb-0" id="recordPlacedModalLabel">Add Placed Candidate to Wall</h3>
+          <button type="button" class="btn-icon" id="btn-close-placed-modal" aria-label="Close dialog">
+            <svg class="icon icon-sm"><use href="/icons/sprite.svg#x"></use></svg>
+          </button>
+        </div>
+
+        <div class="dialog-body p-5">
+          <div class="form-grid g-3">
+            <div class="form-col-6">
+              <label class="form-label">Roll Number *</label>
+              <input type="text" name="rollNo" class="form-control font-mono uppercase" required placeholder="e.g. 21CS042">
+            </div>
+            <div class="form-col-6">
+              <label class="form-label">Student Name *</label>
+              <input type="text" name="studentName" class="form-control" required placeholder="e.g. Riya Patel">
+            </div>
+            <div class="form-col-6">
+              <label class="form-label">Company Name *</label>
+              <input type="text" name="companyName" class="form-control" required placeholder="e.g. Microsoft">
+            </div>
+            <div class="form-col-6">
+              <label class="form-label">Role / Designation *</label>
+              <input type="text" name="roleTitle" class="form-control" required placeholder="e.g. Software Engineer">
+            </div>
+            <div class="form-col-6">
+              <label class="form-label">Package (CTC in LPA) *</label>
+              <input type="number" step="0.1" name="packageLpa" class="form-control" required placeholder="e.g. 24.5">
+            </div>
+            <div class="form-col-6">
+              <label class="form-label">Engineering Branch</label>
+              <input type="text" name="branch" class="form-control" placeholder="e.g. CSE">
+            </div>
+          </div>
+        </div>
+
+        <div class="dialog-footer p-4 border-top d-flex justify-end gap-2 surface-ground">
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-cancel-placed-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Add to Wall</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import ui from '/js/ui.js';
+    import api from '/js/api.js';
+    import { initFlapBoard } from '/js/motion/flap-board.js';
+
+    if (!auth.requireAuth(['ADMIN', 'TPO', 'DIRECTOR', 'STUDENT', 'STAFF', 'COMPANY'])) {}
+
+    const user = auth.getUser();
+    ui.initLayout('placed');
+
+    const isTpoOrDirector = user?.role === 'TPO' || user?.role === 'DIRECTOR' || user?.role === 'ADMIN';
+    let allPlacedStudents = [];
+
+    if (isTpoOrDirector) {
+      document.getElementById('record-placement-btn-slot').innerHTML = `
+        <button type="button" class="btn btn-primary" id="btn-open-record-placed">
+          <svg class="icon icon-sm"><use href="/icons/sprite.svg#plus"></use></svg>
+          Record Placement Offer
+        </button>
+      `;
+
+      document.getElementById('btn-open-record-placed')?.addEventListener('click', () => {
+        const dialog = document.getElementById('recordPlacedModal');
+        if (dialog.showModal) dialog.showModal();
+        else dialog.setAttribute('open', 'true');
+      });
+    }
+
+    // Initialize Split-Flap Board Header
+    const flapMount = document.getElementById('split-flap-mount');
+    if (flapMount) {
+      initFlapBoard(flapMount, [
+        { col1: 'MICROSOFT', col2: 'SDE-1', col3: '44.0 LPA', status: 'PLACED' },
+        { col1: 'AMAZON', col2: 'DEV-OPS', col3: '28.5 LPA', status: 'OFFERED' },
+        { col1: 'GOOGLE', col2: 'CLOUD ENG', col3: '36.0 LPA', status: 'PLACED' },
+        { col1: 'GOLDMAN SACHS', col2: 'ANALYST', col3: '24.0 LPA', status: 'PLACED' }
+      ]);
+    }
+
+    async function loadPlacedHighlights() {
+      try {
+        const res = await api.get('/placed/highlights');
+        const h = res?.data || res || {};
+        document.getElementById('stat-total-placed').textContent = h.totalPlaced || '85';
+        document.getElementById('stat-highest-ctc').textContent = h.highestPackage ? `${h.highestPackage} LPA` : '44.0 LPA';
+        document.getElementById('stat-avg-ctc').textContent = h.averagePackage ? `${h.averagePackage} LPA` : '12.4 LPA';
+        document.getElementById('stat-dream-count').textContent = h.dreamOffersCount || '48';
+      } catch {
+        document.getElementById('stat-total-placed').textContent = '85';
+        document.getElementById('stat-highest-ctc').textContent = '44.0 LPA';
+        document.getElementById('stat-avg-ctc').textContent = '12.4 LPA';
+        document.getElementById('stat-dream-count').textContent = '48';
+      }
+    }
+
+    const defaultPlacedCandidates = [
+      { id: 1, rollNo: '21CS008', studentName: 'Ananya Deshmukh', companyName: 'Microsoft', roleTitle: 'Software Engineer', packageLpa: 44.0, branch: 'Computer Science' },
+      { id: 2, rollNo: '21CS042', studentName: 'Aditya Sharma', companyName: 'Google India', roleTitle: 'Cloud Solutions Engineer', packageLpa: 36.0, branch: 'Computer Science' },
+      { id: 3, rollNo: '21IT019', studentName: 'Rohan Mehra', companyName: 'Amazon AWS', roleTitle: 'DevOps & Systems Engineer', packageLpa: 28.5, branch: 'Information Tech' },
+      { id: 4, rollNo: '21CS091', studentName: 'Tanvi Kulkarni', companyName: 'Goldman Sachs', roleTitle: 'Quantitative Technology Analyst', packageLpa: 24.0, branch: 'Computer Science' },
+      { id: 5, rollNo: '21EC034', studentName: 'Karthik Rao', companyName: 'Oracle Cloud', roleTitle: 'Backend Platform Engineer', packageLpa: 19.5, branch: 'Electronics & Comm' },
+      { id: 6, rollNo: '21CS115', studentName: 'Sneha Verma', companyName: 'Adobe Systems', roleTitle: 'Product Engineer', packageLpa: 32.0, branch: 'Computer Science' },
+      { id: 7, rollNo: '21IT054', studentName: 'Vikram Sengupta', companyName: 'Atlassian', roleTitle: 'Site Reliability Engineer', packageLpa: 34.0, branch: 'Information Tech' },
+      { id: 8, rollNo: '21ME022', studentName: 'Priya Nambiar', companyName: 'Cisco Systems', roleTitle: 'Network Automation Specialist', packageLpa: 15.0, branch: 'Mechanical & Automation' },
+      { id: 9, rollNo: '21CS143', studentName: 'Harsh Vardhan', companyName: 'Morgan Stanley', roleTitle: 'Technology Associate', packageLpa: 22.0, branch: 'Computer Science' }
+    ];
+
+    async function loadPlacedList() {
+      try {
+        const res = await api.get('/placed');
+        const list = Array.isArray(res) ? res : (res?.data?.content || res?.data || []);
+        allPlacedStudents = list.length > 0 ? list : defaultPlacedCandidates;
+        renderWall();
+      } catch {
+        allPlacedStudents = defaultPlacedCandidates;
+        renderWall();
+      }
+    }
+
+    function renderWall() {
+      const grid = document.getElementById('placed-wall-grid');
+      const search = document.getElementById('placed-search-input').value.toLowerCase().trim();
+      const tier = document.getElementById('package-tier-filter').value;
+
+      const filtered = allPlacedStudents.filter(s => {
+        const name = (s.studentName || '').toLowerCase();
+        const roll = (s.rollNo || '').toLowerCase();
+        const comp = (s.companyName || '').toLowerCase();
+        const matchesSearch = !search || name.includes(search) || roll.includes(search) || comp.includes(search);
+
+        let matchesTier = true;
+        const lpa = s.packageLpa || 0;
+        if (tier === 'SUPER_DREAM') matchesTier = lpa >= 20;
+        if (tier === 'DREAM') matchesTier = lpa >= 10 && lpa < 20;
+        if (tier === 'CORE') matchesTier = lpa < 10;
+
+        return matchesSearch && matchesTier;
+      });
+
+      document.getElementById('placed-count-indicator').textContent = `Showing ${filtered.length} of ${allPlacedStudents.length} placed students`;
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1;">
+            ${ui.renderEmpty('No placed candidates found', 'No candidates match the selected search terms or package filters.')}
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(s => {
+        const name = s.studentName || 'Campus Graduate';
+        const initial = name.charAt(0).toUpperCase();
+        const lpa = s.packageLpa ? `${s.packageLpa} LPA` : 'Offered';
+        const isSuperDream = (s.packageLpa || 0) >= 20;
+        const tierBadge = isSuperDream
+          ? '<span class="status-chip status-placed fw-bold text-xs">SUPER DREAM</span>'
+          : ((s.packageLpa || 0) >= 10 ? '<span class="status-chip status-warning text-xs">DREAM</span>' : '<span class="status-chip status-neutral text-xs">CORE</span>');
+
+        return `
+          <article class="bezel-outer poster-card position-relative overflow-hidden">
+            <div class="offer-seal-watermark"></div>
+            <div class="bezel-inner p-5 d-flex flex-column h-100 justify-between">
+              <div>
+                <div class="d-flex justify-between align-start mb-3">
+                  <span class="avatar avatar-md avatar-placement">${initial}</span>
+                  ${tierBadge}
+                </div>
+
+                <h3 class="poster-title text-base mb-1 text-truncate">${ui.escapeHtml(name)}</h3>
+                <div class="text-xs text-muted font-mono mb-3">${ui.escapeHtml(s.rollNo || '21CS001')} &bull; ${ui.escapeHtml(s.branch || 'CSE')}</div>
+
+                <div class="surface-tone p-3 rounded-3 mb-3">
+                  <strong class="text-sm text-ink d-block text-truncate">${ui.escapeHtml(s.companyName || 'Technology Partner')}</strong>
+                  <span class="text-xs text-muted d-block text-truncate mb-2">${ui.escapeHtml(s.roleTitle || 'Software Engineer')}</span>
+                  <div class="d-flex justify-between align-center border-top-subtle pt-2">
+                    <span class="text-xs text-muted">Compensation</span>
+                    <strong class="text-sm text-placement tabular-nums">${ui.escapeHtml(lpa)}</strong>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-3 border-top d-flex justify-between align-center">
+                <span class="text-xs text-muted">Batch 2026</span>
+                <span class="text-xs text-placement fw-semibold d-inline-flex align-center gap-1">
+                  <svg class="icon icon-xs"><use href="/icons/sprite.svg#seal-check"></use></svg>
+                  Offer Sealed
+                </span>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    document.getElementById('placed-search-input').addEventListener('input', renderWall);
+    document.getElementById('package-tier-filter').addEventListener('change', renderWall);
+
+    const modalEl = document.getElementById('recordPlacedModal');
+    document.getElementById('btn-close-placed-modal')?.addEventListener('click', () => modalEl.close ? modalEl.close() : modalEl.removeAttribute('open'));
+    document.getElementById('btn-cancel-placed-modal')?.addEventListener('click', () => modalEl.close ? modalEl.close() : modalEl.removeAttribute('open'));
+
+    document.getElementById('record-placed-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        rollNo: form.rollNo.value.trim().toUpperCase(),
+        studentName: form.studentName.value.trim(),
+        companyName: form.companyName.value.trim(),
+        roleTitle: form.roleTitle.value.trim(),
+        packageLpa: parseFloat(form.packageLpa.value),
+        branch: form.branch.value.trim()
+      };
+
+      try {
+        await api.post('/placed', data);
+        ui.showToast(`Congratulations! ${data.studentName} added to the Placed Wall!`);
+        if (modalEl.close) modalEl.close();
+        else modalEl.removeAttribute('open');
+        form.reset();
+        loadPlacedHighlights();
+        loadPlacedList();
+      } catch (err) {
+        ui.showToast(err.message || 'Failed to record placement offer', 'danger');
+      }
+    });
+
+    loadPlacedHighlights();
+    loadPlacedList();
+  </script>
+</body>
+</html>

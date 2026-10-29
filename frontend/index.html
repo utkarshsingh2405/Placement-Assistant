@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="portal">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Placement Assistant — Unified Frontend Suite</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+  <style>
+    body {
+      background: var(--ground);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .hero-banner {
+      background: var(--night);
+      color: #E8EEEC;
+      padding: var(--space-12) var(--space-6);
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .hero-banner::after {
+      content: '';
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(109, 179, 63, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .pillar-card {
+      transition: transform var(--dur-normal) var(--ease-out), box-shadow var(--dur-normal) var(--ease-out);
+    }
+    .pillar-card:hover {
+      transform: translateY(-4px);
+    }
+  </style>
+</head>
+<body>
+  <!-- Header Banner -->
+  <header class="hero-banner text-center">
+    <div style="max-width: 800px; margin: 0 auto; position: relative; z-index: 1;">
+      <span class="chip chip-accent uppercase text-xs mb-3">Modular Frontend Architecture</span>
+      <h1 class="page-title text-3xl mb-2" style="color: #FFFFFF;">Institutional Placement Secretariat</h1>
+      <p class="text-sm" style="color: #A0B0B4; max-width: 620px; margin: 0 auto 1.5rem;">
+        Enterprise-grade dual-pillar platform connecting student credentials, master timetable compliance, and high-velocity recruitment drives.
+      </p>
+      
+      <!-- API Base Switcher -->
+      <div class="d-inline-flex align-center gap-2 p-2 surface-tone rounded-3" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);">
+        <label for="api-base-select" class="text-xs fw-semibold" style="color: #A0B0B4;">Backend API Target:</label>
+        <select id="api-base-select" class="form-select form-select-sm" style="background: #141E22; color: #FFF; border: 1px solid rgba(255,255,255,0.2); width: auto;">
+          <option value="">Relative / Gateway (Default)</option>
+          <option value="http://localhost:8080">Local Gateway (Port 8080)</option>
+          <option value="http://localhost:8081">Direct Institute (Port 8081)</option>
+          <option value="custom">Custom Cloud URL...</option>
+        </select>
+        <button id="theme-toggle" class="btn btn-secondary btn-sm" title="Toggle Dark/Light Mode">
+          🌓 Theme
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="app-body" style="max-width: 1200px; margin: 0 auto; width: 100%; padding: var(--space-8) var(--space-4);">
+    <div class="bento-grid mb-8">
+      <!-- Pillar 1: Portal & SSO -->
+      <article class="bezel-outer pillar-card">
+        <div class="bezel-inner p-6 d-flex flex-column justify-between h-100">
+          <div>
+            <div class="d-flex justify-between align-center mb-3">
+              <span class="chip chip-muted uppercase text-xs">Pillar 01 &bull; Gateway</span>
+              <span class="chip chip-accent uppercase text-xs">Port 8080</span>
+            </div>
+            <h2 class="text-xl fw-bold text-ink mb-2">Portal &amp; Identity SSO</h2>
+            <p class="text-sm text-ink-2 mb-4" style="line-height: 1.6;">
+              Centralized authentication, role-based JWT identity broker, super-admin security audit logs, and account lifecycle management.
+            </p>
+            <div class="d-flex flex-column gap-2 mb-4">
+              <a href="/portal/index.html" class="text-xs text-ink-2 text-decoration-none d-flex align-center gap-2">
+                <span>&bull;</span> <span>Interactive Public Landing Page</span>
+              </a>
+              <a href="/portal/login.html" class="text-xs text-ink-2 text-decoration-none d-flex align-center gap-2">
+                <span>&bull;</span> <span>Institutional Single Sign-On Login</span>
+              </a>
+              <a href="/portal/register.html" class="text-xs text-ink-2 text-decoration-none d-flex align-center gap-2">
+                <span>&bull;</span> <span>Student Self-Registration Portal</span>
+              </a>
+            </div>
+          </div>
+          <div class="pt-4 border-top d-flex justify-between align-center">
+            <span class="text-xs text-muted">Gateway Context: <code>/</code></span>
+            <a href="/portal/index.html" class="btn btn-primary">
+              <span>Launch Portal</span>
+              <svg class="icon icon-xs"><use href="/shared/icons/sprite.svg#arrow-up-right"></use></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Pillar 2: Academic Institute Pillar -->
+      <article class="bezel-outer pillar-card">
+        <div class="bezel-inner p-6 d-flex flex-column justify-between h-100">
+          <div>
+            <div class="d-flex justify-between align-center mb-3">
+              <span class="chip chip-muted uppercase text-xs">Pillar 02 &bull; Academia</span>
+              <span class="chip chip-institute uppercase text-xs">Port 8081</span>
+            </div>
+            <h2 class="text-xl fw-bold text-ink mb-2">Institute Pillar</h2>
+            <p class="text-sm text-ink-2 mb-4" style="line-height: 1.6;">
+              9-module academic operations hub: Student Dossiers, Company Drives, Question Bank, 75% Attendance Compliance, Drive Rounds, ATS Resume Parsing, Hackathons, Internships, and Off-Campus Openings.
+            </p>
+            <div class="grid-2-col gap-2 mb-4">
+              <a href="/institute/dashboard.html" class="text-xs text-institute fw-semibold text-decoration-none">&rarr; Master Dashboard</a>
+              <a href="/institute/pages/1-students/student-list.html" class="text-xs text-ink-2 text-decoration-none">&bull; Student Directory</a>
+              <a href="/institute/pages/2-company-drives/drive-list.html" class="text-xs text-ink-2 text-decoration-none">&bull; Campus Drives</a>
+              <a href="/institute/pages/5-drive-rounds/rounds-board.html" class="text-xs text-ink-2 text-decoration-none">&bull; Rounds Pipeline</a>
+              <a href="/institute/pages/4-attendance/class/class-sessions.html" class="text-xs text-ink-2 text-decoration-none">&bull; Classroom Attendance</a>
+              <a href="/institute/pages/9-offcampus-jobs/job-list.html" class="text-xs text-ink-2 text-decoration-none">&bull; Off-Campus Hiring</a>
+            </div>
+          </div>
+          <div class="pt-4 border-top d-flex justify-between align-center">
+            <span class="text-xs text-muted">Context: <code>/institute</code></span>
+            <a href="/institute/dashboard.html" class="btn btn-primary">
+              <span>Enter Institute</span>
+              <svg class="icon icon-xs"><use href="/shared/icons/sprite.svg#arrow-up-right"></use></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+
+      <!-- Pillar 3: Corporate Placement Engine -->
+      <article class="bezel-outer pillar-card">
+        <div class="bezel-inner p-6 d-flex flex-column justify-between h-100">
+          <div>
+            <div class="d-flex justify-between align-center mb-3">
+              <span class="chip chip-muted uppercase text-xs">Pillar 03 &bull; Placement</span>
+              <span class="chip chip-placement uppercase text-xs">Port 8082</span>
+            </div>
+            <h2 class="text-xl fw-bold text-ink mb-2">Placement Engine</h2>
+            <p class="text-sm text-ink-2 mb-4" style="line-height: 1.6;">
+              Corporate recruiter portal, real-time round progression, pre-placement talks, live student results broadcast, and institutional placed students showcase.
+            </p>
+            <div class="d-flex flex-column gap-2 mb-4">
+              <a href="/placement/index.html" class="text-xs text-ink-2 text-decoration-none d-flex align-center gap-2">
+                <span>&bull;</span> <span>Placement Operations Board</span>
+              </a>
+            </div>
+          </div>
+          <div class="pt-4 border-top d-flex justify-between align-center">
+            <span class="text-xs text-muted">Context: <code>/placement</code></span>
+            <a href="/placement/index.html" class="btn btn-primary">
+              <span>Enter Placement</span>
+              <svg class="icon icon-xs"><use href="/shared/icons/sprite.svg#arrow-up-right"></use></svg>
+            </a>
+          </div>
+        </div>
+      </article>
+    </div>
+
+    <!-- Credentials Quick Reference -->
+    <div class="bezel-outer">
+      <div class="bezel-inner p-5">
+        <h3 class="text-base fw-bold mb-3 text-ink">Demo Accounts &amp; Default Credentials</h3>
+        <div class="bento-grid">
+          <div class="p-3 surface-tone rounded-3">
+            <span class="text-xs text-muted d-block">Super Admin</span>
+            <strong class="text-sm text-ink">admin@college.edu</strong>
+            <span class="text-xs text-muted d-block mt-1">Pass: <code>Admin@123</code></span>
+          </div>
+          <div class="p-3 surface-tone rounded-3">
+            <span class="text-xs text-muted d-block">Training &amp; Placement Officer</span>
+            <strong class="text-sm text-institute">tpo@college.edu</strong>
+            <span class="text-xs text-muted d-block mt-1">Pass: <code>Tpo@123</code></span>
+          </div>
+          <div class="p-3 surface-tone rounded-3">
+            <span class="text-xs text-muted d-block">Institutional Director</span>
+            <strong class="text-sm text-ink">director@college.edu</strong>
+            <span class="text-xs text-muted d-block mt-1">Pass: <code>Director@123</code></span>
+          </div>
+          <div class="p-3 surface-tone rounded-3">
+            <span class="text-xs text-muted d-block">Student Dossier</span>
+            <strong class="text-sm text-placement">aarav@college.edu</strong>
+            <span class="text-xs text-muted d-block mt-1">Pass: <code>Student@123</code></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    // Handle API Base Switcher
+    const apiSelect = document.getElementById('api-base-select');
+    const storedBase = localStorage.getItem('pa_api_base');
+    if (storedBase) {
+      if (storedBase === 'http://localhost:8080' || storedBase === 'http://localhost:8081') {
+        apiSelect.value = storedBase;
+      } else {
+        apiSelect.value = 'custom';
+      }
+    }
+
+    apiSelect.addEventListener('change', () => {
+      if (apiSelect.value === 'custom') {
+        const customUrl = prompt('Enter backend API Base URL (e.g. https://your-render-app.onrender.com):', storedBase || '');
+        if (customUrl) {
+          localStorage.setItem('pa_api_base', customUrl.replace(/\/$/, ''));
+        }
+      } else if (apiSelect.value) {
+        localStorage.setItem('pa_api_base', apiSelect.value);
+      } else {
+        localStorage.removeItem('pa_api_base');
+      }
+    });
+
+    // Theme toggle
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      const cur = document.documentElement.getAttribute('data-theme') || 'dark';
+      const next = cur === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', next);
+      localStorage.setItem('pa_theme_preference', next);
+    });
+  </script>
+</body>
+</html>

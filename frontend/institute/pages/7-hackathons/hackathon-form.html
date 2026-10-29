@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="institute">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hackathon Publisher — Academic Institute</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <div class="d-flex align-center gap-2 mb-1">
+              <a href="/institute/pages/7-hackathons/hackathon-list.html" class="text-xs text-muted text-decoration-none">&larr; Back to Competitions</a>
+              <span class="text-xs text-muted">&bull;</span>
+              <span class="chip chip-muted uppercase text-xs">Section 07</span>
+            </div>
+            <h1 class="page-title" id="form-title">Post New Hackathon</h1>
+            <p class="page-subtitle">Publish collegiate coding challenges, global hackathons, and corporate prize competitions.</p>
+          </div>
+          <div class="d-flex gap-2">
+            <a href="/institute/pages/7-hackathons/hackathon-list.html" class="btn btn-secondary">Discard</a>
+          </div>
+        </header>
+
+        <!-- Form Card (Double Bezel) -->
+        <div class="bezel-outer mb-8" style="max-width: 960px; margin: 0 auto;">
+          <div class="bezel-inner p-6">
+            <form id="hackathon-form" novalidate>
+              <div class="form-grid g-4">
+                <!-- Title -->
+                <div class="form-col-8">
+                  <label class="form-label fw-semibold" for="title">Hackathon Title <span class="text-danger">*</span></label>
+                  <input type="text" id="title" class="form-control" required placeholder="e.g. Smart India Hackathon 2025">
+                </div>
+
+                <!-- Mode -->
+                <div class="form-col-4">
+                  <label class="form-label fw-semibold" for="mode">Event Mode <span class="text-danger">*</span></label>
+                  <select id="mode" class="form-select" required>
+                    <option value="ONLINE" selected>Online / Virtual</option>
+                    <option value="OFFLINE">In-Person (On-Site)</option>
+                    <option value="HYBRID">Hybrid</option>
+                  </select>
+                </div>
+
+                <!-- Organizer -->
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="organizer">Host / Organizing Entity <span class="text-danger">*</span></label>
+                  <input type="text" id="organizer" class="form-control" required placeholder="e.g. Ministry of Education / Tech Corp">
+                </div>
+
+                <!-- Location -->
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="location">Location / Venue</label>
+                  <input type="text" id="location" class="form-control" placeholder="e.g. Bengaluru / Pan-India Virtual">
+                </div>
+
+                <!-- Prize Pool -->
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="prizePool">Prize Bounty / Rewards</label>
+                  <input type="text" id="prizePool" class="form-control" placeholder="e.g. ₹5,00,000 + Pre-Placement Interviews">
+                </div>
+
+                <!-- Apply URL -->
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="applyUrl">Official Registration Portal URL <span class="text-danger">*</span></label>
+                  <input type="url" id="applyUrl" class="form-control" required placeholder="https://unstop.com/hackathons/...">
+                </div>
+
+                <!-- Dates -->
+                <div class="form-col-4">
+                  <label class="form-label fw-semibold" for="registrationDeadline">Registration Cutoff <span class="text-danger">*</span></label>
+                  <input type="date" id="registrationDeadline" class="form-control" required>
+                </div>
+
+                <div class="form-col-4">
+                  <label class="form-label fw-semibold" for="startDate">Start Date</label>
+                  <input type="date" id="startDate" class="form-control">
+                </div>
+
+                <div class="form-col-4">
+                  <label class="form-label fw-semibold" for="endDate">End Date</label>
+                  <input type="date" id="endDate" class="form-control">
+                </div>
+
+                <!-- Team Size -->
+                <div class="form-col-3">
+                  <label class="form-label fw-semibold" for="minTeamSize">Min Team Size</label>
+                  <input type="number" id="minTeamSize" class="form-control" min="1" value="1">
+                </div>
+                <div class="form-col-3">
+                  <label class="form-label fw-semibold" for="maxTeamSize">Max Team Size</label>
+                  <input type="number" id="maxTeamSize" class="form-control" min="1" value="4">
+                </div>
+
+                <!-- Tags -->
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="tags">Domains & Tracks (Comma-separated)</label>
+                  <input type="text" id="tags" class="form-control" placeholder="e.g. Generative AI, Web3, IoT, Healthcare">
+                </div>
+
+                <!-- Description -->
+                <div class="form-col-12">
+                  <label class="form-label fw-semibold" for="description">Hackathon Overview & Guidelines</label>
+                  <textarea id="description" class="form-control" rows="5" placeholder="Overview of problem themes, eligibility guidelines, evaluation rounds, and submission criteria..."></textarea>
+                </div>
+
+                <!-- Submit Bar -->
+                <div class="form-col-12 d-flex justify-end gap-3 mt-4 pt-4 border-top">
+                  <a href="/institute/pages/7-hackathons/hackathon-list.html" class="btn btn-secondary px-5">Cancel</a>
+                  <button type="submit" class="btn btn-primary px-6" id="btn-save">Publish Hackathon</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import api from '/js/api.js';
+    import ui from '/js/ui.js';
+
+    if (!auth.requireAuth(['ADMIN', 'TPO'])) {
+      // restricted
+    } else {
+      ui.initLayout('hackathons');
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const hackathonId = urlParams.get('id');
+
+      if (hackathonId) {
+        document.getElementById('form-title').textContent = 'Edit Hackathon Details';
+        document.getElementById('btn-save').textContent = 'Update Hackathon';
+        loadHackathon(hackathonId);
+      }
+
+      async function loadHackathon(id) {
+        try {
+          const h = await api.get(`/api/hackathons/${id}`);
+          document.getElementById('title').value = h.title || '';
+          document.getElementById('organizer').value = h.organizer || '';
+          document.getElementById('mode').value = h.mode || 'ONLINE';
+          document.getElementById('location').value = h.location || '';
+          document.getElementById('prizePool').value = h.prizePool || '';
+          document.getElementById('applyUrl').value = h.applyUrl || '';
+          document.getElementById('registrationDeadline').value = h.registrationDeadline || '';
+          document.getElementById('startDate').value = h.startDate || '';
+          document.getElementById('endDate').value = h.endDate || '';
+          document.getElementById('minTeamSize').value = h.minTeamSize || 1;
+          document.getElementById('maxTeamSize').value = h.maxTeamSize || 4;
+          document.getElementById('tags').value = h.tags || '';
+          document.getElementById('description').value = h.description || '';
+        } catch (err) {
+          ui.showToast('Could not load hackathon: ' + err.message, 'danger');
+        }
+      }
+
+      document.getElementById('hackathon-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        const payload = {
+          title: document.getElementById('title').value.trim(),
+          organizer: document.getElementById('organizer').value.trim(),
+          mode: document.getElementById('mode').value,
+          location: document.getElementById('location').value.trim() || null,
+          prizePool: document.getElementById('prizePool').value.trim() || null,
+          applyUrl: document.getElementById('applyUrl').value.trim(),
+          registrationDeadline: document.getElementById('registrationDeadline').value,
+          startDate: document.getElementById('startDate').value || null,
+          endDate: document.getElementById('endDate').value || null,
+          minTeamSize: parseInt(document.getElementById('minTeamSize').value || 1, 10),
+          maxTeamSize: parseInt(document.getElementById('maxTeamSize').value || 4, 10),
+          tags: document.getElementById('tags').value.trim() || null,
+          description: document.getElementById('description').value.trim() || null
+        };
+
+        const btn = document.getElementById('btn-save');
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+
+        try {
+          if (hackathonId) {
+            await api.put(`/api/hackathons/${hackathonId}`, payload);
+            ui.showToast('Hackathon updated successfully!');
+          } else {
+            await api.post('/api/hackathons', payload);
+            ui.showToast('Hackathon published successfully!');
+          }
+          setTimeout(() => {
+            window.location.href = '/institute/pages/7-hackathons/hackathon-list.html';
+          }, 600);
+        } catch (err) {
+          ui.showToast(err.message || 'Failed to save hackathon', 'danger');
+          btn.disabled = false;
+          btn.textContent = hackathonId ? 'Update Hackathon' : 'Publish Hackathon';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-domain="portal">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Service Unavailable — Placement Assistance Gateway</title>
+  
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+</head>
+<body style="display: flex; align-items: center; justify-content: center; min-height: 100dvh; padding: var(--space-6);">
+  <div class="grain-overlay"></div>
+
+  <div class="double-bezel" style="max-width: 520px; width: 100%;">
+    <div class="double-bezel-inner" style="text-align: center; padding: var(--space-8);">
+      <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--danger-tint); color: var(--danger); display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4);">
+        <svg width="28" height="28"><use href="#ph-warning-circle"/></svg>
+      </div>
+
+      <span class="chip chip-danger" style="margin-bottom: var(--space-3); font-family: var(--font-mono);">503 SERVICE TEMPORARILY OFFLINE</span>
+      
+      <h1 class="font-display" id="pillar-title" style="font-size: var(--text-h2); margin-bottom: var(--space-2);">Pillar Service Offline.</h1>
+      <p class="text-muted text-sm" id="pillar-desc" style="margin-bottom: var(--space-6);">
+        The destination service is currently initializing or unreachable. The Gateway will automatically reconnect when the service responds.
+      </p>
+
+      <!-- Technical Diagnostic Details -->
+      <div style="background: var(--surface-2); border-radius: var(--radius-control); padding: var(--space-4); margin-bottom: var(--space-6); text-align: left; font-size: var(--text-xs); font-family: var(--font-mono);">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <span style="color: var(--muted);">Target Pillar:</span>
+          <span style="font-weight: 600;" id="target-pillar-name">Unknown</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+          <span style="color: var(--muted);">Expected Port:</span>
+          <span id="target-pillar-port">--</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--muted);">Connection State:</span>
+          <span style="color: var(--danger); font-weight: 600;" id="target-pillar-status">Connection Refused</span>
+        </div>
+      </div>
+
+      <!-- Auto-retry countdown -->
+      <div style="display: flex; align-items: center; justify-content: center; gap: var(--space-2); font-size: var(--text-xs); color: var(--muted); margin-bottom: var(--space-6);">
+        <svg width="14" height="14" style="color: var(--accent);"><use href="#ph-clock"/></svg>
+        <span>Auto-retrying connection in <strong id="countdown" style="color: var(--accent); font-variant-numeric: tabular-nums;">10</strong>s...</span>
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="display: flex; flex-direction: column; gap: var(--space-2);">
+        <button class="btn btn-primary btn-lg" id="retry-now-btn">
+          <svg width="16" height="16"><use href="#ph-arrow-right"/></svg>
+          <span>Retry Connection Now</span>
+        </button>
+        <a href="/choose-domain.html" class="btn btn-outline" id="alt-domain-btn">
+          <span>Switch Workspace Domain</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div id="sprite-container" style="display: none;"></div>
+
+  <script>
+    fetch('/icons/sprite.svg').then(r => r.text()).then(svg => {
+      document.getElementById('sprite-container').innerHTML = svg;
+    });
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const pillar = urlParams.get('pillar') || 'institute';
+    const isInst = pillar === 'institute';
+
+    document.getElementById('target-pillar-name').textContent = isInst ? 'Institute Academic Pillar' : 'Placement Recruitment Pillar';
+    document.getElementById('target-pillar-port').textContent = isInst ? '8081 (/institute)' : '8082 (/placement)';
+
+    let remaining = 10;
+    const timer = setInterval(() => {
+      remaining--;
+      document.getElementById('countdown').textContent = remaining;
+      if (remaining <= 0) {
+        clearInterval(timer);
+        retry();
+      }
+    }, 1000);
+
+    function retry() {
+      const target = isInst ? '/institute/pages/1-students/student-list.html' : '/placement/pages/1-drives/drive-list.html';
+      window.location.href = target;
+    }
+
+    document.getElementById('retry-now-btn').addEventListener('click', retry);
+  </script>
+</body>
+</html>

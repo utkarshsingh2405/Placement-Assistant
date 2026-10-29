@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="portal">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Choose Domain — Placement Assistance Gateway</title>
+  
+  <!-- Design System CSS -->
+    <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+
+  <style>
+    .doors-wrapper {
+      display: grid;
+      grid-template-columns: 1fr;
+      min-height: calc(100dvh - 64px);
+    }
+    @media (min-width: 1024px) {
+      .doors-wrapper {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+    .door-half {
+      padding: var(--space-8);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      color: #FFFFFF;
+      position: relative;
+      cursor: pointer;
+      overflow: hidden;
+      transition: flex-grow var(--dur-normal) var(--ease-out),
+                  filter var(--dur-normal) var(--ease-out),
+                  background-color var(--dur-normal) var(--ease-out);
+    }
+    @media (min-width: 1024px) {
+      .door-half {
+        padding: var(--space-12);
+      }
+      .door-half:hover {
+        filter: brightness(1.06);
+      }
+    }
+    .door-institute-bg {
+      background-color: var(--door-institute, #7F1D2C);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .door-placement-bg {
+      background-color: var(--door-placement, #0D6154);
+    }
+    html[data-theme="dark"] .door-institute-bg {
+      background-color: #240B10;
+      box-shadow: inset 0 0 100px rgba(140, 36, 51, 0.15);
+    }
+    html[data-theme="dark"] .door-placement-bg {
+      background-color: #051E1A;
+      box-shadow: inset 0 0 100px rgba(14, 107, 92, 0.15);
+    }
+    
+    .door-cta-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-3);
+      padding: 10px 14px 10px 24px;
+      border-radius: var(--radius-pill);
+      font-weight: 600;
+      font-size: var(--text-sm);
+      transition: all var(--dur-fast) var(--ease-out);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    .door-cta-institute {
+      background: #FFFFFF;
+      color: #7F1D2C;
+    }
+    html[data-theme="dark"] .door-cta-institute {
+      background: #E0808C;
+      color: #240B10;
+      border-color: #F09CA6;
+    }
+    .door-cta-placement {
+      background: #FFFFFF;
+      color: #0D6154;
+    }
+    html[data-theme="dark"] .door-cta-placement {
+      background: #4FD1B8;
+      color: #051E1A;
+      border-color: #6EE7CF;
+    }
+    .door-cta-circle {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .door-cta-institute .door-cta-circle {
+      background: #7F1D2C;
+      color: #FFFFFF;
+    }
+    html[data-theme="dark"] .door-cta-institute .door-cta-circle {
+      background: #240B10;
+      color: #E0808C;
+    }
+    .door-cta-placement .door-cta-circle {
+      background: #0D6154;
+      color: #FFFFFF;
+    }
+    html[data-theme="dark"] .door-cta-placement .door-cta-circle {
+      background: #051E1A;
+      color: #4FD1B8;
+    }
+    .door-half:hover .door-cta-btn {
+      transform: translateY(-2px) scale(1.03);
+    }
+  </style>
+</head>
+<body class="theme-ground">
+  <!-- Paper Grain Overlay -->
+  <div class="grain-overlay"></div>
+
+  <!-- Gateway Solid Topbar -->
+  <header class="app-topbar">
+    <div style="display: flex; align-items: center; gap: var(--space-3);">
+      <!-- Explicit Back Button to Home -->
+      <a href="/" class="btn btn-sm btn-outline" title="Return to Landing Page" id="gateway-back-btn" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 14px; font-weight: 500;">
+        <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor">
+          <path d="M216,128a8,8,0,0,1-8,8H75.31l58.35,58.34a8,8,0,0,1-11.32,11.32l-72-72a8,8,0,0,1,0-11.32l72-72a8,8,0,0,1,11.32,11.32L75.31,120H208A8,8,0,0,1,216,128Z"/>
+        </svg>
+        <span>Back</span>
+      </a>
+
+      <a href="/" class="brand-wordmark">
+        <span class="brand-dot" style="background-color: var(--brass);"></span>
+        <span>Placement Secretariat</span>
+      </a>
+      <span class="chip chip-neutral hide-on-mobile" style="font-size: 11px;">SINGLE SIGN-ON GATEWAY</span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: var(--space-3);">
+      <!-- Theme Toggle with guaranteed visible icon -->
+      <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-btn" title="Toggle Light/Dark Theme" aria-label="Toggle Light/Dark Theme" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;">
+        <span id="theme-icon" class="theme-icon" style="display: inline-flex; align-items: center;">
+          <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor">
+            <path d="M216.7,152.6A96,96,0,1,1,103.4,39.3,80,80,0,0,0,216.7,152.6Z"/>
+          </svg>
+        </span>
+        <span class="hide-on-mobile" style="font-size: var(--text-xs); font-weight: 500;">Theme</span>
+      </button>
+
+      <!-- User Profile Badge & Logout -->
+      <div style="display: flex; align-items: center; gap: var(--space-2);">
+        <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--brass); color: #FFF; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: var(--text-xs);" id="user-avatar">
+          U
+        </div>
+        <div class="hide-on-mobile" style="text-align: left; line-height: 1.2;">
+          <div style="font-size: var(--text-xs); font-weight: 600;" id="user-display-name">Loading...</div>
+          <div style="font-size: 11px; color: var(--muted);" id="user-dropdown-role">STUDENT</div>
+        </div>
+        <button id="logout-btn" class="btn btn-sm btn-outline" title="Sign Out" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; margin-left: var(--space-1);">
+          <svg width="14" height="14" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M128,40H48a8,8,0,0,0-8,8V208a8,8,0,0,0,8,8h80"/>
+            <polyline points="176 88 216 128 176 168"/>
+            <line x1="216" y1="128" x2="104" y2="128"/>
+          </svg>
+          <span class="hide-on-mobile">Sign Out</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Two Doors Split Screen -->
+  <main class="doors-wrapper" id="doors-container">
+    <!-- Left Door: Academic Institute (Heraldic Burgundy) -->
+    <section class="door-half door-institute-bg" id="card-institute" tabindex="0" role="button" aria-label="Enter Academic Institute Desk">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
+          <span class="chip" style="background: rgba(255,255,255,0.15); color: #FFFFFF; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="40" y="40" width="176" height="176" rx="8"/>
+              <line x1="40" y1="96" x2="216" y2="96"/>
+              <line x1="40" y1="152" x2="216" y2="152"/>
+              <line x1="96" y1="40" x2="96" y2="216"/>
+              <line x1="160" y1="40" x2="160" y2="216"/>
+            </svg>
+            <span>PILLAR 1 • ACADEMIC REGISTRY</span>
+          </span>
+          <span class="chip" id="inst-pill-status" style="background: rgba(0,0,0,0.3); color: #FFFFFF; font-family: var(--font-mono); font-size: 11px;">
+            ONLINE • 8081
+          </span>
+        </div>
+
+        <h2 class="font-display" style="font-size: var(--text-display-lg); color: #FFFFFF; margin-bottom: var(--space-3); line-height: 0.95;">
+          Academic Ledger.
+        </h2>
+        <p style="color: rgba(255,255,255,0.9); font-size: var(--text-body); max-width: 44ch; line-height: 1.5; margin-bottom: var(--space-6);">
+          Master student profiles, verified academic CGPA, CRT & class attendance registers, question bank practice mode, and ATS diagnostics.
+        </p>
+
+        <!-- Live Facts for this user -->
+        <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-card); padding: var(--space-4); max-width: 420px; margin-bottom: var(--space-6);">
+          <div style="font-size: 11px; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-bottom: var(--space-2); font-weight: 600;">Current Ledger Status</div>
+          <div style="display: flex; justify-content: space-between; font-size: var(--text-sm); margin-bottom: 6px;">
+            <span>Class Attendance Rate:</span>
+            <span style="font-weight: 600; font-variant-numeric: tabular-nums;">86.4% Verified</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: var(--text-sm);">
+            <span>Placement Eligibility:</span>
+            <span style="font-weight: 600; color: #6EE7CF;">Cleared (0 Backlogs)</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; padding-top: var(--space-6);">
+        <div style="font-size: var(--text-xs); color: rgba(255,255,255,0.7);">
+          Context: <code>/institute</code> • Hotkey: <strong>1</strong> or <strong>Left Arrow</strong>
+        </div>
+        <div class="door-cta-btn door-cta-institute">
+          <span>Enter Institute</span>
+          <span class="door-cta-circle">
+            <svg width="16" height="16" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="40" y1="128" x2="216" y2="128"/>
+              <polyline points="144 56 216 128 144 200"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Right Door: Placement Recruitment Season (Deep Pine Emerald) -->
+    <section class="door-half door-placement-bg" id="card-placement" tabindex="0" role="button" aria-label="Enter Recruitment Season Desk">
+      <div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
+          <span class="chip" style="background: rgba(255,255,255,0.15); color: #FFFFFF; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+            <svg width="14" height="14" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="32" y="72" width="192" height="144" rx="8"/>
+              <path d="M168 72V56a24 24 0 0 0-24-24h-32a24 24 0 0 0-24 24v16"/>
+              <line x1="32" y1="128" x2="224" y2="128"/>
+            </svg>
+            <span>PILLAR 2 • RECRUITMENT SEASON</span>
+          </span>
+          <span class="chip" id="plc-pill-status" style="background: rgba(0,0,0,0.3); color: #FFFFFF; font-family: var(--font-mono); font-size: 11px;">
+            ONLINE • 8082
+          </span>
+        </div>
+
+        <h2 class="font-display" style="font-size: var(--text-display-lg); color: #FFFFFF; margin-bottom: var(--space-3); line-height: 0.95;">
+          The Season Board.
+        </h2>
+        <p style="color: rgba(255,255,255,0.9); font-size: var(--text-body); max-width: 44ch; line-height: 1.5; margin-bottom: var(--space-6);">
+          Campus recruitment hiring cycles, pre-placement talks, live notice chits, rotating QR hall tickets, and the placed wall.
+        </p>
+
+        <!-- Live Facts for this user -->
+        <div style="background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius-card); padding: var(--space-4); max-width: 420px; margin-bottom: var(--space-6);">
+          <div style="font-size: 11px; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-bottom: var(--space-2); font-weight: 600;">Active Season Feed</div>
+          <div style="display: flex; justify-content: space-between; font-size: var(--text-sm); margin-bottom: 6px;">
+            <span>Live Notice Board:</span>
+            <span style="font-weight: 600; color: #FDE68A;">3 New Circulars</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; font-size: var(--text-sm);">
+            <span>Next Drive Stage:</span>
+            <span style="font-weight: 600;">Google Technical • Tomorrow 10:00</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: flex-end; padding-top: var(--space-6);">
+        <div style="font-size: var(--text-xs); color: rgba(255,255,255,0.7);">
+          Context: <code>/placement</code> • Hotkey: <strong>2</strong> or <strong>Right Arrow</strong>
+        </div>
+        <div class="door-cta-btn door-cta-placement">
+          <span>Enter Placement</span>
+          <span class="door-cta-circle">
+            <svg width="16" height="16" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="40" y1="128" x2="216" y2="128"/>
+              <polyline points="144 56 216 128 144 200"/>
+            </svg>
+          </span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Hidden elements to preserve existing user hooks -->
+  <div style="display: none;">
+    <span id="user-dropdown-name"></span>
+    <span id="user-dropdown-email"></span>
+    <div id="admin-link-li"></div>
+    <input type="checkbox" id="remember-domain-choice">
+  </div>
+
+  <!-- SVG Sprite Inclusion (Using non-hidden accessibility style so <use> references render across all engines) -->
+  <div id="sprite-container" style="position: absolute; width: 0; height: 0; overflow: hidden; pointer-events: none;"></div>
+
+  <!-- Scripts -->
+  <script type="module">
+    import auth from '/js/auth.js';
+    import theme from '/js/core/theme.js';
+
+    // Inject SVG Sprite
+    fetch('/icons/sprite.svg')
+      .then(r => r.text())
+      .then(svg => {
+        document.getElementById('sprite-container').innerHTML = svg;
+      })
+      .catch(() => {});
+
+    // Guard route
+    if (!auth.requireAuth()) {
+      // automatically redirected
+    }
+
+    const user = auth.getUser();
+    if (user) {
+      if (user.role === 'COMPANY') {
+        window.location.href = '/placement/dashboard.html';
+      }
+
+      const displayName = user.name || user.email;
+      const role = user.role || 'STUDENT';
+      const isStudent = role === 'STUDENT';
+
+      document.getElementById('user-display-name').textContent = displayName;
+      document.getElementById('user-dropdown-role').textContent = isStudent && user.rollNo ? `${role} • ${user.rollNo}` : role;
+      document.getElementById('user-avatar').textContent = (displayName[0] || 'U').toUpperCase();
+
+      if (isStudent) {
+        const greetingDiv = document.createElement('div');
+        greetingDiv.className = 'w-100 text-center py-2 px-4';
+        greetingDiv.style.background = 'var(--surface-2)';
+        greetingDiv.style.borderBottom = '1px solid var(--surface-3)';
+        greetingDiv.style.fontSize = 'var(--text-xs)';
+        greetingDiv.style.color = 'var(--ink)';
+        greetingDiv.innerHTML = `Candidate Workspace: <strong>${displayName}</strong> &bull; Roll No: <strong>${user.rollNo || '21CS001'}</strong> &bull; Batch 2026 &bull; <span class="chip chip-success" style="font-size: 10px;">ELIGIBLE FOR RECRUITMENT</span>`;
+        document.querySelector('.app-topbar').insertAdjacentElement('afterend', greetingDiv);
+      } else if (role === 'DIRECTOR') {
+        const greetingDiv = document.createElement('div');
+        greetingDiv.className = 'w-100 text-center py-2 px-4';
+        greetingDiv.style.background = 'var(--surface-2)';
+        greetingDiv.style.borderBottom = '1px solid var(--surface-3)';
+        greetingDiv.style.fontSize = 'var(--text-xs)';
+        greetingDiv.style.color = 'var(--ink)';
+        greetingDiv.innerHTML = `Executive Secretariat: <strong>${displayName}</strong> &bull; <span class="chip chip-accent" style="font-size: 10px;">DIRECTOR &bull; FULL SYSTEM OVERSIGHT</span>`;
+        document.querySelector('.app-topbar').insertAdjacentElement('afterend', greetingDiv);
+      }
+    }
+
+    // Theme Toggle
+    function updateThemeIcon() {
+      const current = document.documentElement.getAttribute('data-theme') || 'light';
+      const iconSpan = document.getElementById('theme-icon');
+      if (iconSpan) {
+        if (current === 'dark') {
+          iconSpan.innerHTML = `
+            <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor">
+              <circle cx="128" cy="128" r="48"/>
+              <line x1="128" y1="24" x2="128" y2="48" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
+              <line x1="128" y1="208" x2="128" y2="232" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
+              <line x1="24" y1="128" x2="48" y2="128" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
+              <line x1="208" y1="128" x2="232" y2="128" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
+              <line x1="54.5" y1="54.5" x2="71.5" y2="71.5" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
+              <line x1="184.5" y1="184.5" x2="201.5" y2="201.5" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
+              <line x1="54.5" y1="201.5" x2="71.5" y2="184.5" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
+              <line x1="184.5" y1="71.5" x2="201.5" y2="54.5" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
+            </svg>
+          `;
+        } else {
+          iconSpan.innerHTML = `
+            <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor">
+              <path d="M216.7,152.6A96,96,0,1,1,103.4,39.3,80,80,0,0,0,216.7,152.6Z"/>
+            </svg>
+          `;
+        }
+      }
+    }
+
+    // Theme Icon listener (ThemeManager handles click events and initial icon setup automatically)
+    window.addEventListener('themechange', (e) => {
+      if (typeof theme !== 'undefined') {
+        theme.updateToggleIcons(e.detail?.theme || theme.getTheme());
+      }
+    });
+
+    // Logout
+    document.getElementById('logout-btn').addEventListener('click', () => {
+      auth.logout();
+    });
+
+    // Door Selection with View Transition
+    function selectDomain(domain) {
+      localStorage.setItem('pa_last_domain', domain);
+      const targetUrl = domain === 'institute' 
+        ? '/institute/dashboard.html' 
+        : '/placement/dashboard.html';
+
+      if (document.startViewTransition) {
+        document.startViewTransition(() => {
+          window.location.href = targetUrl;
+        });
+      } else {
+        window.location.href = targetUrl;
+      }
+    }
+
+    document.getElementById('card-institute').addEventListener('click', () => selectDomain('institute'));
+    document.getElementById('card-placement').addEventListener('click', () => selectDomain('placement'));
+
+    // Keyboard Navigation: 1 or ArrowLeft for Institute; 2 or ArrowRight for Placement
+    window.addEventListener('keydown', (e) => {
+      if (e.key === '1' || e.key === 'ArrowLeft') {
+        selectDomain('institute');
+      } else if (e.key === '2' || e.key === 'ArrowRight') {
+        selectDomain('placement');
+      }
+    });
+
+    // Pillar health check
+    fetch('/api/status/pillars')
+      .then(r => r.json())
+      .then(res => {
+        const d = res.data || res;
+        if (d && d.institute && d.institute.status !== 'UP') {
+          document.getElementById('inst-pill-status').textContent = 'OFFLINE';
+        }
+        if (d && d.placement && d.placement.status !== 'UP') {
+          document.getElementById('plc-pill-status').textContent = 'OFFLINE';
+        }
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

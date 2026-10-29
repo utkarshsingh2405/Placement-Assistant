@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="institute">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Round Editor — Academic Institute Pillar</title>
+  
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Back Navigation & Breadcrumbs -->
+        <div class="d-flex align-center justify-between gap-3 mb-4">
+          <div class="d-flex align-center gap-2">
+            <a href="#" id="link-back-board" class="btn btn-outline btn-sm" style="display: inline-flex; align-items: center; gap: 0.375rem;">
+              <svg class="icon icon-xs"><use href="/icons/sprite.svg#arrow-left"></use></svg>
+              <span>Back to Rounds Board</span>
+            </a>
+            <span class="text-xs text-muted">/ Institute / Rounds / Editor</span>
+          </div>
+        </div>
+
+        <!-- Page Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <div class="d-flex align-center gap-2 mb-2">
+              <span class="chip chip-accent uppercase tracking-wider">Round Configuration</span>
+              <span class="text-xs text-muted">Stage Progression Criteria</span>
+            </div>
+            <h1 class="page-title" id="form-title">Add Recruitment Round</h1>
+            <p class="page-subtitle">Define evaluation stage, sequence order, platform venue, and qualifying cutoffs.</p>
+          </div>
+        </header>
+
+        <!-- Form Card (Double Bezel) -->
+        <div class="bezel-outer" style="max-width: 800px; margin: 0 auto;">
+          <div class="bezel-inner p-6">
+            <form id="round-form">
+              <div class="form-grid g-4">
+                <!-- Round Name -->
+                <div class="form-col-8">
+                  <label for="roundName" class="form-label fw-semibold">Round Name <span class="text-danger">*</span></label>
+                  <input type="text" id="roundName" class="form-control" required placeholder="e.g. Round 1: Online Technical Assessment">
+                </div>
+
+                <!-- Sequence -->
+                <div class="form-col-4">
+                  <label for="sequence" class="form-label fw-semibold">Sequence Order <span class="text-danger">*</span></label>
+                  <input type="number" id="sequence" class="form-control font-mono" required min="1" max="15" value="1">
+                </div>
+
+                <!-- Round Type -->
+                <div class="form-col-6">
+                  <label for="roundType" class="form-label fw-semibold">Round Type <span class="text-danger">*</span></label>
+                  <select id="roundType" class="form-select" required>
+                    <option value="ONLINE_TEST" selected>Online Test / Aptitude</option>
+                    <option value="CODING_ROUND">Coding &amp; DSA Assessment</option>
+                    <option value="TECHNICAL_INTERVIEW">Technical Interview</option>
+                    <option value="HR_INTERVIEW">HR &amp; Behavioral Interview</option>
+                    <option value="GROUP_DISCUSSION">Group Discussion (GD)</option>
+                  </select>
+                </div>
+
+                <!-- Status -->
+                <div class="form-col-6">
+                  <label for="status" class="form-label fw-semibold">Status</label>
+                  <select id="status" class="form-select font-mono">
+                    <option value="SCHEDULED" selected>SCHEDULED</option>
+                    <option value="IN_PROGRESS">IN_PROGRESS</option>
+                    <option value="COMPLETED">COMPLETED</option>
+                    <option value="CANCELLED">CANCELLED</option>
+                  </select>
+                </div>
+
+                <!-- Date & Cutoff -->
+                <div class="form-col-6">
+                  <label for="roundDate" class="form-label fw-semibold">Round Date</label>
+                  <input type="date" id="roundDate" class="form-control font-mono">
+                </div>
+
+                <div class="form-col-6">
+                  <label for="cutoffScore" class="form-label fw-semibold">Cutoff Score / Marks (Optional)</label>
+                  <input type="number" id="cutoffScore" class="form-control font-mono" step="0.5" min="0" placeholder="e.g. 70.0">
+                </div>
+
+                <!-- Platform / Venue -->
+                <div class="form-col-12">
+                  <label for="platformVenue" class="form-label fw-semibold">Platform Link / Campus Venue</label>
+                  <input type="text" id="platformVenue" class="form-control" placeholder="e.g. Central Computer Lab 2 or https://hackerrank.com/test-id">
+                </div>
+
+                <!-- Instructions -->
+                <div class="form-col-12">
+                  <label for="instructions" class="form-label fw-semibold">Round Instructions &amp; Guidelines</label>
+                  <textarea id="instructions" class="form-control" rows="3" placeholder="Syllabus, duration, webcam requirements, coding language restrictions, etc."></textarea>
+                </div>
+
+                <!-- Actions -->
+                <div class="form-col-12 d-flex justify-end gap-2 pt-4 border-top">
+                  <a href="#" id="link-cancel" class="btn btn-outline">Cancel</a>
+                  <button type="submit" class="btn btn-primary px-5" id="btn-save">
+                    Save Round
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import api from '/js/api.js';
+    import ui from '/js/ui.js';
+
+    if (!auth.requireAuth(['ADMIN', 'TPO'])) {
+      // restricted
+    } else {
+      ui.initLayout('rounds');
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const driveId = urlParams.get('driveId');
+      const roundId = urlParams.get('id');
+
+      if (!driveId) {
+        window.location.href = '/institute/pages/2-company-drives/drive-list.html';
+      }
+
+      const backUrl = `/institute/pages/5-drive-rounds/rounds-board.html?driveId=${driveId}`;
+      document.getElementById('link-back-board').href = backUrl;
+      document.getElementById('link-cancel').href = backUrl;
+
+      if (roundId) {
+        document.getElementById('form-title').textContent = 'Edit Drive Round';
+        document.getElementById('btn-save').textContent = 'Update Round';
+        loadRoundDetails(roundId);
+      }
+
+      async function loadRoundDetails(id) {
+        try {
+          const r = await api.get(`/api/rounds/${id}`);
+          document.getElementById('roundName').value = r.roundName || '';
+          document.getElementById('sequence').value = r.sequence || 1;
+          document.getElementById('roundType').value = r.roundType || 'ONLINE_TEST';
+          document.getElementById('status').value = r.status || 'SCHEDULED';
+          document.getElementById('roundDate').value = r.roundDate || '';
+          document.getElementById('cutoffScore').value = r.cutoffScore || '';
+          document.getElementById('platformVenue').value = r.platformVenue || '';
+          document.getElementById('instructions').value = r.instructions || '';
+        } catch (err) {
+          ui.showToast('Failed to load round details: ' + err.message, 'danger');
+        }
+      }
+
+      document.getElementById('round-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const payload = {
+          driveId: parseInt(driveId, 10),
+          roundName: document.getElementById('roundName').value.trim(),
+          sequence: parseInt(document.getElementById('sequence').value || 1, 10),
+          roundType: document.getElementById('roundType').value,
+          status: document.getElementById('status').value,
+          roundDate: document.getElementById('roundDate').value || null,
+          cutoffScore: document.getElementById('cutoffScore').value ? parseFloat(document.getElementById('cutoffScore').value) : null,
+          platformVenue: document.getElementById('platformVenue').value.trim() || null,
+          instructions: document.getElementById('instructions').value.trim() || null
+        };
+
+        const saveBtn = document.getElementById('btn-save');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+
+        try {
+          if (roundId) {
+            await api.put(`/api/rounds/${roundId}`, payload);
+            ui.showToast('Round updated successfully!');
+          } else {
+            await api.post('/api/rounds', payload);
+            ui.showToast('Round created successfully!');
+          }
+          setTimeout(() => {
+            window.location.href = backUrl;
+          }, 600);
+        } catch (err) {
+          saveBtn.disabled = false;
+          saveBtn.textContent = roundId ? 'Update Round' : 'Save Round';
+          ui.showToast(err.message || 'Error saving round', 'danger');
+        }
+      });
+    }
+  </script>
+</body>
+</html>

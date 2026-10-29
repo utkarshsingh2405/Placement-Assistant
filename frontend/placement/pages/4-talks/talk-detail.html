@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="placement">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Placement Presentation &amp; Live Q&amp;A — Placement Season</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+
+  <style>
+    .video-presentation-frame {
+      background: var(--night);
+      border-radius: var(--radius-card);
+      border: 1px solid var(--border-color);
+      min-height: 360px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #E8EEEC;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      padding: var(--space-8);
+    }
+    .video-presentation-frame::after {
+      content: '';
+      position: absolute;
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(13, 148, 136, 0.2) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .qa-card {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-control);
+      padding: var(--space-4);
+      background: var(--surface);
+      margin-bottom: var(--space-3);
+      transition: all var(--dur-fast) var(--ease-out);
+    }
+    .qa-card:hover {
+      border-color: var(--placement);
+    }
+    .upvote-badge {
+      cursor: pointer;
+      user-select: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-color);
+      background: var(--surface-2);
+      color: var(--ink);
+      font-size: var(--text-xs);
+      font-weight: 600;
+      transition: all var(--dur-fast) var(--ease-out);
+    }
+    .upvote-badge:hover, .upvote-badge.upvoted {
+      background: var(--placement);
+      color: #FFFFFF;
+      border-color: var(--placement);
+    }
+  </style>
+</head>
+<body class="theme-ground">
+  <div class="grain-overlay"></div>
+
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Back Navigation & Breadcrumb -->
+        <div class="d-flex align-center justify-between gap-3 mb-4">
+          <div class="d-flex align-center gap-2">
+            <a href="/placement/pages/4-talks/talk-list.html" class="btn btn-outline btn-sm" style="display: inline-flex; align-items: center; gap: 0.375rem;">
+              <svg class="icon icon-xs"><use href="/icons/sprite.svg#arrow-left"></use></svg>
+              <span>Back to Talks</span>
+            </a>
+            <span class="text-xs text-muted">/ Pre-Placement Presentations / Live Room</span>
+          </div>
+          <div id="live-session-pill">
+            <span class="on-air-badge"><span class="on-air-dot"></span> SESSION IN PROGRESS</span>
+          </div>
+        </div>
+
+        <!-- Talk Header (Double Bezel) -->
+        <div class="bezel-outer mb-6">
+          <div class="bezel-inner p-6">
+            <div class="d-flex flex-wrap justify-between align-start gap-4">
+              <div>
+                <div class="d-flex align-center gap-2 mb-2">
+                  <span class="chip chip-accent uppercase text-xs" id="talk-company-badge">Enterprise Partner</span>
+                  <span class="text-xs text-muted font-mono" id="talk-date-time">Today • 11:00 AM IST</span>
+                </div>
+                <h1 class="text-2xl fw-bold text-ink mb-2" id="talk-title">Loading Pre-Placement Session...</h1>
+                <p class="text-sm text-ink-2 mb-0" id="speaker-line">Presented by Corporate Talent Acquisition Team</p>
+              </div>
+              <div class="d-flex gap-2">
+                <a href="/placement/pages/1-drives/drive-list.html" class="btn btn-primary btn-sm">
+                  <svg class="icon icon-xs"><use href="/icons/sprite.svg#briefcase"></use></svg>
+                  <span>Apply for Drive</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bento Grid: Video Stream + Q&A Panel -->
+        <div class="bento-grid mb-6">
+          <!-- Left Presentation Stream: 7 Cols -->
+          <div class="bento-span-7">
+            <div class="video-presentation-frame mb-4">
+              <div style="font-size: 2.5rem; margin-bottom: var(--space-2); z-index: 1;">🖥️</div>
+              <h2 class="text-xl fw-bold text-white mb-2" style="z-index: 1;">Live Pre-Placement Stream Active</h2>
+              <p class="text-sm text-muted mb-4" style="max-width: 480px; z-index: 1;">
+                Review company requirements, engineering hierarchy, role trajectories, and compensation packages directly with recruiting leads.
+              </p>
+              <div class="d-flex gap-2" style="z-index: 1;">
+                <span class="chip chip-success text-xs">Audio/Video: Connected</span>
+                <span class="chip chip-neutral text-xs">HD 1080p Stream</span>
+              </div>
+            </div>
+
+            <div class="bezel-outer">
+              <div class="bezel-inner p-5">
+                <h3 class="text-base fw-bold text-ink mb-2">About this Presentation</h3>
+                <p class="text-sm text-ink-2 mb-0" id="talk-description-full" style="line-height: 1.6;">
+                  Comprehensive company orientation, technical interview structure breakdown, internship-to-FTE conversion rates, and compensation structure details.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Live Q&A Panel: 5 Cols -->
+          <div class="bento-span-5">
+            <div class="bezel-outer h-100">
+              <div class="bezel-inner p-5 d-flex flex-column h-100">
+                <div class="d-flex justify-between align-center mb-4">
+                  <h3 class="text-base fw-bold text-ink mb-0">Candidate Live Q&amp;A</h3>
+                  <span class="chip chip-muted text-xs font-mono" id="questions-count-badge">0 Questions</span>
+                </div>
+
+                <!-- Ask Question Form -->
+                <form id="ask-question-form" class="mb-4">
+                  <div class="d-flex gap-2">
+                    <input type="text" id="new-question-input" class="input-field" placeholder="Ask the recruiters a question..." required style="flex: 1;">
+                    <button type="submit" class="btn btn-primary btn-sm" style="flex-shrink: 0;">
+                      <span>Submit</span>
+                    </button>
+                  </div>
+                </form>
+
+                <!-- Questions List Stream -->
+                <div id="questions-list-container" style="flex: 1; overflow-y: auto; max-height: 440px; padding-right: 4px;">
+                  <div class="text-center py-6 text-muted">
+                    <div class="spinner-modern mb-2"></div>
+                    <div class="text-xs">Loading live audience questions...</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="sprite-container" style="display: none;"></div>
+
+  <script type="module">
+    import auth from '/js/core/auth.js';
+    import ui from '/js/core/ui.js';
+    import api from '/js/core/api.js';
+
+    fetch('/icons/sprite.svg')
+      .then(r => r.text())
+      .then(svg => {
+        document.getElementById('sprite-container').innerHTML = svg;
+      });
+
+    if (!auth.requireAuth()) {}
+
+    ui.initLayout('talks');
+
+    const params = new URLSearchParams(window.location.search);
+    const talkId = params.get('id') || '1';
+
+    let currentQuestions = [
+      {
+        id: 1,
+        author: 'Aarav Sharma (CS-A)',
+        question: 'Are there separate online assessments for frontend and backend roles, or is there a unified DSA round?',
+        upvotes: 24,
+        upvoted: false
+      },
+      {
+        id: 2,
+        author: 'Ananya Verma (IT)',
+        question: 'What is the standard duration of the summer internship prior to the full-time conversion evaluation?',
+        upvotes: 18,
+        upvoted: true
+      },
+      {
+        id: 3,
+        author: 'Rohan Gupta (ECE)',
+        question: 'Are candidates with electronics background eligible for the Core Infrastructure engineering track?',
+        upvotes: 11,
+        upvoted: false
+      }
+    ];
+
+    async function loadTalkDetails() {
+      try {
+        const talk = await api.get(`/talks/${talkId}`);
+        const data = talk?.data || talk;
+        if (data && data.title) {
+          document.getElementById('talk-title').textContent = data.title;
+          document.getElementById('talk-company-badge').textContent = data.companyName || 'Corporate Partner';
+          document.getElementById('speaker-line').textContent = `Speaker: ${data.speaker || 'Recruitment Leadership'}`;
+          document.getElementById('talk-description-full').textContent = data.description || document.getElementById('talk-description-full').textContent;
+        } else {
+          document.getElementById('talk-title').textContent = 'Google India — Campus Recruitment PPT & Q&A';
+          document.getElementById('talk-company-badge').textContent = 'Google India';
+        }
+      } catch (err) {
+        document.getElementById('talk-title').textContent = 'Google India — Campus Recruitment PPT & Q&A';
+        document.getElementById('talk-company-badge').textContent = 'Google India';
+      }
+      renderQuestions();
+    }
+
+    function renderQuestions() {
+      const container = document.getElementById('questions-list-container');
+      const badge = document.getElementById('questions-count-badge');
+      badge.textContent = `${currentQuestions.length} Questions`;
+
+      if (currentQuestions.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-6 text-muted text-xs">
+            No questions asked yet. Be the first to ask the panelists!
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = currentQuestions.map(q => `
+        <div class="qa-card" data-id="${q.id}">
+          <div class="d-flex justify-between align-center mb-1">
+            <span class="text-xs fw-semibold text-ink">${ui.escapeHtml(q.author)}</span>
+            <button type="button" class="upvote-badge ${q.upvoted ? 'upvoted' : ''}" data-id="${q.id}">
+              <span>▲</span>
+              <span>${q.upvotes}</span>
+            </button>
+          </div>
+          <p class="text-xs text-ink-2 mb-0" style="line-height: 1.5;">${ui.escapeHtml(q.question)}</p>
+        </div>
+      `).join('');
+
+      container.querySelectorAll('.upvote-badge').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const id = Number(btn.getAttribute('data-id'));
+          const item = currentQuestions.find(x => x.id === id);
+          if (item) {
+            item.upvoted = !item.upvoted;
+            item.upvotes += item.upvoted ? 1 : -1;
+            renderQuestions();
+          }
+        });
+      });
+    }
+
+    document.getElementById('ask-question-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = document.getElementById('new-question-input');
+      const val = input.value.trim();
+      if (!val) return;
+
+      const user = auth.getUser();
+      const newQ = {
+        id: Date.now(),
+        author: `${user?.name || user?.email || 'Candidate'} (${user?.rollNo || 'Candidate'})`,
+        question: val,
+        upvotes: 1,
+        upvoted: true
+      };
+
+      currentQuestions.unshift(newQ);
+      input.value = '';
+      renderQuestions();
+      ui.toast('Your question has been posted to the live session queue!', 'success');
+    });
+
+    loadTalkDetails();
+  </script>
+</body>
+</html>

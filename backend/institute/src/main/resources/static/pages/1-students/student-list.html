@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-domain="institute">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Directory — Academic Institute Pillar</title>
+  
+  <!-- Preload Display Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Design System CSS -->
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+
+  <style>
+    .dossier-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: var(--space-4);
+    }
+    .dossier-box {
+      background: var(--surface-2);
+      border: 1px solid var(--surface-3);
+      border-radius: var(--radius-control);
+      padding: var(--space-4);
+    }
+    .dossier-box-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--institute);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-3);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Paper Grain Overlay -->
+  <div class="grain-overlay"></div>
+
+  <div class="app-shell">
+    <!-- Desktop Left App Rail -->
+    <div id="sidebar-container"></div>
+
+    <!-- Main Workspace -->
+    <div class="app-main">
+      <!-- Persistent Topbar with Domain Switcher -->
+      <div id="topbar-container"></div>
+
+      <!-- Content Body -->
+      <main class="app-body">
+        <!-- Page Title & Primary Actions -->
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--space-4); margin-bottom: var(--space-6);">
+          <div>
+            <div style="display: flex; align-items: center; gap: var(--space-2); margin-bottom: var(--space-1);">
+              <span class="chip" style="background: var(--institute-tint); color: var(--institute); font-weight: 600;">
+                REGISTRY LEDGER
+              </span>
+              <span class="text-muted text-xs">Directorate &amp; TPO Official Roster 2026</span>
+            </div>
+            <h1 class="page-title">Student Directory</h1>
+            <p class="text-muted text-sm">Browse verified student credentials, monitor 10th &amp; 12th schooling, track semester performance, and review complete academic dossiers.</p>
+          </div>
+          <div style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
+            <button id="btn-export-csv" class="btn btn-outline" title="Export complete student roster to CSV">
+              <svg width="15" height="15"><use href="#ph-download-simple"/></svg>
+              <span>Export Master CSV</span>
+            </button>
+            <button class="btn btn-primary" id="btn-add-student">
+              <svg width="15" height="15"><use href="#ph-plus"/></svg>
+              <span>Add Student Profile</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Bar (Tonal Double-Bezel) -->
+        <div class="double-bezel" style="margin-bottom: var(--space-6);">
+          <div class="double-bezel-inner" style="padding: var(--space-4);">
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1.2fr; gap: var(--space-3);">
+              <!-- Search Bar -->
+              <div style="position: relative; display: flex; align-items: center;">
+                <svg width="16" height="16" style="position: absolute; left: 12px; color: var(--muted);"><use href="#ph-magnifying-glass"/></svg>
+                <input type="text" id="filter-search" class="input-field" placeholder="Search by name, roll no, USN, branch, section, or batch..." style="padding-left: 36px;">
+              </div>
+
+              <!-- Branch Filter -->
+              <div>
+                <select id="filter-branch" class="select-field">
+                  <option value="">All Branches</option>
+                  <option value="CSE">CSE (Computer Science)</option>
+                  <option value="IT">IT (Information Tech)</option>
+                  <option value="ECE">ECE (Electronics)</option>
+                  <option value="EEE">EEE (Electrical)</option>
+                  <option value="MECH">MECH (Mechanical)</option>
+                  <option value="CIVIL">CIVIL (Civil)</option>
+                </select>
+              </div>
+
+              <!-- Section Filter -->
+              <div>
+                <select id="filter-section" class="select-field">
+                  <option value="">All Sections</option>
+                  <option value="Section A">Section A</option>
+                  <option value="Section B">Section B</option>
+                </select>
+              </div>
+
+              <!-- Year Filter -->
+              <div>
+                <select id="filter-year" class="select-field">
+                  <option value="">All Years</option>
+                  <option value="1">1st Year</option>
+                  <option value="2">2nd Year</option>
+                  <option value="3">3rd Year</option>
+                  <option value="4">4th Year (Graduating)</option>
+                </select>
+              </div>
+
+              <!-- Eligibility Filter -->
+              <div>
+                <select id="filter-eligible" class="select-field">
+                  <option value="">All Placement Status</option>
+                  <option value="true">Eligible Only (Clean Record)</option>
+                  <option value="false">Ineligible (Backlogs/Cutoff)</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Ledger Table -->
+        <div class="double-bezel">
+          <div class="double-bezel-inner" style="padding: 0;">
+            <div id="table-container"></div>
+            <div id="pagination-container" style="padding: var(--space-4); border-top: 1px solid var(--surface-3); display: flex; justify-content: space-between; align-items: center;"></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Complete Student Dossier Modal Dialog for Directors & TPOs -->
+  <dialog class="modal-dialog" id="studentDossierModal" style="max-width: 860px; width: 95vw; padding: 0; border: none; border-radius: var(--radius-card); background: var(--surface);">
+    <div style="background: var(--surface); border: 2px solid var(--surface-3); border-radius: var(--radius-card); overflow: hidden; box-shadow: var(--shadow-dialog);">
+      <!-- Modal Header -->
+      <div style="padding: var(--space-5) var(--space-6); background: var(--surface-2); border-bottom: 1px solid var(--surface-3); display: flex; justify-content: space-between; align-items: flex-start;">
+        <div style="display: flex; align-items: center; gap: var(--space-4);">
+          <div id="m-avatar" style="width: 52px; height: 52px; border-radius: 50%; background: var(--institute); color: #FFF; font-size: 1.4rem; font-weight: 700; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(15,118,110,0.3);">
+            ST
+          </div>
+          <div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <h2 id="m-name" style="font-size: 1.35rem; margin-bottom: 2px; color: var(--ink);">Student Name</h2>
+              <span id="m-eligibility-chip" class="chip chip-success">ELIGIBLE</span>
+            </div>
+            <div style="font-size: var(--text-xs); color: var(--muted); display: flex; gap: 12px; flex-wrap: wrap;">
+              <span>Roll No: <strong class="text-ink font-mono" id="m-rollNo">--</strong></span>
+              <span>&bull;</span>
+              <span id="m-usn">USN: --</span>
+              <span>&bull;</span>
+              <span id="m-branch-sem">CSE &bull; Semester 6</span>
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-sm btn-outline" id="m-close-btn" style="padding: 6px;">
+          <svg width="16" height="16"><use href="#ph-x"/></svg>
+        </button>
+      </div>
+
+      <!-- Modal Content Body -->
+      <div style="padding: var(--space-6); max-height: 75vh; overflow-y: auto;">
+        <!-- Top Stats Row -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--space-3); margin-bottom: var(--space-6);">
+          <div class="info-item" style="text-align: center;">
+            <span class="info-item-label">Verified CGPA</span>
+            <div style="font-size: 1.4rem; font-weight: 700; color: var(--ink);" id="m-cgpa">8.85</div>
+          </div>
+          <div class="info-item" style="text-align: center;">
+            <span class="info-item-label">Active Backlogs</span>
+            <div style="font-size: 1.4rem; font-weight: 700;" id="m-backlogs">0</div>
+          </div>
+          <div class="info-item" style="text-align: center;">
+            <span class="info-item-label">Class Attendance</span>
+            <div style="font-size: 1.4rem; font-weight: 700; color: var(--accent);" id="m-attendance">89.4%</div>
+          </div>
+          <div class="info-item" style="text-align: center;">
+            <span class="info-item-label">CRT Enrolled</span>
+            <div style="font-size: 1.1rem; font-weight: 700; color: var(--institute);" id="m-crt-phase">Phase 3</div>
+          </div>
+        </div>
+
+        <div class="dossier-grid" style="margin-bottom: var(--space-6);">
+          <!-- Schooling -->
+          <div class="dossier-box">
+            <div class="dossier-box-title">
+              <svg width="14" height="14"><use href="#ph-book-open"/></svg>
+              <span>10th &amp; 12th Schooling Records</span>
+            </div>
+            <div style="margin-bottom: var(--space-3); padding-bottom: var(--space-2); border-bottom: 1px dashed var(--surface-3);">
+              <div style="display: flex; justify-content: space-between;">
+                <strong style="font-size: var(--text-xs); color: var(--ink);">10th Standard</strong>
+                <span class="chip chip-success" id="m-tenth-pct" style="font-size: 11px;">94.6%</span>
+              </div>
+              <div style="font-size: 11px; color: var(--muted);" id="m-tenth-school">Delhi Public School &bull; CBSE (2020)</div>
+              <div style="font-size: 10px; color: var(--muted); margin-top: 2px;" id="m-tenth-dist">Math (98), Science (96)</div>
+            </div>
+            <div>
+              <div style="display: flex; justify-content: space-between;">
+                <strong style="font-size: var(--text-xs); color: var(--ink);">12th Standard / Pre-Univ</strong>
+                <span class="chip chip-success" id="m-twelfth-pct" style="font-size: 11px;">92.4%</span>
+              </div>
+              <div style="font-size: 11px; color: var(--muted);" id="m-twelfth-school">National Public School &bull; CBSE (2022)</div>
+              <div style="font-size: 10px; color: var(--muted); margin-top: 2px;" id="m-twelfth-rank">JEE Main: 98.74 Percentile</div>
+            </div>
+          </div>
+
+          <!-- Personal Dossier -->
+          <div class="dossier-box">
+            <div class="dossier-box-title">
+              <svg width="14" height="14"><use href="#ph-identification-card"/></svg>
+              <span>Personal &amp; Contact Details</span>
+            </div>
+            <div style="font-size: var(--text-xs); display: flex; flex-direction: column; gap: 4px;">
+              <div>DOB &amp; Gender: <strong class="text-ink" id="m-dob">14-Aug-2003 (Male)</strong></div>
+              <div>Blood Group: <strong class="text-ink" id="m-blood">O+ Positive</strong></div>
+              <div>Email: <strong class="text-ink" id="m-email">student@college.edu</strong></div>
+              <div>Phone: <strong class="text-ink" id="m-phone">+91 98765 43210</strong></div>
+              <div>Guardian: <strong class="text-ink" id="m-guardian">Rajesh Sharma</strong></div>
+              <div style="color: var(--muted); font-size: 11px; margin-top: 2px;" id="m-address">Sarjapur Road, Bengaluru</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Semester Performance & CRT Section -->
+        <div class="dossier-grid" style="margin-bottom: var(--space-6);">
+          <div class="dossier-box">
+            <div class="dossier-box-title">
+              <svg width="14" height="14"><use href="#ph-chart-line"/></svg>
+              <span>Semester SGPA History</span>
+            </div>
+            <div id="m-semesters-list" style="display: flex; flex-direction: column; gap: 6px;"></div>
+          </div>
+
+          <div class="dossier-box">
+            <div class="dossier-box-title">
+              <svg width="14" height="14"><use href="#ph-graduation-cap"/></svg>
+              <span>Campus Recruitment Training (CRT) Details</span>
+            </div>
+            <div style="font-size: var(--text-xs); display: flex; flex-direction: column; gap: 6px;">
+              <div>Assigned Batch: <strong class="text-ink" id="m-crt-batch-no">CRT-2026-CSE-B1</strong></div>
+              <div>Current Track: <strong class="text-ink" id="m-crt-track">CSE/IT Core Algorithm Track</strong></div>
+              <div>Room &amp; Venue: <strong class="text-ink" id="m-crt-room">Seminar Hall 2 (Turing Wing)</strong></div>
+              <div>Assigned Trainer: <strong class="text-ink" id="m-crt-trainer">Er. Vikramaditya Sen</strong></div>
+              <div>Timetable Slot: <strong class="text-ink" id="m-crt-timing">Mon, Wed, Fri (03:30 - 05:30 PM)</strong></div>
+              <div>Attendance Compliance: <span class="chip chip-success" id="m-crt-attn">92.5% Attendance</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer -->
+      <div style="padding: var(--space-4) var(--space-6); background: var(--surface-2); border-top: 1px solid var(--surface-3); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-2);">
+        <div style="display: flex; gap: var(--space-2);">
+          <button id="m-btn-transcript" class="btn btn-sm btn-outline">
+            <svg width="14" height="14"><use href="#ph-download-simple"/></svg>
+            <span>Download Marksheet</span>
+          </button>
+          <a href="/institute/pages/6-resume-ats/ats-report.html" class="btn btn-sm btn-outline">
+            <svg width="14" height="14"><use href="#ph-file-text"/></svg>
+            <span>ATS Diagnostic</span>
+          </a>
+        </div>
+        <div style="display: flex; gap: var(--space-2);">
+          <a href="#" id="m-profile-link" class="btn btn-sm btn-primary">
+            <span>Open ID Pass</span>
+            <svg width="14" height="14"><use href="#ph-arrow-right"/></svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Quick Add Student Native Dialog -->
+  <dialog class="modal-dialog" id="quickAddStudentModal">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+      <h3 style="margin-bottom: 0;">Add Student Profile</h3>
+      <button class="btn btn-sm btn-outline" id="close-modal-btn" style="padding: 6px;">
+        <svg width="16" height="16"><use href="#ph-x"/></svg>
+      </button>
+    </div>
+
+    <form id="quick-student-form">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-3);">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Full Name *</label>
+          <input type="text" name="name" class="input-field" required placeholder="Aarav Sharma">
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Roll Number *</label>
+          <input type="text" name="rollNo" class="input-field roll-no" required placeholder="22CS099" style="text-transform: uppercase;">
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1.4fr 1fr; gap: var(--space-3); margin-bottom: var(--space-3);">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Email Address *</label>
+          <input type="email" name="email" class="input-field" required placeholder="student@college.edu">
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Phone</label>
+          <input type="tel" name="phone" class="input-field" placeholder="9876543210">
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-4);">
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Branch *</label>
+          <select name="branch" class="select-field" required>
+            <option value="CSE" selected>CSE</option>
+            <option value="IT">IT</option>
+            <option value="ECE">ECE</option>
+            <option value="EEE">EEE</option>
+            <option value="MECH">MECH</option>
+            <option value="CIVIL">CIVIL</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">Year *</label>
+          <select name="year" class="select-field" required>
+            <option value="1">1st Year</option>
+            <option value="2">2nd Year</option>
+            <option value="3">3rd Year</option>
+            <option value="4" selected>4th Year</option>
+          </select>
+        </div>
+        <div class="form-group" style="margin-bottom: 0;">
+          <label class="form-label">CGPA *</label>
+          <input type="number" name="cgpa" class="input-field" required min="0" max="10" step="0.01" value="8.00">
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: var(--space-2);">
+        <button type="button" class="btn btn-outline" id="btn-cancel-add">Cancel</button>
+        <button type="submit" class="btn btn-primary">Create Profile</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- SVG Sprite Inclusion -->
+  <div id="sprite-container" style="display: none;"></div>
+
+  <!-- Scripts -->
+  <script type="module">
+    import auth from '/js/core/auth.js';
+    import api from '/js/core/api.js';
+    import ui from '/js/core/ui.js';
+    import StudentDossierService from '/js/student-dossier.js';
+
+    fetch('/icons/sprite.svg')
+      .then(r => r.text())
+      .then(svg => {
+        document.getElementById('sprite-container').innerHTML = svg;
+      });
+
+    if (!auth.requireAuth()) {
+      // redirected
+    }
+
+    if (auth.getRole() === 'STUDENT') {
+      window.location.replace('/institute/pages/1-students/student-profile.html');
+      throw new Error('Access denied: Student Directory is restricted to authorized faculty and placement staff.');
+    }
+
+    ui.initLayout('students');
+
+    const tableContainer = document.getElementById('table-container');
+    const paginationContainer = document.getElementById('pagination-container');
+    const searchInput = document.getElementById('filter-search');
+    const branchSelect = document.getElementById('filter-branch');
+    const sectionSelect = document.getElementById('filter-section');
+    const yearSelect = document.getElementById('filter-year');
+    const eligibleSelect = document.getElementById('filter-eligible');
+
+    let allStudents = [];
+    let currentPage = 0;
+    const pageSize = 12;
+
+    async function loadStudents() {
+      tableContainer.innerHTML = ui.renderLoader('Loading verified student records from master registry...');
+      try {
+        const res = await api.get('/api/students?size=200');
+        allStudents = res?.content || (Array.isArray(res) ? res : (res?.data?.content || []));
+        if (!allStudents || allStudents.length === 0) {
+          allStudents = StudentDossierService.getAllDossiers();
+        }
+        renderTable();
+      } catch (err) {
+        allStudents = StudentDossierService.getAllDossiers();
+        renderTable();
+      }
+    }
+
+    function getFilteredStudents() {
+      const q = searchInput.value.trim().toLowerCase();
+      const b = branchSelect.value;
+      const sVal = sectionSelect.value;
+      const y = yearSelect.value;
+      const e = eligibleSelect.value;
+
+      return allStudents.filter(s => {
+        const dossier = StudentDossierService.getDossier(s);
+        
+        const matchesQ = !q || 
+          (s.name && s.name.toLowerCase().includes(q)) ||
+          (s.rollNo && s.rollNo.toLowerCase().includes(q)) ||
+          (s.email && s.email.toLowerCase().includes(q)) ||
+          (s.branch && s.branch.toLowerCase().includes(q)) ||
+          (dossier.universityRegNo && dossier.universityRegNo.toLowerCase().includes(q)) ||
+          (dossier.section && dossier.section.toLowerCase().includes(q)) ||
+          (dossier.batch && dossier.batch.toLowerCase().includes(q));
+
+        const matchesB = !b || s.branch === b;
+        const matchesSection = !sVal || dossier.section === sVal;
+        const matchesY = !y || String(s.year) === y;
+        const matchesE = !e || String(s.placementEligible) === e;
+
+        return matchesQ && matchesB && matchesSection && matchesY && matchesE;
+      });
+    }
+
+    function renderTable() {
+      const filtered = getFilteredStudents();
+      const total = filtered.length;
+      const start = currentPage * pageSize;
+      const pageSlice = filtered.slice(start, start + pageSize);
+
+      if (total === 0) {
+        tableContainer.innerHTML = ui.renderEmpty('No student records found', 'Try adjusting your search criteria or add a new student profile.');
+        paginationContainer.innerHTML = '';
+        return;
+      }
+
+      tableContainer.innerHTML = `
+        <table class="ledger-table">
+          <thead>
+            <tr>
+              <th>Student Candidate</th>
+              <th>Roll Number</th>
+              <th>Branch &amp; Section</th>
+              <th>10th / 12th %</th>
+              <th>CGPA</th>
+              <th>Backlogs</th>
+              <th>CRT Status</th>
+              <th>Placement Cleared</th>
+              <th style="text-align: right;">Dossier &amp; Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${pageSlice.map(s => {
+              const d = StudentDossierService.getDossier(s);
+              const initial = (s.name || 'U')[0].toUpperCase();
+              return `
+                <tr>
+                  <td>
+                    <div style="display: flex; align-items: center; gap: var(--space-3);">
+                      <div style="width: 32px; height: 32px; border-radius: 50%; background: var(--surface-2); color: var(--accent); display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: var(--text-xs);">
+                        ${initial}
+                      </div>
+                      <div>
+                        <div style="font-weight: 600; color: var(--ink);">${ui.escapeHtml(s.name)}</div>
+                        <div style="font-size: 11px; color: var(--muted);">${d.universityRegNo}</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td class="roll-no" style="font-weight: 600;">${ui.escapeHtml(s.rollNo)}</td>
+                  <td>
+                    <div style="font-weight: 600;">${s.branch}</div>
+                    <div style="font-size: 11px; color: var(--muted);">${d.section}</div>
+                  </td>
+                  <td>
+                    <div style="font-size: var(--text-xs); font-variant-numeric: tabular-nums;">
+                      <span>10th: <strong>${d.tenth.percentage}%</strong></span>
+                    </div>
+                    <div style="font-size: 11px; color: var(--muted); font-variant-numeric: tabular-nums;">
+                      <span>12th: <strong>${d.twelfth.percentage}%</strong></span>
+                    </div>
+                  </td>
+                  <td style="font-variant-numeric: tabular-nums; font-weight: 700; color: var(--ink);">${Number(s.cgpa).toFixed(2)}</td>
+                  <td>
+                    <span class="chip ${s.backlogs > 0 ? 'chip-danger' : 'chip-neutral'}">
+                      ${s.backlogs > 0 ? `${s.backlogs} Backlog` : '0 Active'}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="chip chip-neutral" style="font-size: 11px;">
+                      ${d.crt.phase.split(':')[0]}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="chip ${s.placementEligible ? 'chip-success' : 'chip-danger'}">
+                      <svg width="12" height="12"><use href="#${s.placementEligible ? 'ph-check' : 'ph-x'}"/></svg>
+                      <span>${s.placementEligible ? 'Eligible' : 'Ineligible'}</span>
+                    </span>
+                  </td>
+                  <td style="text-align: right;">
+                    <div style="display: flex; justify-content: flex-end; gap: var(--space-2);">
+                      <button class="btn btn-sm btn-primary view-dossier-btn" data-email="${s.email}" title="Open Complete Student Dossier">
+                        <svg width="14" height="14"><use href="#ph-identification-card"/></svg>
+                        <span>Dossier</span>
+                      </button>
+                      <a href="/institute/pages/1-students/student-profile.html?id=${s.id}" class="btn btn-sm btn-outline" title="Open Official ID Card Pass">
+                        <svg width="14" height="14"><use href="#ph-id-card"/></svg>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              `;
+            }).join('')}
+          </tbody>
+        </table>
+      `;
+
+      // Pagination readout
+      paginationContainer.innerHTML = `
+        <div style="font-size: var(--text-xs); color: var(--muted); font-variant-numeric: tabular-nums;">
+          Showing ${start + 1} &ndash; ${Math.min(start + pageSize, total)} of ${total} students
+        </div>
+        <div style="display: flex; gap: var(--space-2);">
+          <button class="btn btn-sm btn-outline" id="prev-page" ${currentPage === 0 ? 'disabled' : ''}>Previous</button>
+          <button class="btn btn-sm btn-outline" id="next-page" ${start + pageSize >= total ? 'disabled' : ''}>Next</button>
+        </div>
+      `;
+
+      document.getElementById('prev-page')?.addEventListener('click', () => {
+        if (currentPage > 0) {
+          currentPage--;
+          renderTable();
+        }
+      });
+
+      document.getElementById('next-page')?.addEventListener('click', () => {
+        if ((currentPage + 1) * pageSize < total) {
+          currentPage++;
+          renderTable();
+        }
+      });
+
+      // Bind Dossier Modal clicks
+      document.querySelectorAll('.view-dossier-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const email = btn.dataset.email;
+          const match = allStudents.find(s => s.email === email);
+          openDossierModal(match || email);
+        });
+      });
+    }
+
+    // Modal Controller
+    const dossierModal = document.getElementById('studentDossierModal');
+    let currentModalDossier = null;
+
+    function openDossierModal(student) {
+      const d = StudentDossierService.getDossier(student);
+      currentModalDossier = d;
+
+      document.getElementById('m-avatar').textContent = (d.name[0] || 'U').toUpperCase();
+      document.getElementById('m-name').textContent = d.name;
+      document.getElementById('m-rollNo').textContent = d.rollNo;
+      document.getElementById('m-usn').textContent = d.universityRegNo;
+      document.getElementById('m-branch-sem').textContent = `${d.department} • Semester ${d.currentSemester} (${d.section})`;
+      
+      const elChip = document.getElementById('m-eligibility-chip');
+      elChip.className = `chip ${d.placementEligible ? 'chip-success' : 'chip-danger'}`;
+      elChip.textContent = d.placementEligible ? 'PLACEMENT CLEARED' : 'INELIGIBLE (BACKLOGS)';
+
+      document.getElementById('m-cgpa').textContent = Number(d.cgpa).toFixed(2);
+      document.getElementById('m-backlogs').textContent = d.backlogs > 0 ? `${d.backlogs} Pending` : '0 Active';
+      document.getElementById('m-backlogs').style.color = d.backlogs > 0 ? 'var(--danger)' : 'var(--success)';
+      document.getElementById('m-attendance').textContent = `${d.classAttendance}%`;
+      document.getElementById('m-crt-phase').textContent = d.crt.phase.split(':')[0];
+
+      // Schooling
+      document.getElementById('m-tenth-pct').textContent = `${d.tenth.percentage}%`;
+      document.getElementById('m-tenth-school').textContent = `${d.tenth.school} • ${d.tenth.board} (${d.tenth.passingYear})`;
+      document.getElementById('m-tenth-dist').textContent = d.tenth.distinction;
+
+      document.getElementById('m-twelfth-pct').textContent = `${d.twelfth.percentage}%`;
+      document.getElementById('m-twelfth-school').textContent = `${d.twelfth.school} • ${d.twelfth.board} (${d.twelfth.passingYear})`;
+      document.getElementById('m-twelfth-rank').textContent = `${d.twelfth.stream} • ${d.twelfth.entranceRank}`;
+
+      // Personal
+      document.getElementById('m-dob').textContent = `${d.personal.dob} (${d.personal.gender})`;
+      document.getElementById('m-blood').textContent = d.personal.bloodGroup;
+      document.getElementById('m-email').textContent = d.email;
+      document.getElementById('m-phone').textContent = d.phone;
+      document.getElementById('m-guardian').textContent = `${d.personal.fatherName} (${d.personal.emergencyContact})`;
+      document.getElementById('m-address').textContent = d.personal.permanentAddress;
+
+      // CRT
+      document.getElementById('m-crt-batch-no').textContent = d.crt.batchNo;
+      document.getElementById('m-crt-track').textContent = d.crt.track;
+      document.getElementById('m-crt-room').textContent = d.crt.roomNo;
+      document.getElementById('m-crt-trainer').textContent = d.crt.trainer;
+      document.getElementById('m-crt-timing').textContent = d.crt.timetableSlot;
+      document.getElementById('m-crt-attn').textContent = `${d.crt.attendanceRate}% Attendance Rate`;
+
+      // Semesters list
+      document.getElementById('m-semesters-list').innerHTML = d.semesters.map(s => `
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 8px; background: var(--surface); border-radius: 4px; font-size: 11px;">
+          <span>Semester ${s.sem} (${s.credits} Credits)</span>
+          <span style="font-weight: 700; font-variant-numeric: tabular-nums;">${Number(s.sgpa).toFixed(2)} SGPA</span>
+          <span class="chip chip-success" style="font-size: 9px; padding: 1px 5px;">${s.status}</span>
+        </div>
+      `).join('');
+
+      document.getElementById('m-profile-link').href = `/institute/pages/1-students/student-profile.html?id=${student.id || 1}`;
+
+      dossierModal.showModal();
+    }
+
+    document.getElementById('m-close-btn').addEventListener('click', () => dossierModal.close());
+    document.getElementById('m-btn-transcript').addEventListener('click', () => {
+      if (currentModalDossier) {
+        StudentDossierService.downloadTranscript(currentModalDossier);
+      }
+    });
+
+    // Master CSV Export
+    document.getElementById('btn-export-csv').addEventListener('click', () => {
+      const headers = [
+        "Candidate Name", "Roll Number", "University USN", "Branch", "Year", "Section", "Batch",
+        "10th Percentage", "10th Board", "10th School",
+        "12th Percentage", "12th Board", "12th School",
+        "Cumulative CGPA", "Active Backlogs", "Class Attendance Rate", "Placement Status",
+        "CRT Phase Enrolled", "CRT Batch", "Email Address", "Phone Number", "Blood Group"
+      ];
+
+      const rows = allStudents.map(s => {
+        const d = StudentDossierService.getDossier(s);
+        return [
+          d.name, d.rollNo, d.universityRegNo, d.branch, s.year, d.section, d.batch,
+          d.tenth.percentage, d.tenth.board, d.tenth.school,
+          d.twelfth.percentage, d.twelfth.board, d.twelfth.school,
+          d.cgpa, d.backlogs, `${d.classAttendance}%`, d.placementEligible ? "ELIGIBLE" : "INELIGIBLE",
+          d.crt.phase, d.crt.batchNo, d.email, d.phone, d.personal.bloodGroup
+        ];
+      });
+
+      StudentDossierService.downloadCsv("Institute_Master_Student_Directory_2026.csv", headers, rows);
+    });
+
+    // Filters event listeners
+    let filterTimer;
+    searchInput.addEventListener('input', () => {
+      clearTimeout(filterTimer);
+      filterTimer = setTimeout(() => {
+        currentPage = 0;
+        renderTable();
+      }, 200);
+    });
+
+    branchSelect.addEventListener('change', () => { currentPage = 0; renderTable(); });
+    sectionSelect.addEventListener('change', () => { currentPage = 0; renderTable(); });
+    yearSelect.addEventListener('change', () => { currentPage = 0; renderTable(); });
+    eligibleSelect.addEventListener('change', () => { currentPage = 0; renderTable(); });
+
+    // Quick Add Modal
+    const addModal = document.getElementById('quickAddStudentModal');
+    document.getElementById('btn-add-student').addEventListener('click', () => addModal.showModal());
+    document.getElementById('close-modal-btn').addEventListener('click', () => addModal.close());
+    document.getElementById('btn-cancel-add').addEventListener('click', () => addModal.close());
+
+    document.getElementById('quick-student-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const formData = new FormData(form);
+      const payload = {
+        name: formData.get('name'),
+        rollNo: formData.get('rollNo'),
+        email: formData.get('email'),
+        phone: formData.get('phone'),
+        branch: formData.get('branch'),
+        year: parseInt(formData.get('year'), 10),
+        cgpa: parseFloat(formData.get('cgpa')),
+        backlogs: 0,
+        skills: ["Core Engineering", "Problem Solving"]
+      };
+
+      try {
+        await api.post('/api/students', payload);
+        ui.toast(`Student "${payload.name}" enrolled into Master Registry!`, 'success');
+        addModal.close();
+        form.reset();
+        loadStudents();
+      } catch (err) {
+        ui.toast(`Failed to register student: ${err.message}`, 'danger');
+      }
+    });
+
+    loadStudents();
+  </script>
+</body>
+</html>

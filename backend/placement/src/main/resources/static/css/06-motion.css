@@ -1,0 +1,157 @@
+/**
+ * Placement Assistance Platform Design System
+ * 06-motion.css: Physical Motion Choreography, View Transitions, and Reduced-Motion Fallbacks
+ */
+
+/* ==========================================================================
+   VIEW TRANSITIONS API (DOOR TRANSITION BETWEEN DOMAINS)
+   ========================================================================== */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: fadeOut var(--dur-normal) var(--ease-out) forwards;
+}
+
+::view-transition-new(root) {
+  animation: fadeIn var(--dur-normal) var(--ease-out) forwards;
+}
+
+/* Retain Topbar & Domain Switcher Position during Page Transitions */
+.app-topbar,
+.domain-switcher-container {
+  view-transition-name: persistent-topbar;
+}
+
+::view-transition-old(persistent-topbar),
+::view-transition-new(persistent-topbar) {
+  animation: none;
+}
+
+/* ==========================================================================
+   KEYFRAME ENTRANCES & TRANSITIONS (GPU SAFE: TRANSFORM & OPACITY ONLY)
+   ========================================================================== */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes headingReveal {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes chitDropIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-32px) scale(0.96);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(4px) scale(1.01);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* ==========================================================================
+   STAGGERED REVEAL UTILITY CLASSES
+   ========================================================================== */
+.reveal-init {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity var(--dur-slow) var(--ease-out),
+              transform var(--dur-slow) var(--ease-out);
+}
+
+.reveal-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.heading-reveal {
+  opacity: 1;
+  transform: translateY(0);
+  filter: none;
+  transition: opacity var(--dur-deliberate) var(--ease-out),
+              transform var(--dur-deliberate) var(--ease-out);
+}
+
+.heading-reveal.reveal-active {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0);
+}
+
+/* ==========================================================================
+   INTERACTION FEEDBACK
+   ========================================================================== */
+.tactile-hover {
+  transition: transform var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.tactile-hover:hover {
+  transform: translateY(-3px);
+}
+
+.tactile-hover:active {
+  transform: scale(0.98);
+}
+
+/* ==========================================================================
+   REDUCED MOTION OVERRIDES (WCAG AAA STANDARD)
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal-init,
+  .heading-reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+  }
+
+  .flap-cell {
+    transition: none !important;
+  }
+}

@@ -1,0 +1,302 @@
+/* ==============================================================================
+   THEME DESIGN SYSTEM - Placement Assist (Professional Enterprise Aesthetics)
+   Fonts: Plus Jakarta Sans (Headings) + Inter (Body/Data)
+   Dual-Theme (Light / Dark) + 3 Domain Accents (Institute, Placement, Portal)
+   ============================================================================== */
+
+@import url('00-tokens.css');
+@import url('01-reset.css');
+@import url('02-typography.css');
+@import url('03-layout.css');
+@import url('04-components.css');
+@import url('05-patterns.css');
+@import url('06-motion.css');
+@import url('07-domains.css');
+@import url('domain-switcher.css');
+
+:root {
+  color-scheme: light;
+
+  /* Typography Tokens - Stylized Display Headings Everywhere */
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-heading: var(--font-display, 'Instrument Serif', Georgia, serif);
+  --font-body: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Domain Palette - Institute (Heraldic Burgundy) */
+  --institute-accent: var(--institute, #8C2433);
+  --institute-hover: var(--institute-hover, #721C29);
+  --institute-active: #5B1621;
+  --institute-soft: var(--institute-tint, #F4E3E5);
+  --institute-soft-border: rgba(140, 36, 51, 0.25);
+  --institute-gradient: linear-gradient(135deg, #8C2433 0%, #B3394D 100%);
+
+  /* Domain Palette - Placement (Deep Pine Emerald) */
+  --placement-accent: var(--placement, #0E6B5C);
+  --placement-hover: var(--placement-hover, #0A5448);
+  --placement-active: #073D34;
+  --placement-soft: var(--placement-tint, #DDF1EC);
+  --placement-soft-border: rgba(14, 107, 92, 0.25);
+  --placement-gradient: linear-gradient(135deg, #0E6B5C 0%, #169B85 100%);
+
+  /* Domain Palette - Portal (Polished Brass Gold) */
+  --portal-accent: var(--brass, #B8892B);
+  --portal-hover: var(--brass-light, #E0B552);
+  --portal-active: #9E7422;
+  --portal-soft: var(--brass-tint, #FAF3E3);
+  --portal-soft-border: rgba(184, 137, 43, 0.25);
+  --portal-gradient: linear-gradient(135deg, #B8892B 0%, #D4A33B 100%);
+
+  /* Accent Gold / Star Awards */
+  --gold: #D97706;
+  --gold-hover: #B45309;
+  --gold-soft: #FEF3C7;
+  --gold-text: #78350F;
+
+  /* Geometry & Radius Tokens */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-input: 8px;
+  --radius-card: 14px;
+  --radius-pill: 9999px;
+
+  /* Transitions */
+  --transition-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ==============================================================================
+   LIGHT THEME (Default)
+   Clean, modern high-contrast corporate dashboard aesthetic
+   ============================================================================== */
+:root,
+html[data-theme="light"] {
+  --bg: #F8FAFC;
+  --bg-subtle: #F1F5F9;
+  --surface: #FFFFFF;
+  --surface-2: #F1F5F9;
+  --surface-elevated: #FFFFFF;
+  --border: #E2E8F0;
+  --border-subtle: #F1F5F9;
+  --border-focus: #94A3B8;
+
+  --text: #0F172A;
+  --text-muted: #334155;
+  --text-dim: #64748B;
+
+  --ground: var(--bg);
+  --ink: var(--text);
+  --ink-2: var(--text-muted);
+  --muted: var(--text-dim);
+  --surface-3: var(--border);
+
+  --success: #16A34A;
+  --success-soft: #F0FDF4;
+  --success-border: #BBF7D0;
+  --warning: #D97706;
+  --warning-soft: #FFFBEB;
+  --warning-border: #FDE68A;
+  --danger: #DC2626;
+  --danger-soft: #FEF2F2;
+  --danger-border: #FECACA;
+  --info: #0284C7;
+  --info-soft: #F0F9FF;
+  --info-border: #BAE6FD;
+
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+
+  --topbar-bg: rgba(255, 255, 255, 0.98);
+  --topbar-border: rgba(226, 232, 240, 0.9);
+
+  /* Fallback Accent */
+  --accent: var(--portal-accent);
+  --accent-hover: var(--portal-hover);
+  --accent-soft: var(--portal-soft);
+  --accent-border: var(--portal-soft-border);
+  --accent-contrast: #FFFFFF;
+  --accent-gradient: var(--portal-gradient);
+}
+
+/* ==============================================================================
+   DARK THEME
+   Deep obsidian nocturnal ground, elevated tonal dark cards
+   ============================================================================== */
+html[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0C1214;
+  --bg-subtle: #121C1F;
+  --surface: #121C1F;
+  --surface-2: #182529;
+  --surface-elevated: #1F3036;
+  --border: rgba(255, 255, 255, 0.09);
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --border-focus: rgba(255, 255, 255, 0.22);
+
+  --text: #E8EEEC;
+  --text-muted: #B9C6C9;
+  --text-dim: #8FA0A5;
+
+  --ground: var(--bg);
+  --ink: var(--text);
+  --ink-2: var(--text-muted);
+  --muted: var(--text-dim);
+  --surface-3: var(--border);
+
+  --institute-accent: var(--institute, #E0808C);
+  --institute-hover: var(--institute-hover, #F09CA6);
+  --institute-soft: rgba(224, 128, 140, 0.16);
+  --institute-soft-border: rgba(224, 128, 140, 0.35);
+
+  --placement-accent: var(--placement, #4FD1B8);
+  --placement-hover: var(--placement-hover, #6EE7CF);
+  --placement-soft: rgba(79, 209, 184, 0.16);
+  --placement-soft-border: rgba(79, 209, 184, 0.35);
+
+  --portal-accent: var(--brass, #E0B552);
+  --portal-hover: var(--brass-light, #F2CA68);
+  --portal-soft: rgba(224, 181, 82, 0.16);
+  --portal-soft-border: rgba(224, 181, 82, 0.35);
+
+  --gold: #FBBF24;
+  --gold-hover: #F59E0B;
+  --gold-soft: rgba(251, 191, 36, 0.16);
+  --gold-text: #FDE68A;
+
+  --success: #34D399;
+  --success-soft: rgba(52, 211, 153, 0.15);
+  --success-border: rgba(52, 211, 153, 0.3);
+  --warning: #FBBF24;
+  --warning-soft: rgba(251, 191, 36, 0.15);
+  --warning-border: rgba(251, 191, 36, 0.3);
+  --danger: #F87171;
+  --danger-soft: rgba(248, 113, 113, 0.15);
+  --danger-border: rgba(248, 113, 113, 0.3);
+  --info: #38BDF8;
+  --info-soft: rgba(56, 189, 248, 0.15);
+  --info-border: rgba(56, 189, 248, 0.3);
+
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 2px 4px -1px rgba(0, 0, 0, 0.5), 0 1px 2px -1px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 10px 20px -3px rgba(0, 0, 0, 0.6), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.7), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+
+  --topbar-bg: rgba(17, 24, 39, 0.88);
+  --topbar-border: rgba(255, 255, 255, 0.08);
+
+  /* Fallback Accent (Dark) */
+  --accent: var(--portal-accent);
+  --accent-hover: var(--portal-hover);
+  --accent-soft: var(--portal-soft);
+  --accent-border: var(--portal-soft-border);
+  --accent-contrast: #090D16;
+  --accent-gradient: var(--portal-gradient);
+}
+
+/* ==============================================================================
+   DOMAIN ACCENT OVERRIDES
+   ============================================================================== */
+html[data-domain="institute"] {
+  --accent: var(--institute-accent);
+  --accent-hover: var(--institute-hover);
+  --accent-soft: var(--institute-soft);
+  --accent-border: var(--institute-soft-border);
+  --accent-contrast: #FFFFFF;
+  --accent-gradient: var(--institute-gradient);
+}
+
+html[data-domain="placement"] {
+  --accent: var(--placement-accent);
+  --accent-hover: var(--placement-hover);
+  --accent-soft: var(--placement-soft);
+  --accent-border: var(--placement-soft-border);
+  --accent-contrast: #FFFFFF;
+  --accent-gradient: var(--placement-gradient);
+}
+
+html[data-domain="portal"] {
+  --accent: var(--portal-accent);
+  --accent-hover: var(--portal-hover);
+  --accent-soft: var(--portal-soft);
+  --accent-border: var(--portal-soft-border);
+  --accent-contrast: #FFFFFF;
+  --accent-gradient: var(--portal-gradient);
+}
+
+/* ==============================================================================
+   GLOBAL RESET & TYPOGRAPHY
+   ============================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.55;
+  font-size: 15px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html[data-theme="dark"] body {
+  background-color: var(--bg);
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6,
+.app-heading,
+.card-title,
+.modal-title,
+.section-title,
+.page-title,
+.hero-title,
+.font-display {
+  font-family: var(--font-heading, 'Instrument Serif', Georgia, serif) !important;
+  font-weight: 400 !important;
+  color: var(--text);
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+}
+
+p, span, label, input, button, select, textarea {
+  font-family: var(--font-body);
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--accent-hover);
+}
+
+/* Modern Spinner Element */
+.spinner-modern {
+  width: 36px;
+  height: 36px;
+  border: 3px solid var(--border);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin-modern 0.75s cubic-bezier(0.6, 0.2, 0.4, 0.8) infinite;
+  display: inline-block;
+}
+
+@keyframes spin-modern {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

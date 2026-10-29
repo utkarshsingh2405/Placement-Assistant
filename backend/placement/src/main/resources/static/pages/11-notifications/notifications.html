@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="placement">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Notifications &amp; Activity Broadcasts — Placement Season</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+
+  <style>
+    .notif-card {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-card);
+      padding: var(--space-4) var(--space-5);
+      background: var(--surface);
+      margin-bottom: var(--space-3);
+      transition: transform var(--dur-fast) var(--ease-out), border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out);
+      display: flex;
+      align-items: flex-start;
+      gap: var(--space-4);
+      position: relative;
+    }
+    .notif-card:hover {
+      border-color: var(--placement);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-sm);
+    }
+    .notif-card.unread {
+      background: var(--placement-tint);
+      border-color: rgba(13, 148, 136, 0.35);
+    }
+    .notif-card.unread::before {
+      content: '';
+      position: absolute;
+      top: 14px;
+      left: 10px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--placement);
+    }
+    .notif-icon-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--surface-2);
+      color: var(--placement);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .notif-card.unread .notif-icon-circle {
+      background: var(--placement);
+      color: #FFFFFF;
+    }
+    .category-filter-btn {
+      padding: 6px 14px;
+      font-size: var(--text-xs);
+      font-weight: 600;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--border-color);
+      background: var(--surface);
+      color: var(--ink-2);
+      cursor: pointer;
+      transition: all var(--dur-fast) var(--ease-out);
+    }
+    .category-filter-btn:hover {
+      border-color: var(--placement);
+      color: var(--ink);
+    }
+    .category-filter-btn.active {
+      background: var(--placement);
+      color: #FFFFFF;
+      border-color: var(--placement);
+    }
+  </style>
+</head>
+<body class="theme-ground">
+  <div class="grain-overlay"></div>
+
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Back Navigation & Breadcrumb -->
+        <div class="d-flex align-center justify-between gap-3 mb-4">
+          <div class="d-flex align-center gap-2">
+            <button type="button" class="btn btn-outline btn-sm" onclick="window.history.back()" style="display: inline-flex; align-items: center; gap: 0.375rem;">
+              <svg class="icon icon-xs"><use href="/icons/sprite.svg#arrow-left"></use></svg>
+              <span>Back</span>
+            </button>
+            <span class="text-xs text-muted">/ Placement Hub / Notifications</span>
+          </div>
+          <div class="d-flex align-center gap-2">
+            <button class="btn btn-outline btn-sm" id="enable-push-btn">
+              <svg class="icon icon-xs"><use href="/icons/sprite.svg#bell"></use></svg>
+              <span>Enable Browser Push</span>
+            </button>
+            <button class="btn btn-outline btn-sm" id="mark-all-read-btn">
+              <svg class="icon icon-xs"><use href="/icons/sprite.svg#check"></use></svg>
+              <span>Mark All as Read</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Page Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <div class="d-flex align-center gap-2 mb-2">
+              <span class="chip chip-accent uppercase tracking-wider">Broadcast Dispatch</span>
+              <span class="text-xs text-muted">Real-time Push &amp; In-App Notifications</span>
+            </div>
+            <h1 class="page-title">Notifications &amp; Activity Stream</h1>
+            <p class="page-subtitle">Drive registrations, interview call letters, stage advancements, and urgent campus recruiting announcements.</p>
+          </div>
+        </header>
+
+        <!-- Category Filter Bar (Double Bezel) -->
+        <div class="bezel-outer mb-6">
+          <div class="bezel-inner p-3 d-flex flex-wrap justify-between align-center gap-3">
+            <div class="d-flex flex-wrap gap-2" id="filter-tabs">
+              <button class="category-filter-btn active" data-category="">All Alerts</button>
+              <button class="category-filter-btn" data-category="SHORTLIST">Shortlists</button>
+              <button class="category-filter-btn" data-category="INTERVIEW">Interviews</button>
+              <button class="category-filter-btn" data-category="RESULT">Results &amp; Offers</button>
+              <button class="category-filter-btn" data-category="CIRCULAR">Circulars</button>
+            </div>
+            <div class="text-xs text-muted font-mono" id="notif-count-label">Loading...</div>
+          </div>
+        </div>
+
+        <!-- Notifications Feed Container -->
+        <div id="notifications-list-container">
+          <div class="text-center py-8 text-muted">
+            <div class="spinner-modern mb-3"></div>
+            <div>Retrieving real-time notifications...</div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="sprite-container" style="display: none;"></div>
+
+  <script type="module">
+    import auth from '/js/core/auth.js';
+    import ui from '/js/core/ui.js';
+    import api from '/js/core/api.js';
+
+    fetch('/icons/sprite.svg')
+      .then(r => r.text())
+      .then(svg => {
+        document.getElementById('sprite-container').innerHTML = svg;
+      });
+
+    if (!auth.requireAuth()) {}
+
+    ui.initLayout('notifications');
+
+    let allNotifs = [];
+    let activeCategory = '';
+
+    // Seed mock fallback notifications if backend list is empty
+    const fallbackNotifs = [
+      {
+        id: 101,
+        category: 'SHORTLIST',
+        title: 'Google Technical Round 1 Shortlist',
+        message: 'Congratulations! You have been shortlisted for the Google SWE interview round. Reporting time: 09:30 AM via Google Meet Room A-04.',
+        createdAt: new Date(Date.now() - 1000 * 60 * 15).toISOString(),
+        read: false
+      },
+      {
+        id: 102,
+        category: 'INTERVIEW',
+        title: 'Microsoft Core Engineering Panel Slot',
+        message: 'Your system design interview with Microsoft Redmond team has been scheduled for tomorrow at 02:00 PM.',
+        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(),
+        read: false
+      },
+      {
+        id: 103,
+        category: 'CIRCULAR',
+        title: 'Amazon AWS OA2 Link Dispatched',
+        message: 'Online assessment console is open until 11:59 PM tonight for registered candidates. Check your primary college email.',
+        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(),
+        read: true
+      },
+      {
+        id: 104,
+        category: 'RESULT',
+        title: 'Goldman Sachs Final Selects Announced',
+        message: '14 candidates have been offered full-time roles as Summer Analysts. Offer seals have been minted into dossiers.',
+        createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(),
+        read: true
+      }
+    ];
+
+    async function loadNotifications() {
+      const container = document.getElementById('notifications-list-container');
+      try {
+        const res = await api.get('/live-updates/recent');
+        const liveItems = Array.isArray(res) ? res : (res?.data || []);
+        
+        if (liveItems.length > 0) {
+          allNotifs = liveItems.map(item => ({
+            id: item.id,
+            category: item.category || 'CIRCULAR',
+            title: item.title || 'Recruitment Update',
+            message: item.message || item.content || '',
+            createdAt: item.createdAt || new Date().toISOString(),
+            read: false
+          }));
+        } else {
+          // Check local storage for read state
+          const stored = localStorage.getItem('pa_notifications_cache');
+          if (stored) {
+            allNotifs = JSON.parse(stored);
+          } else {
+            allNotifs = fallbackNotifs;
+            localStorage.setItem('pa_notifications_cache', JSON.stringify(allNotifs));
+          }
+        }
+        renderNotifications();
+      } catch (err) {
+        allNotifs = fallbackNotifs;
+        renderNotifications();
+      }
+    }
+
+    function renderNotifications() {
+      const container = document.getElementById('notifications-list-container');
+      const countLabel = document.getElementById('notif-count-label');
+
+      const filtered = allNotifs.filter(n => {
+        if (!activeCategory) return true;
+        return (n.category || '').toUpperCase() === activeCategory;
+      });
+
+      const unreadCount = allNotifs.filter(n => !n.read).length;
+      countLabel.textContent = `${unreadCount} unread • ${filtered.length} visible`;
+
+      if (filtered.length === 0) {
+        container.innerHTML = ui.renderEmpty('No notifications in this category', 'You are completely caught up with recruitment announcements.');
+        return;
+      }
+
+      container.innerHTML = filtered.map(n => {
+        const isUnread = !n.read;
+        const time = n.createdAt ? new Date(n.createdAt).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) : 'Recently';
+
+        let iconHref = 'ph-bell';
+        if (n.category === 'SHORTLIST') iconHref = 'ph-check-circle';
+        else if (n.category === 'INTERVIEW') iconHref = 'ph-clock';
+        else if (n.category === 'RESULT') iconHref = 'ph-seal-check';
+        else if (n.category === 'CIRCULAR') iconHref = 'ph-broadcast';
+
+        return `
+          <div class="notif-card ${isUnread ? 'unread' : ''}" data-id="${n.id}">
+            <div class="notif-icon-circle">
+              <svg width="20" height="20"><use href="#${iconHref}"/></svg>
+            </div>
+            <div style="flex: 1; min-width: 0;">
+              <div class="d-flex justify-between align-center mb-1">
+                <span class="chip chip-${isUnread ? 'accent' : 'muted'} uppercase text-xs">${ui.escapeHtml(n.category || 'NOTICE')}</span>
+                <span class="text-xs text-muted font-mono">${ui.escapeHtml(time)}</span>
+              </div>
+              <h3 class="text-sm fw-bold text-ink mb-1">${ui.escapeHtml(n.title)}</h3>
+              <p class="text-xs text-ink-2 mb-0" style="line-height: 1.5;">${ui.escapeHtml(n.message)}</p>
+            </div>
+            ${isUnread ? `
+              <button class="btn btn-sm btn-outline btn-mark-read" data-id="${n.id}" title="Mark as Read" style="padding: 4px 8px; flex-shrink: 0;">
+                <svg width="14" height="14"><use href="#ph-check"/></svg>
+                <span class="text-xs">Read</span>
+              </button>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+
+      container.querySelectorAll('.btn-mark-read').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const id = Number(btn.getAttribute('data-id'));
+          const item = allNotifs.find(x => x.id === id);
+          if (item) {
+            item.read = true;
+            localStorage.setItem('pa_notifications_cache', JSON.stringify(allNotifs));
+            renderNotifications();
+            ui.toast('Marked notification as read', 'info');
+          }
+        });
+      });
+    }
+
+    // Category Tabs Filtering
+    document.querySelectorAll('.category-filter-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.category-filter-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeCategory = btn.getAttribute('data-category');
+        renderNotifications();
+      });
+    });
+
+    // Mark All Read
+    document.getElementById('mark-all-read-btn')?.addEventListener('click', () => {
+      allNotifs.forEach(n => n.read = true);
+      localStorage.setItem('pa_notifications_cache', JSON.stringify(allNotifs));
+      renderNotifications();
+      ui.toast('All notifications marked as read', 'success');
+    });
+
+    // Browser Push Request
+    document.getElementById('enable-push-btn')?.addEventListener('click', async () => {
+      if (!('Notification' in window)) {
+        ui.toast('Web push notifications not supported in this browser.', 'warning');
+        return;
+      }
+      const perm = await Notification.requestPermission();
+      if (perm === 'granted') {
+        ui.toast('Browser alerts granted! You will receive live recruitment updates.', 'success');
+      } else {
+        ui.toast('Notification permission was declined.', 'warning');
+      }
+    });
+
+    loadNotifications();
+  </script>
+</body>
+</html>

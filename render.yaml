@@ -8,22 +8,26 @@ services:
   - type: web
     name: placement-assist-institute
     runtime: docker
-    dockerContext: ./placement-assist
-    dockerfilePath: ./placement-assist/institute/Dockerfile
+    dockerContext: ./backend
+    dockerfilePath: ./backend/institute/Dockerfile
     plan: free
     region: oregon
     healthCheckPath: /institute/actuator/health
     envVars:
-      - key: SERVER_PORT
+      - key: PORT
         value: 8081
-      - key: PORTAL_PORT
+      - key: SERVER_PORT
         value: 8081
       - key: CONTEXT_PATH
         value: /institute
       - key: SPRING_PROFILES_ACTIVE
         value: dev
-      - key: DB_PATH
-        value: /app/data/institute.db
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:mysql://${MYSQL_HOST:-localhost}:${MYSQL_PORT:-3306}/placement_institute?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - key: MYSQL_USER
+        value: root
+      - key: MYSQL_PASSWORD
+        value: root
       - key: UPLOAD_DIR
         value: /app/uploads/resumes
       - key: INSTITUTE_API_KEY
@@ -39,20 +43,26 @@ services:
   - type: web
     name: placement-assist-placement
     runtime: docker
-    dockerContext: ./placement-assist
-    dockerfilePath: ./placement-assist/placement/Dockerfile
+    dockerContext: ./backend
+    dockerfilePath: ./backend/placement/Dockerfile
     plan: free
     region: oregon
     healthCheckPath: /placement/actuator/health
     envVars:
+      - key: PORT
+        value: 8082
       - key: PLACEMENT_PORT
         value: 8082
       - key: CONTEXT_PATH
         value: /placement
       - key: SPRING_PROFILES_ACTIVE
         value: dev
-      - key: DB_PATH
-        value: /app/data/placement.db
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:mysql://${MYSQL_HOST:-localhost}:${MYSQL_PORT:-3306}/placement_placement?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - key: MYSQL_USER
+        value: root
+      - key: MYSQL_PASSWORD
+        value: root
       - key: UPLOAD_DIR
         value: /app/data/placement/uploads
       - key: INSTITUTE_URL
@@ -72,18 +82,24 @@ services:
   - type: web
     name: placement-assist-portal
     runtime: docker
-    dockerContext: ./placement-assist
-    dockerfilePath: ./placement-assist/portal/Dockerfile
+    dockerContext: ./backend
+    dockerfilePath: ./backend/portal/Dockerfile
     plan: free
     region: oregon
     healthCheckPath: /actuator/health
     envVars:
+      - key: PORT
+        value: 8080
       - key: PORTAL_PORT
         value: 8080
       - key: SPRING_PROFILES_ACTIVE
         value: dev
-      - key: DB_PATH
-        value: /app/data/portal.db
+      - key: SPRING_DATASOURCE_URL
+        value: jdbc:mysql://${MYSQL_HOST:-localhost}:${MYSQL_PORT:-3306}/placement_portal?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - key: MYSQL_USER
+        value: root
+      - key: MYSQL_PASSWORD
+        value: root
       - key: INSTITUTE_URL
         value: http://placement-assist-institute:8081
       - key: PLACEMENT_URL

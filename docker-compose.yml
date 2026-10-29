@@ -1,0 +1,124 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: placement-assist-mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: placement_portal
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./backend/init-mysql.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  portal:
+    build:
+      context: ./backend
+      dockerfile: portal/Dockerfile
+    container_name: placement-assist-portal
+    ports:
+      - "${PORTAL_PORT:-8080}:8080"
+    environment:
+      - PORT=8080
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/placement_portal?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - JWT_SECRET=${JWT_SECRET:-404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+      - INSTITUTE_URL=http://institute:8081
+      - PLACEMENT_URL=http://placement:8082
+      - INSTITUTE_API_KEY=${INSTITUTE_API_KEY:-inst-sec-key-7f9a12b4e8c345d6}
+      - MAIL_MODE=${MAIL_MODE:-log}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 25s
+    depends_on:
+      mysql:
+        condition: service_healthy
+      institute:
+        condition: service_started
+      placement:
+        condition: service_started
+    restart: unless-stopped
+
+  institute:
+    build:
+      context: ./backend
+      dockerfile: institute/Dockerfile
+    container_name: placement-assist-institute
+    ports:
+      - "${INSTITUTE_PORT:-8081}:8081"
+    environment:
+      - PORT=8081
+      - CONTEXT_PATH=/institute
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/placement_institute?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - UPLOAD_DIR=/app/data/institute/uploads/resumes
+      - JWT_SECRET=${JWT_SECRET:-404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+      - INSTITUTE_API_KEY=${INSTITUTE_API_KEY:-inst-sec-key-7f9a12b4e8c345d6}
+      - PORTAL_SSO_ENABLED=${PORTAL_SSO_ENABLED:-true}
+      - PORTAL_URL=http://portal:8080
+    volumes:
+      - ./backend/data/institute/uploads:/app/data/institute/uploads
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/institute/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 25s
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+  placement:
+    build:
+      context: ./backend
+      dockerfile: placement/Dockerfile
+    container_name: placement-assist-placement
+    ports:
+      - "${PLACEMENT_PORT:-8082}:8082"
+    environment:
+      - PORT=8082
+      - CONTEXT_PATH=/placement
+      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/placement_placement?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=root
+      - UPLOAD_DIR=/app/data/placement/uploads
+      - INSTITUTE_URL=http://institute:8081
+      - INSTITUTE_API_KEY=${INSTITUTE_API_KEY:-inst-sec-key-7f9a12b4e8c345d6}
+      - JWT_SECRET=${JWT_SECRET:-404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+      - PORTAL_SSO_ENABLED=${PORTAL_SSO_ENABLED:-true}
+      - PORTAL_URL=http://portal:8080
+      - MAIL_MODE=${MAIL_MODE:-log}
+    volumes:
+      - ./backend/data/placement/uploads:/app/data/placement/uploads
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8082/placement/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 25s
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  mysql-data:

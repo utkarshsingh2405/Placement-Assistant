@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="institute">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drive Rounds Pipeline — Academic Institute Pillar</title>
+  
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+
+  <style>
+    .round-num-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--institute);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+  </style>
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Breadcrumb & Back -->
+        <div class="d-flex align-center justify-between gap-3 mb-4">
+          <div class="d-flex align-center gap-2">
+            <a href="/institute/pages/2-company-drives/drive-list.html" class="btn btn-outline btn-sm" style="display: inline-flex; align-items: center; gap: 0.375rem;">
+              <svg class="icon icon-xs"><use href="/icons/sprite.svg#arrow-left"></use></svg>
+              <span>Back to Master Drives</span>
+            </a>
+            <span class="text-xs text-muted">/ Institute / Rounds Pipeline</span>
+          </div>
+          <div class="d-flex gap-2">
+            <a href="#" class="btn btn-primary btn-sm d-flex align-center gap-1" id="btn-add-round">
+              <svg class="icon icon-xs"><use href="/icons/sprite.svg#plus"></use></svg>
+              <span>Add Next Round</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Page Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <div class="d-flex align-center gap-2 mb-2">
+              <span class="chip chip-accent uppercase tracking-wider">Recruitment Stages</span>
+              <span class="text-xs text-muted">Sequential Elimination & Shortlisting</span>
+            </div>
+            <h1 class="page-title">Recruitment Rounds Pipeline</h1>
+            <p class="page-subtitle">Track round sequence, venues, qualifying cutoffs, and candidate progression across hiring diets.</p>
+          </div>
+        </header>
+
+        <!-- Drive Selector Bar (Double Bezel) -->
+        <div class="bezel-outer mb-6">
+          <div class="bezel-inner p-4">
+            <div class="form-grid g-3 align-center">
+              <div class="form-col-4">
+                <label for="drive-selector" class="form-label fw-semibold">Select Active Campus Drive</label>
+              </div>
+              <div class="form-col-8">
+                <select id="drive-selector" class="form-select">
+                  <option value="">Choose a drive to view rounds...</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Selected Drive Header Info -->
+        <div id="drive-info-banner" class="bezel-outer mb-6 d-none">
+          <div class="bezel-inner p-5">
+            <div class="d-flex flex-wrap justify-between align-center gap-3">
+              <div>
+                <h3 class="poster-title text-xl mb-1 text-ink" id="banner-drive-title">Drive Title</h3>
+                <div class="text-muted text-xs d-flex align-center gap-2 flex-wrap">
+                  <span>Company: <strong class="text-ink" id="banner-company-name">--</strong></span>
+                  <span>&bull;</span>
+                  <span>Roles: <span class="text-ink fw-semibold" id="banner-roles">--</span></span>
+                </div>
+              </div>
+              <div>
+                <span id="banner-status-badge" class="chip chip-success uppercase font-mono">UPCOMING</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Rounds Container -->
+        <div id="rounds-loader"></div>
+        <div id="rounds-list" class="d-flex flex-column gap-4"></div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import api from '/js/api.js';
+    import ui from '/js/ui.js';
+
+    if (!auth.requireAuth()) {
+      // redirected
+    } else {
+      ui.initLayout('rounds');
+
+      const urlParams = new URLSearchParams(window.location.search);
+      let driveId = urlParams.get('driveId');
+
+      if (!auth.isTpo()) {
+        document.getElementById('btn-add-round')?.classList.add('d-none');
+      }
+
+      async function init() {
+        await loadAllDrives();
+        if (driveId) {
+          document.getElementById('drive-selector').value = driveId;
+          await loadDriveRounds(driveId);
+        }
+      }
+
+      async function loadAllDrives() {
+        try {
+          const res = await api.get('/api/drives', { size: 100 });
+          const drives = res.content || res.data?.content || res || [];
+          const select = document.getElementById('drive-selector');
+          select.innerHTML = '<option value="">Choose a drive to view rounds...</option>';
+
+          drives.forEach(d => {
+            const opt = document.createElement('option');
+            opt.value = d.id;
+            opt.textContent = `${d.title || d.roles} (${d.companyName || d.company?.name || 'Company'}) - ${d.status || 'ACTIVE'}`;
+            select.appendChild(opt);
+          });
+
+          if (!driveId && drives.length > 0) {
+            driveId = drives[0].id;
+            select.value = driveId;
+          }
+        } catch (err) {
+          ui.showToast('Could not load drives: ' + err.message, 'danger');
+        }
+      }
+
+      document.getElementById('drive-selector').addEventListener('change', (e) => {
+        const val = e.target.value;
+        if (val) {
+          driveId = val;
+          const newUrl = `${window.location.pathname}?driveId=${driveId}`;
+          window.history.pushState({}, '', newUrl);
+          loadDriveRounds(driveId);
+        }
+      });
+
+      async function loadDriveRounds(dId) {
+        const loader = document.getElementById('rounds-loader');
+        const container = document.getElementById('rounds-list');
+        const banner = document.getElementById('drive-info-banner');
+
+        loader.innerHTML = ui.renderLoader('Loading rounds pipeline...');
+        container.innerHTML = '';
+
+        document.getElementById('btn-add-round').href = `/institute/pages/5-drive-rounds/round-form.html?driveId=${dId}`;
+
+        try {
+          const drive = await api.get(`/api/drives/${dId}`);
+          banner.classList.remove('d-none');
+          document.getElementById('banner-drive-title').textContent = drive.title || drive.roles;
+          document.getElementById('banner-company-name').textContent = drive.companyName || drive.company?.name || 'Company';
+          document.getElementById('banner-roles').textContent = drive.roles || drive.title || 'Multiple';
+          const badge = document.getElementById('banner-status-badge');
+          badge.className = `chip chip-${drive.status === 'COMPLETED' ? 'neutral' : 'success'} uppercase font-mono`;
+          badge.textContent = drive.status || 'ACTIVE';
+
+          const rounds = await api.get(`/api/rounds/drive/${dId}`);
+          loader.innerHTML = '';
+
+          if (!rounds || rounds.length === 0) {
+            container.innerHTML = ui.renderEmpty('No rounds configured for this drive', 'Click "Add Next Round" above to create Round 1 (e.g. Online Assessment, Technical Interview).');
+            return;
+          }
+
+          rounds.sort((a, b) => (a.sequence || 0) - (b.sequence || 0));
+
+          rounds.forEach(r => {
+            const card = document.createElement('div');
+            card.className = 'bezel-outer';
+            card.innerHTML = `
+              <div class="bezel-inner p-5 d-flex flex-column flex-md-row justify-between align-center gap-4">
+                <div class="d-flex align-start gap-3">
+                  <div class="round-num-badge">${r.sequence}</div>
+                  <div>
+                    <div class="d-flex align-center gap-2 mb-1 flex-wrap">
+                      <h3 class="text-base fw-bold mb-0 text-ink">${ui.escapeHtml(r.roundName)}</h3>
+                      <span class="chip chip-accent text-xs">${ui.escapeHtml(r.roundType)}</span>
+                      <span class="chip chip-${r.status === 'COMPLETED' ? 'neutral' : 'success'} text-xs font-mono">${r.status || 'PENDING'}</span>
+                    </div>
+                    <div class="text-muted text-xs d-flex align-center gap-2 flex-wrap">
+                      <span>Date: <strong class="text-ink">${r.roundDate || 'TBD'}</strong></span>
+                      ${r.platformVenue ? `<span>&bull;</span> <span>Venue: <span class="text-ink">${ui.escapeHtml(r.platformVenue)}</span></span>` : ''}
+                      ${r.cutoffScore ? `<span>&bull;</span> <span>Cutoff: <span class="text-institute fw-bold">${r.cutoffScore}</span></span>` : ''}
+                    </div>
+                    ${r.instructions ? `<div class="text-xs text-muted mt-2 p-2 rounded surface-tone" style="background: var(--surface-2);">${ui.escapeHtml(r.instructions)}</div>` : ''}
+                  </div>
+                </div>
+                <div class="d-flex align-center gap-2 flex-shrink-0">
+                  <a href="/institute/pages/5-drive-rounds/round-results.html?roundId=${r.id}" class="btn btn-sm btn-primary d-flex align-center gap-1">
+                    <svg class="icon icon-xs"><use href="/icons/sprite.svg#users"></use></svg>
+                    <span>Candidates &amp; Results &rarr;</span>
+                  </a>
+                  ${auth.isTpo() ? `
+                    <a href="/institute/pages/5-drive-rounds/round-form.html?driveId=${dId}&id=${r.id}" class="btn btn-sm btn-outline" title="Edit Round">
+                      <svg class="icon icon-xs"><use href="/icons/sprite.svg#pencil-simple"></use></svg>
+                      <span>Edit</span>
+                    </a>
+                  ` : ''}
+                </div>
+              </div>
+            `;
+            container.appendChild(card);
+          });
+
+        } catch (err) {
+          loader.innerHTML = ui.renderError(err.message);
+        }
+      }
+
+      init();
+    }
+  </script>
+</body>
+</html>

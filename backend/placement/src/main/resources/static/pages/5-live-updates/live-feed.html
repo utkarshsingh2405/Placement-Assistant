@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="placement">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Notice Board & Broadcasts — Placement Season</title>
+  
+  <!-- Design System CSS -->
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+
+  <style>
+    .notice-board {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+    @media (min-width: 768px) {
+      .notice-board {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    @media (min-width: 1100px) {
+      .notice-board {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+    .notice-chit {
+      background-color: var(--surface);
+      border: 1px solid var(--surface-3);
+      border-radius: var(--radius-inner);
+      padding: var(--space-6);
+      position: relative;
+      box-shadow: 0 4px 16px rgba(16, 24, 32, 0.05);
+      transition: transform var(--dur-fast) var(--ease-out),
+                  box-shadow var(--dur-fast) var(--ease-out);
+    }
+    @media (min-width: 1024px) {
+      .notice-chit:nth-child(odd) { transform: rotate(-0.6deg); }
+      .notice-chit:nth-child(even) { transform: rotate(0.6deg); }
+      .notice-chit:hover { transform: rotate(0) translateY(-4px); box-shadow: 0 12px 32px rgba(16, 24, 32, 0.1); }
+    }
+    .chit-pin {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--brass);
+      position: absolute;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+    }
+    .chit-urgent {
+      border-top: 4px solid var(--danger);
+      background: linear-gradient(180deg, rgba(229, 72, 77, 0.03) 0%, var(--surface) 20%);
+    }
+  </style>
+</head>
+<body class="theme-ground">
+  <!-- Paper Grain Overlay -->
+  <div class="grain-overlay"></div>
+
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Page Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <div class="d-flex align-center gap-2 mb-2">
+              <a href="/placement/dashboard.html" class="nav-crumb">
+                <svg width="14" height="14"><use href="#ph-arrow-left"/></svg>
+                <span>Placement Hub</span>
+              </a>
+              <span class="crumb-separator">/</span>
+              <span class="crumb-current">Notice Board</span>
+            </div>
+            <div class="d-flex align-center gap-2 mb-1">
+              <span class="on-air-badge">
+                <span class="on-air-dot"></span>
+                <span>Live Broadcast Terminal</span>
+              </span>
+              <span class="text-xs text-muted font-mono">SSE RECRUITMENT STREAM</span>
+            </div>
+            <h1 class="page-title">Live Candidate Notice Board</h1>
+            <p class="page-subtitle">Real-time drive announcements, stage qualifications, venue changes, and urgent candidate directives.</p>
+          </div>
+          <div class="d-flex align-center gap-2">
+            <button onclick="window.history.back()" class="btn btn-outline btn-sm">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#arrow-left"></use></svg>
+              <span>Back</span>
+            </button>
+            <div id="tpo-broadcast-action">
+              <!-- Injected for TPO / Director -->
+            </div>
+          </div>
+        </header>
+
+        <!-- Feed Filter Bar (Tonal Double Bezel) -->
+        <div class="double-bezel mb-6">
+          <div class="double-bezel-inner" style="padding: var(--space-4) var(--space-6);">
+            <div class="d-flex flex-wrap align-center justify-between gap-3">
+              <div class="d-flex flex-wrap gap-2" role="group" aria-label="Notice Filters">
+                <button type="button" class="btn btn-primary btn-sm active-filter-btn" data-category="">All Bulletins</button>
+                <button type="button" class="btn btn-outline btn-sm filter-btn" data-category="URGENT">Urgent Alerts</button>
+                <button type="button" class="btn btn-outline btn-sm filter-btn" data-category="STAGE_UPDATE">Stage Updates</button>
+                <button type="button" class="btn btn-outline btn-sm filter-btn" data-category="SHORTLIST">Shortlists</button>
+                <button type="button" class="btn btn-outline btn-sm filter-btn" data-category="NOTICE">General Circulars</button>
+              </div>
+              <div class="text-xs text-muted d-flex align-center gap-2" id="stream-status-indicator">
+                <span class="status-dot status-live-pulse" style="background: var(--placement);"></span>
+                <span class="font-mono">Listening for live circulars...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pinned Notice Board Grid -->
+        <div class="notice-board mb-8" id="broadcasts-container">
+          <div style="grid-column: 1 / -1;" class="text-center py-12 text-muted">
+            <div class="spinner-modern mb-3"></div>
+            <div>Synchronizing live notice board...</div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Publish Broadcast Modal (Native Accessible Dialog) -->
+  <dialog id="createBroadcastModal" class="custom-dialog">
+    <div class="dialog-card">
+      <div class="dialog-header">
+        <div class="d-flex align-center gap-2">
+          <div class="avatar avatar-sm avatar-placement">
+            <svg class="icon icon-xs"><use href="/icons/sprite.svg#broadcast"></use></svg>
+          </div>
+          <div>
+            <h3 class="font-display font-semibold mb-0" style="font-size: 1.15rem;">Pin Announcement Chit</h3>
+            <p class="text-xs text-muted mb-0">Broadcast live message to all registered candidates and cell operators</p>
+          </div>
+        </div>
+        <button type="button" class="btn-icon" id="btn-close-broadcast-modal" aria-label="Close dialog">
+          <svg class="icon icon-sm"><use href="/icons/sprite.svg#x"></use></svg>
+        </button>
+      </div>
+
+      <form id="create-broadcast-form" novalidate>
+        <div class="dialog-body">
+          <div class="form-grid">
+            <div class="form-col-6 mb-3">
+              <label class="form-label" for="modal-category">Bulletin Category <span style="color: var(--danger);">*</span></label>
+              <select name="category" id="modal-category" class="form-select" required>
+                <option value="NOTICE">General Notice</option>
+                <option value="STAGE_UPDATE">Stage Update</option>
+                <option value="URGENT" selected>Urgent Callout</option>
+                <option value="SHORTLIST">Shortlist Announcement</option>
+              </select>
+            </div>
+
+            <div class="form-col-6 mb-3">
+              <label class="form-label" for="modal-priority">Priority Level</label>
+              <select name="priority" id="modal-priority" class="form-select">
+                <option value="NORMAL">Normal Priority</option>
+                <option value="HIGH" selected>High Priority (Brass Strip)</option>
+                <option value="CRITICAL">Critical (Immediate Alert)</option>
+              </select>
+            </div>
+
+            <div class="form-col-12 mb-3">
+              <label class="form-label" for="modal-company">Associated Company / Recruiter (Optional)</label>
+              <input type="text" name="companyName" id="modal-company" class="input" placeholder="e.g. Google India / Microsoft">
+            </div>
+
+            <div class="form-col-12">
+              <label class="form-label" for="modal-message">Announcement Text <span style="color: var(--danger);">*</span></label>
+              <textarea name="message" id="modal-message" class="input" rows="4" required placeholder="Type the live broadcast chit for candidates..."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="dialog-footer">
+          <button type="button" class="btn btn-outline btn-sm" id="btn-cancel-broadcast-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">
+            <svg class="icon icon-sm"><use href="/icons/sprite.svg#broadcast"></use></svg>
+            <span>Pin Announcement</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <script type="module">
+    import auth from '/js/core/auth.js';
+    import ui from '/js/core/ui.js';
+    import api from '/js/core/api.js';
+    import sseClient from '/js/sse.js';
+
+    if (!auth.requireAuth()) {}
+
+    const user = auth.getUser();
+    ui.initLayout('live-feed');
+
+    const canBroadcast = auth.canManage() || user?.role === 'COMPANY';
+    if (canBroadcast) {
+      document.getElementById('tpo-broadcast-action').innerHTML = `
+        <button type="button" class="btn btn-primary btn-sm" id="btn-open-create-broadcast">
+          <svg class="icon icon-sm"><use href="/icons/sprite.svg#plus"></use></svg>
+          <span>Pin Announcement</span>
+        </button>
+      `;
+
+      document.getElementById('btn-open-create-broadcast')?.addEventListener('click', () => {
+        const dialog = document.getElementById('createBroadcastModal');
+        dialog.showModal();
+      });
+    }
+
+    let allBroadcasts = [];
+    let currentFilter = '';
+
+    const sampleBroadcasts = [
+      {
+        id: 1,
+        category: 'URGENT',
+        priority: 'CRITICAL',
+        companyName: 'Google India',
+        message: 'Google Technical Round 1 Shortlist dispatched. Shortlisted candidates report immediately to Main Audi Hall A-04 with Hall Ticket and student photo ID.',
+        createdAt: new Date(Date.now() - 1000 * 60 * 10).toISOString()
+      },
+      {
+        id: 2,
+        category: 'STAGE_UPDATE',
+        priority: 'HIGH',
+        companyName: 'Microsoft Corporation',
+        message: 'Coding Assessment Round 1 concluded. Top 42 candidates qualified for Technical System Design interviews tomorrow morning at 09:00 AM.',
+        createdAt: new Date(Date.now() - 1000 * 60 * 35).toISOString()
+      },
+      {
+        id: 3,
+        category: 'NOTICE',
+        priority: 'NORMAL',
+        companyName: 'Amazon AWS',
+        message: 'Online Assessment (OA2) link dispatched to all registered CSE & ECE students. Assessment window closes at 11:59 PM IST tonight.',
+        createdAt: new Date(Date.now() - 1000 * 60 * 90).toISOString()
+      },
+      {
+        id: 4,
+        category: 'SHORTLIST',
+        priority: 'NORMAL',
+        companyName: 'Oracle Cloud',
+        message: 'Pre-Placement Talk (PPT) scheduled for today at 03:30 PM in Seminar Hall 2. Attendance is mandatory for all registered candidates.',
+        createdAt: new Date(Date.now() - 1000 * 60 * 150).toISOString()
+      },
+      {
+        id: 5,
+        category: 'URGENT',
+        priority: 'HIGH',
+        companyName: 'Goldman Sachs',
+        message: 'Quantitative Analyst Aptitude test venue moved from Lab 3 to New Computing Center (NCC-2). Reporting time remains 02:00 PM.',
+        createdAt: new Date(Date.now() - 1000 * 60 * 210).toISOString()
+      },
+      {
+        id: 6,
+        category: 'SHORTLIST',
+        priority: 'NORMAL',
+        companyName: 'Deloitte USI',
+        message: 'Case Interview shortlists released. Selected candidates check their registered email for Zoom breakout room assignments.',
+        createdAt: new Date(Date.now() - 1000 * 60 * 320).toISOString()
+      }
+    ];
+
+    async function loadRecentBroadcasts() {
+      try {
+        const res = await api.get('/live-updates/recent');
+        const list = Array.isArray(res) ? res : (res?.data || []);
+        allBroadcasts = (list && list.length > 0) ? list : sampleBroadcasts;
+        renderBroadcasts();
+      } catch {
+        allBroadcasts = sampleBroadcasts;
+        renderBroadcasts();
+      }
+    }
+
+    function renderBroadcasts() {
+      const container = document.getElementById('broadcasts-container');
+      const filtered = currentFilter
+        ? allBroadcasts.filter(b => b.category === currentFilter)
+        : allBroadcasts;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div style="grid-column: 1 / -1;">
+            ${ui.renderEmpty('No announcements found', 'Live notice chits in this category will appear here in real-time as companies advance candidate rounds.')}
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(b => {
+        const isUrgent = b.category === 'URGENT' || b.priority === 'CRITICAL' || b.priority === 'HIGH';
+        const time = b.createdAt ? new Date(b.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Live';
+        const categoryChip = isUrgent ? 'chip-danger' : (b.category === 'SHORTLIST' ? 'chip-accent' : 'chip-neutral');
+
+        return `
+          <article class="notice-chit ${isUrgent ? 'chit-urgent' : ''}">
+            <div class="chit-pin"></div>
+            
+            <div class="d-flex justify-between align-center mb-3">
+              <div class="d-flex align-center gap-2">
+                <span class="chip ${categoryChip} text-xs font-semibold">
+                  ${ui.escapeHtml(b.category || 'NOTICE')}
+                </span>
+                ${b.companyName ? `<strong class="text-xs text-ink font-semibold">${ui.escapeHtml(b.companyName)}</strong>` : ''}
+              </div>
+              <span class="text-xs text-muted tabular-nums font-mono">${ui.escapeHtml(time)}</span>
+            </div>
+
+            <div class="text-sm text-ink mb-1" style="line-height: 1.55;">
+              ${ui.escapeHtml(b.message || b.title)}
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    // Connect SSE Client if available
+    if (sseClient && sseClient.connect) {
+      try {
+        sseClient.connect();
+        sseClient.on('DRIVE_ANNOUNCEMENT', (data) => {
+          allBroadcasts.unshift(data);
+          renderBroadcasts();
+          ui.showToast(`New Broadcast: ${data.message || data.title}`);
+        });
+        sseClient.on('STAGE_UPDATE', (data) => {
+          allBroadcasts.unshift(data);
+          renderBroadcasts();
+          ui.showToast(`Stage Update: ${data.message || data.title}`);
+        });
+      } catch (err) {
+        console.warn('SSE fallback mode', err);
+      }
+    }
+
+    // Filter button handling
+    document.querySelectorAll('[data-category]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        currentFilter = btn.getAttribute('data-category');
+        document.querySelectorAll('[data-category]').forEach(b => {
+          b.className = 'btn btn-outline btn-sm filter-btn';
+        });
+        btn.className = 'btn btn-primary btn-sm active-filter-btn';
+        renderBroadcasts();
+      });
+    });
+
+    const modalEl = document.getElementById('createBroadcastModal');
+    document.getElementById('btn-close-broadcast-modal')?.addEventListener('click', () => modalEl.close());
+    document.getElementById('btn-cancel-broadcast-modal')?.addEventListener('click', () => modalEl.close());
+
+    // Form submit
+    document.getElementById('create-broadcast-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        category: form.category.value,
+        priority: form.priority.value,
+        companyName: form.companyName.value.trim() || null,
+        message: form.message.value.trim()
+      };
+
+      try {
+        await api.post('/live-updates', data);
+        ui.showToast('Announcement pinned to Notice Board!', 'success');
+        modalEl.close();
+        form.reset();
+        allBroadcasts.unshift({
+          ...data,
+          createdAt: new Date().toISOString()
+        });
+        renderBroadcasts();
+      } catch (err) {
+        ui.showToast(err.message || 'Failed to broadcast update', 'danger');
+      }
+    });
+
+    loadRecentBroadcasts();
+  </script>
+</body>
+</html>

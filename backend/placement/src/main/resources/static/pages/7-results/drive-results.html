@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="placement">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Results &amp; Selected Lists - Placement Season</title>
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Dual Mode Authority Banner -->
+        <div id="authority-mode-bar" class="mb-4"></div>
+
+        <!-- Page Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <div class="d-flex align-center gap-2 mb-2">
+              <span class="chip chip-accent uppercase tracking-wider">Official Ledger</span>
+              <span class="text-xs text-muted" id="mode-text-indicator">Verified Selection Record</span>
+            </div>
+            <h1 class="page-title">Recruitment Results &amp; Offer Slates</h1>
+            <p class="page-subtitle">Statutory institutional roster of qualified, advanced, waitlisted, and released candidates per round.</p>
+          </div>
+          <div class="d-flex flex-wrap align-center gap-2" id="action-buttons-container">
+            <button type="button" class="btn btn-outline" id="export-results-csv-btn">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#download"></use></svg>
+              Export CSV
+            </button>
+            <div id="tpo-mark-result-btn-slot"></div>
+          </div>
+        </header>
+
+        <!-- Selector and Filter Bar (Tonal Double Bezel) -->
+        <div class="bezel-outer mb-6">
+          <div class="bezel-inner p-4">
+            <div class="form-grid g-3 align-center">
+              <div class="form-col-4">
+                <label for="stage-select" class="form-label">Recruitment Drive / Evaluation Stage</label>
+                <select id="stage-select" class="form-select">
+                  <option value="1">Google - Round 1 (Online Assessment)</option>
+                </select>
+              </div>
+              <div class="form-col-5">
+                <label for="candidate-search" class="form-label">Search Candidate Roster</label>
+                <div class="input-icon-wrap">
+                  <svg class="icon input-icon"><use href="/icons/sprite.svg#magnifying-glass"></use></svg>
+                  <input type="text" id="candidate-search" class="form-control" placeholder="Search by roll number or student name...">
+                </div>
+              </div>
+              <div class="form-col-3">
+                <label for="status-filter" class="form-label">Filter Evaluation Outcome</label>
+                <select id="status-filter" class="form-select">
+                  <option value="">All Candidates</option>
+                  <option value="SELECTED">Selected / Qualified</option>
+                  <option value="NOT_SELECTED">Not Selected</option>
+                  <option value="WAITLISTED">Waitlisted</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results Summary Cards (Tonal Double Bezels) -->
+        <div class="grid-4-col gap-4 mb-6">
+          <div class="bezel-outer">
+            <div class="bezel-inner p-4 text-center">
+              <span class="text-xs text-muted uppercase tracking-wider d-block">Evaluated Total</span>
+              <strong class="text-2xl text-ink tabular-nums d-block my-1" id="stat-total-evaluated">0</strong>
+              <span class="text-xs text-muted">Candidates processed</span>
+            </div>
+          </div>
+          <div class="bezel-outer">
+            <div class="bezel-inner p-4 text-center">
+              <span class="text-xs text-muted uppercase tracking-wider d-block">Selected / Advanced</span>
+              <strong class="text-2xl text-placement tabular-nums d-block my-1" id="stat-selected-count">0</strong>
+              <span class="text-xs text-placement fw-semibold">Qualified for offer/next stage</span>
+            </div>
+          </div>
+          <div class="bezel-outer">
+            <div class="bezel-inner p-4 text-center">
+              <span class="text-xs text-muted uppercase tracking-wider d-block">Not Selected</span>
+              <strong class="text-2xl text-danger tabular-nums d-block my-1" id="stat-not-selected-count">0</strong>
+              <span class="text-xs text-muted">Exited process</span>
+            </div>
+          </div>
+          <div class="bezel-outer">
+            <div class="bezel-inner p-4 text-center">
+              <span class="text-xs text-muted uppercase tracking-wider d-block">Waitlisted</span>
+              <strong class="text-2xl text-brass tabular-nums d-block my-1" id="stat-waitlisted-count">0</strong>
+              <span class="text-xs text-muted">Pending final review</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Results Ledger Table -->
+        <div class="card p-0 overflow-hidden mb-6">
+          <div class="table-responsive">
+            <table class="data-table mb-0" id="results-table">
+              <thead>
+                <tr>
+                  <th style="width: 16%;">Roll Number</th>
+                  <th style="width: 24%;">Candidate</th>
+                  <th style="width: 14%;">Score</th>
+                  <th style="width: 18%;">Evaluation Status</th>
+                  <th style="width: 16%;">Evaluator Feedback</th>
+                  <th class="text-end" id="table-col-action" style="width: 12%;">Authority Status</th>
+                </tr>
+              </thead>
+              <tbody id="results-tbody">
+                <tr>
+                  <td colspan="6" class="text-center py-6 text-muted">
+                    <div class="spinner-modern mb-2"></div>
+                    <div>Loading evaluation results...</div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Mark Result Modal (Native Accessible Dialog for TPO/Director) -->
+  <dialog id="markResultModal" class="custom-dialog">
+    <div class="dialog-card">
+      <form id="mark-result-form">
+        <div class="dialog-header d-flex justify-between align-center p-4 border-bottom">
+          <h3 class="text-lg fw-semibold text-ink mb-0" id="markResultModalLabel">Record Candidate Result</h3>
+          <button type="button" class="btn-icon" id="btn-close-result-modal" aria-label="Close dialog">
+            <svg class="icon icon-sm"><use href="/icons/sprite.svg#x"></use></svg>
+          </button>
+        </div>
+
+        <div class="dialog-body p-5">
+          <div class="form-grid g-3">
+            <div class="form-col-6">
+              <label class="form-label">Roll Number *</label>
+              <input type="text" name="rollNo" class="form-control font-mono uppercase" required placeholder="e.g. 21CS001">
+            </div>
+            <div class="form-col-6">
+              <label class="form-label">Candidate Name</label>
+              <input type="text" name="studentName" class="form-control" placeholder="e.g. Aarav Sharma">
+            </div>
+            <div class="form-col-6">
+              <label class="form-label">Result Status *</label>
+              <select name="resultStatus" class="form-select" required>
+                <option value="SELECTED">SELECTED (Qualified)</option>
+                <option value="NOT_SELECTED">NOT_SELECTED (Exited)</option>
+                <option value="WAITLISTED">WAITLISTED</option>
+                <option value="ABSENT">ABSENT</option>
+              </select>
+            </div>
+            <div class="form-col-6">
+              <label class="form-label">Score / Marks</label>
+              <input type="number" step="0.5" name="score" class="form-control" placeholder="e.g. 85.0">
+            </div>
+            <div class="form-col-12">
+              <label class="form-label">Round Feedback / Assessment Notes</label>
+              <textarea name="roundFeedback" class="form-control" rows="2" placeholder="e.g. Excellent system architecture reasoning, passed coding test."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="dialog-footer p-4 border-top d-flex justify-end gap-2 surface-ground">
+          <button type="button" class="btn btn-secondary btn-sm" id="btn-cancel-result-modal">Cancel</button>
+          <button type="submit" class="btn btn-primary btn-sm">Save Evaluation</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import ui from '/js/ui.js';
+    import api from '/js/api.js';
+
+    if (!auth.requireAuth(['ADMIN', 'TPO', 'DIRECTOR', 'STUDENT', 'STAFF', 'COMPANY'])) {}
+
+    const user = auth.getUser();
+    ui.initLayout('results');
+
+    const isTpoOrDirector = user?.role === 'TPO' || user?.role === 'DIRECTOR' || user?.role === 'ADMIN';
+    let currentResults = [];
+    let currentStageId = 1;
+
+    // Render Dual-Mode Indicator Banner
+    const authorityBar = document.getElementById('authority-mode-bar');
+    if (isTpoOrDirector) {
+      authorityBar.innerHTML = `
+        <div class="surface-tone p-3 rounded-3 border-subtle d-flex justify-between align-center">
+          <div class="d-flex align-center gap-2">
+            <span class="avatar avatar-sm avatar-placement"><svg class="icon icon-xs"><use href="/icons/sprite.svg#check"></use></svg></span>
+            <span class="text-xs fw-semibold text-ink">Authorized Officer Mode Active &bull; TPO / Director Controls Enabled</span>
+          </div>
+          <span class="chip chip-muted text-xs">Direct Database Write Privilege</span>
+        </div>
+      `;
+      document.getElementById('tpo-mark-result-btn-slot').innerHTML = `
+        <button type="button" class="btn btn-primary" id="btn-open-mark-result">
+          <svg class="icon icon-sm"><use href="/icons/sprite.svg#plus"></use></svg>
+          Record Result
+        </button>
+      `;
+
+      document.getElementById('btn-open-mark-result')?.addEventListener('click', () => {
+        const dialog = document.getElementById('markResultModal');
+        if (dialog.showModal) dialog.showModal();
+        else dialog.setAttribute('open', 'true');
+      });
+    } else {
+      authorityBar.innerHTML = `
+        <div class="surface-tone p-3 rounded-3 border-subtle d-flex align-center gap-2">
+          <svg class="icon icon-sm text-muted"><use href="/icons/sprite.svg#lock"></use></svg>
+          <span class="text-xs text-muted">Quiet View Mode &bull; Official Institutional Ledger (Read-Only)</span>
+        </div>
+      `;
+      document.getElementById('table-col-action').textContent = 'Verification';
+    }
+
+    async function loadStages() {
+      try {
+        const drivesRes = await api.get('/drives/all');
+        const drives = Array.isArray(drivesRes) ? drivesRes : (drivesRes?.data || []);
+        const selector = document.getElementById('stage-select');
+
+        let options = '';
+        drives.forEach(d => {
+          const comp = d.company?.name || d.companyName || 'Drive';
+          if (d.stages && d.stages.length > 0) {
+            d.stages.forEach(s => {
+              options += `<option value="${s.id}">[${ui.escapeHtml(comp)}] ${ui.escapeHtml(s.roundName || s.name)}</option>`;
+            });
+          } else {
+            options += `<option value="${d.id}">[${ui.escapeHtml(comp)}] Final Selection List</option>`;
+          }
+        });
+
+        if (options) {
+          selector.innerHTML = options;
+          currentStageId = selector.value;
+        }
+
+        loadResults();
+      } catch {
+        loadResults();
+      }
+    }
+
+    async function loadResults() {
+      const tbody = document.getElementById('results-tbody');
+      tbody.innerHTML = `<tr><td colspan="6" class="text-center py-5 text-muted">${ui.renderLoader('Loading results ledger...')}</td></tr>`;
+
+      try {
+        const res = await api.get(`/stages/${currentStageId}/results`);
+        currentResults = Array.isArray(res) ? res : (res?.data || []);
+
+        // Update counts
+        document.getElementById('stat-total-evaluated').textContent = currentResults.length;
+        document.getElementById('stat-selected-count').textContent = currentResults.filter(r => r.resultStatus === 'SELECTED').length;
+        document.getElementById('stat-not-selected-count').textContent = currentResults.filter(r => r.resultStatus === 'NOT_SELECTED').length;
+        document.getElementById('stat-waitlisted-count').textContent = currentResults.filter(r => r.resultStatus === 'WAITLISTED').length;
+
+        renderResultsTable();
+      } catch {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-5 text-danger">${ui.renderError('Failed to load stage results.')}</td></tr>`;
+      }
+    }
+
+    function renderResultsTable() {
+      const tbody = document.getElementById('results-tbody');
+      const search = document.getElementById('candidate-search').value.toLowerCase().trim();
+      const statusFilter = document.getElementById('status-filter').value;
+
+      const filtered = currentResults.filter(r => {
+        const roll = (r.rollNo || '').toLowerCase();
+        const name = (r.studentName || '').toLowerCase();
+        const matchesSearch = !search || roll.includes(search) || name.includes(search);
+        const matchesStatus = !statusFilter || r.resultStatus === statusFilter;
+        return matchesSearch && matchesStatus;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-6 text-muted">${ui.renderEmpty('No candidate results found', 'No records match your search criteria.')}</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(r => {
+        const isSelected = r.resultStatus === 'SELECTED';
+        const isNotSelected = r.resultStatus === 'NOT_SELECTED';
+        const chip = isSelected
+          ? '<span class="status-chip status-placed"><span class="status-dot"></span> QUALIFIED</span>'
+          : (isNotSelected ? '<span class="status-chip status-danger"><span class="status-dot"></span> EXITED</span>' : '<span class="status-chip status-warning"><span class="status-dot"></span> WAITLISTED</span>');
+
+        const scoreText = r.score != null ? `${r.score}` : '--';
+        const initials = (r.studentName || 'S').split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+
+        return `
+          <tr>
+            <td class="font-mono fw-semibold text-ink">${ui.escapeHtml(r.rollNo || '21CS001')}</td>
+            <td>
+              <div class="d-flex align-center gap-2">
+                <span class="avatar avatar-sm avatar-placement">${initials}</span>
+                <div>
+                  <div class="fw-semibold text-ink text-sm">${ui.escapeHtml(r.studentName || 'Aarav Sharma')}</div>
+                  <span class="text-xs text-muted">${ui.escapeHtml(r.branch || 'B.Tech CSE')}</span>
+                </div>
+              </div>
+            </td>
+            <td><span class="chip chip-muted tabular-nums">${scoreText}</span></td>
+            <td>${chip}</td>
+            <td class="text-xs text-ink-2 lh-relaxed" style="max-width: 240px;">
+              ${ui.escapeHtml(r.roundFeedback || 'Evaluation completed and verified by placement cell.')}
+            </td>
+            <td class="text-end">
+              ${isTpoOrDirector ? `
+                <div class="d-flex justify-end gap-1">
+                  <button type="button" class="btn btn-outline btn-sm text-placement btn-quick-mark" data-roll="${r.rollNo}" data-status="SELECTED">Select</button>
+                  <button type="button" class="btn btn-outline btn-sm text-danger btn-quick-mark" data-roll="${r.rollNo}" data-status="NOT_SELECTED">Reject</button>
+                </div>
+              ` : `
+                <span class="text-xs text-placement fw-semibold d-inline-flex align-center gap-1">
+                  <svg class="icon icon-xs"><use href="/icons/sprite.svg#seal-check"></use></svg>
+                  Verified
+                </span>
+              `}
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      if (isTpoOrDirector) {
+        tbody.querySelectorAll('.btn-quick-mark').forEach(btn => {
+          btn.addEventListener('click', async () => {
+            const roll = btn.getAttribute('data-roll');
+            const status = btn.getAttribute('data-status');
+            try {
+              await api.post(`/stages/${currentStageId}/results`, {
+                rollNo: roll,
+                resultStatus: status
+              });
+              ui.showToast(`Updated result for ${roll}`);
+              loadResults();
+            } catch (err) {
+              ui.showToast(err.message || 'Permission denied', 'danger');
+            }
+          });
+        });
+      }
+    }
+
+    document.getElementById('stage-select').addEventListener('change', (e) => {
+      currentStageId = e.target.value;
+      loadResults();
+    });
+
+    document.getElementById('candidate-search').addEventListener('input', renderResultsTable);
+    document.getElementById('status-filter').addEventListener('change', renderResultsTable);
+
+    const modalEl = document.getElementById('markResultModal');
+    document.getElementById('btn-close-result-modal')?.addEventListener('click', () => modalEl.close ? modalEl.close() : modalEl.removeAttribute('open'));
+    document.getElementById('btn-cancel-result-modal')?.addEventListener('click', () => modalEl.close ? modalEl.close() : modalEl.removeAttribute('open'));
+
+    // Form submit for TPO/Director
+    document.getElementById('mark-result-form')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const form = e.target;
+      const data = {
+        rollNo: form.rollNo.value.trim().toUpperCase(),
+        studentName: form.studentName.value.trim(),
+        resultStatus: form.resultStatus.value,
+        score: form.score.value ? parseFloat(form.score.value) : null,
+        roundFeedback: form.roundFeedback.value.trim()
+      };
+
+      try {
+        await api.post(`/stages/${currentStageId}/results`, data);
+        ui.showToast('Candidate evaluation recorded successfully!');
+        if (modalEl.close) modalEl.close();
+        else modalEl.removeAttribute('open');
+        form.reset();
+        loadResults();
+      } catch (err) {
+        ui.showToast(err.message || 'Only TPO and Director roles are authorized to modify results', 'danger');
+      }
+    });
+
+    // CSV Export
+    document.getElementById('export-results-csv-btn').addEventListener('click', () => {
+      if (currentResults.length === 0) {
+        ui.showToast('No results to export', 'warning');
+        return;
+      }
+      let csv = 'RollNo,StudentName,Status,Score,Feedback\n';
+      currentResults.forEach(r => {
+        csv += `"${r.rollNo || ''}","${r.studentName || ''}","${r.resultStatus || ''}","${r.score || ''}","${r.roundFeedback || ''}"\n`;
+      });
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `results-stage-${currentStageId}.csv`;
+      link.click();
+    });
+
+    loadStages();
+  </script>
+</body>
+</html>

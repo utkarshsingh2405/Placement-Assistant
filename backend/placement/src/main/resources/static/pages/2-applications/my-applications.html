@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="placement">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Candidate Workspace & Applications — Placement Season</title>
+  
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="grain-overlay"></div>
+
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Page Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <div class="d-flex align-center gap-2 mb-2">
+              <span class="chip chip-accent uppercase tracking-wider">Candidate Workspace</span>
+              <span class="text-xs text-muted" id="student-roll-badge">Roll: 21CS001</span>
+            </div>
+            <h1 class="page-title" id="student-greeting-heading">My Application Portfolio</h1>
+            <p class="page-subtitle">Personalized candidate ledger. Track registered campus drives, proctored evaluation schedules, and interview clearances.</p>
+          </div>
+          <div class="d-flex flex-wrap align-center gap-2">
+            <a href="/placement/pages/1-drives/drive-list.html" class="btn btn-primary">
+              <svg class="icon icon-sm"><use href="/icons/sprite.svg#briefcase"></use></svg>
+              <span>Explore More Drives</span>
+            </a>
+          </div>
+        </header>
+
+        <!-- Candidate Admit Pass / Next Scheduled Stage (Double Bezel) -->
+        <div id="active-hall-ticket-container" class="mb-6" style="display: none;">
+          <div class="double-bezel">
+            <div class="double-bezel-inner" style="background: var(--surface); padding: var(--space-5);">
+              <div class="d-flex justify-between align-center mb-3">
+                <div class="d-flex align-center gap-2">
+                  <span class="status-dot status-live-pulse" style="background: var(--placement);"></span>
+                  <span class="text-xs uppercase tracking-wider fw-semibold text-placement">ACTIVE ADMIT PASS &bull; UPCOMING EVALUATION</span>
+                </div>
+                <span class="chip chip-neutral font-mono text-xs" id="ticket-id-display">PASS-2026-001</span>
+              </div>
+              <div class="hall-ticket">
+                <div class="ticket-body">
+                  <div class="ticket-stamp" id="ticket-verdict-stamp">ADMIT PASS</div>
+                  <div class="text-xs text-muted uppercase tracking-wider mb-1" id="ticket-stage-title">STAGE 2 &bull; TECHNICAL INTERVIEW</div>
+                  <h3 class="poster-title text-xl mb-1" id="ticket-company-heading">Google India Software Engineering</h3>
+                  <div class="text-xs text-muted mb-3" id="ticket-venue-display">Platform: Google Meet Room A-04 &bull; Reporting: 10:00 AM IST</div>
+                  <div class="d-flex gap-4 text-xs text-ink-2">
+                    <div>Candidate: <strong class="text-ink" id="ticket-candidate-name">Aarav Sharma</strong></div>
+                    <div>Roll No: <strong class="font-mono text-ink" id="ticket-candidate-roll">21CS001</strong></div>
+                    <div>Branch: <strong class="text-ink">Computer Science (CSE)</strong></div>
+                  </div>
+                </div>
+                <div class="ticket-perforation"></div>
+                <div class="ticket-stub text-center">
+                  <div style="width: 72px; height: 72px; background: var(--surface-2); border: 1px solid var(--surface-3); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-2);">
+                    <svg width="40" height="40" style="color: var(--ink);"><use href="/icons/sprite.svg#qr-code"/></svg>
+                  </div>
+                  <div class="text-xs font-mono fw-semibold" id="ticket-stub-roll">21CS001</div>
+                  <span class="status-chip status-placed mt-1" style="font-size: 9px; padding: 2px 6px;">VERIFIED</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Student Application Metrics (Double Bezel) -->
+        <div class="grid-4-col gap-4 mb-6">
+          <div class="bezel-outer">
+            <div class="bezel-inner p-4 text-center">
+              <span class="text-xs text-muted uppercase tracking-wider d-block">Drives Applied</span>
+              <strong class="text-2xl text-placement tabular-nums d-block my-1" id="stat-drives-applied">0</strong>
+              <span class="text-xs text-muted">Active submissions</span>
+            </div>
+          </div>
+          <div class="bezel-outer">
+            <div class="bezel-inner p-4 text-center">
+              <span class="text-xs text-muted uppercase tracking-wider d-block">Rounds Cleared</span>
+              <strong class="text-2xl text-accent tabular-nums d-block my-1" id="stat-rounds-cleared">0</strong>
+              <span class="text-xs text-muted">Advanced stages</span>
+            </div>
+          </div>
+          <div class="bezel-outer">
+            <div class="bezel-inner p-4 text-center">
+              <span class="text-xs text-muted uppercase tracking-wider d-block">Average ATS Match</span>
+              <strong class="text-2xl text-success tabular-nums d-block my-1" id="stat-avg-ats">88%</strong>
+              <span class="text-xs text-muted">Resume resonance</span>
+            </div>
+          </div>
+          <div class="bezel-outer">
+            <div class="bezel-inner p-4 text-center">
+              <span class="text-xs text-muted uppercase tracking-wider d-block">Confirmed Offers</span>
+              <strong class="text-2xl text-brass tabular-nums d-block my-1" id="stat-offers-received">0</strong>
+              <span class="text-xs text-muted">Appointment slates</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Applications Table (Double Bezel Ledger) -->
+        <div class="bezel-outer">
+          <div class="bezel-inner p-5">
+            <div class="d-flex justify-between align-center mb-4">
+              <h3 class="text-base fw-semibold text-ink mb-0 d-flex align-center gap-2">
+                <svg class="icon icon-sm text-placement"><use href="/icons/sprite.svg#layers"></use></svg>
+                Registered Hiring Drives &amp; Progression Roster
+              </h3>
+              <span class="text-xs text-muted font-mono" id="records-count-badge">Loading applications...</span>
+            </div>
+
+            <div class="ledger-container">
+              <table class="ledger-table" id="my-apps-table">
+                <thead>
+                  <tr>
+                    <th>Recruiting Enterprise &amp; Designation</th>
+                    <th>Compensation (CTC)</th>
+                    <th>Application Date</th>
+                    <th>Current Evaluation Stage</th>
+                    <th>ATS Score</th>
+                    <th>Status</th>
+                    <th style="text-align: right;">Action</th>
+                  </tr>
+                </thead>
+                <tbody id="my-apps-tbody">
+                  <tr>
+                    <td colspan="7" class="text-center p-6 text-muted">
+                      <div class="spinner-modern mb-2"></div>
+                      <div>Retrieving candidate applications...</div>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- SVG Sprite Inclusion -->
+  <div id="sprite-container" style="display: none;"></div>
+
+  <script type="module">
+    import auth from '/js/core/auth.js';
+    import api from '/js/core/api.js';
+    import ui from '/js/core/ui.js';
+
+    fetch('/icons/sprite.svg')
+      .then(r => r.text())
+      .then(svg => {
+        document.getElementById('sprite-container').innerHTML = svg;
+      });
+
+    if (!auth.requireAuth()) {}
+
+    ui.initLayout('applications');
+
+    const user = auth.getUser();
+    const displayName = user?.name || 'Student Candidate';
+    const rollNo = user?.rollNo || '21CS001';
+
+    document.getElementById('student-greeting-heading').textContent = `${displayName}'s Applications`;
+    document.getElementById('student-roll-badge').textContent = `Roll: ${rollNo}`;
+
+    async function loadMyApplications() {
+      const tbody = document.getElementById('my-apps-tbody');
+      try {
+        const query = `rollNo=${encodeURIComponent(rollNo)}&email=${encodeURIComponent(user?.email || '')}`;
+        const res = await api.get(`/applications/my?${query}`);
+        const studentApps = Array.isArray(res) ? res : (res?.data || []);
+
+        // Update stats with genuine database numbers
+        document.getElementById('stat-drives-applied').textContent = studentApps.length;
+        document.getElementById('stat-rounds-cleared').textContent = studentApps.filter(a => a.status === 'SHORTLISTED' || a.status === 'SELECTED').length;
+        document.getElementById('stat-offers-received').textContent = studentApps.filter(a => a.status === 'SELECTED' || a.status === 'OFFERED').length;
+        document.getElementById('records-count-badge').textContent = `${studentApps.length} Active Registrations`;
+
+        // Render Admit Pass only if candidate has an active/shortlisted application
+        const hallTicketContainer = document.getElementById('active-hall-ticket-container');
+        const topActive = studentApps.find(a => a.status === 'SHORTLISTED' || a.status === 'SELECTED') || (studentApps.length > 0 ? studentApps[0] : null);
+        if (topActive && hallTicketContainer) {
+          hallTicketContainer.style.display = 'block';
+          document.getElementById('ticket-candidate-name').textContent = displayName;
+          document.getElementById('ticket-candidate-roll').textContent = rollNo;
+          document.getElementById('ticket-stub-roll').textContent = rollNo;
+          document.getElementById('ticket-company-heading').textContent = topActive.drive?.title || 'Campus Recruitment Drive';
+          document.getElementById('ticket-stage-title').textContent = topActive.currentStage?.stageName ? `${topActive.currentStage.stageName.toUpperCase()}` : 'STAGE 1 • SCREENING & TECHNICAL';
+        } else if (hallTicketContainer) {
+          hallTicketContainer.style.display = 'none';
+        }
+
+        if (studentApps.length === 0) {
+          tbody.innerHTML = `
+            <tr>
+              <td colspan="7" class="text-center p-8 text-muted">
+                <div style="max-width: 380px; margin: 0 auto; text-align: center;">
+                  <div style="font-size: 2rem; margin-bottom: 8px;">📋</div>
+                  <h4 style="font-size: 1rem; color: var(--ink); margin-bottom: 4px;">No Applications Submitted Yet</h4>
+                  <p style="font-size: var(--text-xs); color: var(--muted); margin-bottom: var(--space-4);">You have not registered for any active placement drives. Browse eligible drives and submit your application to start your recruitment journey.</p>
+                  <a href="/placement/pages/1-drives/drive-list.html" class="btn btn-sm btn-primary">
+                    <svg width="14" height="14"><use href="/icons/sprite.svg#briefcase"></use></svg>
+                    <span>Explore Eligible Drives</span>
+                  </a>
+                </div>
+              </td>
+            </tr>
+          `;
+          return;
+        }
+
+        tbody.innerHTML = studentApps.map(app => {
+          const driveTitle = app.drive?.title || 'Campus Recruitment Drive';
+          const pkg = app.drive?.packageDetails || 'Competitive CTC';
+          const stage = app.currentStage?.stageName || 'Stage 1 • Aptitude & Coding';
+          const status = app.status || 'APPLIED';
+
+          let chipClass = 'chip-neutral';
+          if (status === 'SHORTLISTED') chipClass = 'chip-success';
+          if (status === 'SELECTED' || status === 'OFFERED') chipClass = 'chip-brass';
+          if (status === 'REJECTED') chipClass = 'chip-danger';
+
+          return `
+            <tr>
+              <td>
+                <div class="fw-semibold text-ink text-sm">${ui.escapeHtml(driveTitle)}</div>
+                <div class="text-xs text-muted">ID: #DRV-00${app.driveId || app.drive?.id || 1}</div>
+              </td>
+              <td>
+                <strong class="tabular-nums text-placement text-xs">${ui.escapeHtml(pkg)}</strong>
+              </td>
+              <td>
+                <span class="text-xs text-muted tabular-nums">${app.appliedAt ? new Date(app.appliedAt).toLocaleDateString() : 'Season 2026'}</span>
+              </td>
+              <td>
+                <span class="chip chip-neutral" style="font-size: 11px;">
+                  <svg class="icon icon-xs"><use href="/icons/sprite.svg#git-commit"></use></svg>
+                  ${ui.escapeHtml(stage)}
+                </span>
+              </td>
+              <td>
+                <span class="tabular-nums fw-semibold text-success">${app.atsScore || 85}%</span>
+              </td>
+              <td>
+                <span class="chip ${chipClass}" style="font-size: 11px;">${status}</span>
+              </td>
+              <td style="text-align: right;">
+                <a href="/placement/pages/1-drives/drive-detail.html?id=${app.driveId || app.drive?.id || 1}" class="btn btn-outline btn-sm">
+                  <span>View Details</span>
+                </a>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger p-6">${ui.escapeHtml(err.message || 'Failed to load applications')}</td></tr>`;
+      }
+    }
+
+    loadMyApplications();
+  </script>
+</body>
+</html>

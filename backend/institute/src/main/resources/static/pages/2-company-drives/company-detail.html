@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="institute">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Corporate Recruiter Profile — Academic Institute</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <div id="company-loader"></div>
+
+        <div id="company-content" class="d-none">
+          <!-- Page Header -->
+          <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+            <div>
+              <div class="d-flex align-center gap-2 mb-1">
+                <a href="/institute/pages/2-company-drives/drive-list.html" class="text-xs text-muted text-decoration-none">&larr; Back to Campus Drives</a>
+                <span class="text-xs text-muted">&bull;</span>
+                <span class="chip chip-muted uppercase text-xs" id="company-industry">Technology</span>
+              </div>
+              <h1 class="page-title" id="company-name">Company Name</h1>
+              <p class="page-subtitle">
+                Official Corporate Partner &bull;
+                <a href="#" target="_blank" rel="noopener noreferrer" id="company-website" class="text-institute text-decoration-none fw-semibold">
+                  <span>Visit Portal</span>
+                  <svg class="icon icon-xs"><use href="/icons/sprite.svg#arrow-up-right"></use></svg>
+                </a>
+              </p>
+            </div>
+            <div class="d-flex gap-2">
+              <a href="/institute/pages/2-company-drives/drive-list.html" class="btn btn-secondary">
+                &larr; Campus Drives
+              </a>
+            </div>
+          </header>
+
+          <!-- Key Metrics Bento (Double Bezel) -->
+          <div class="bento-grid mb-6">
+            <div class="bezel-outer">
+              <div class="bezel-inner p-4 text-center">
+                <span class="text-xs text-muted d-block mb-1">Campus HR Lead</span>
+                <strong class="text-lg text-ink" id="company-contact">--</strong>
+                <span class="text-xs text-muted d-block mt-1" id="company-email">--</span>
+              </div>
+            </div>
+            <div class="bezel-outer">
+              <div class="bezel-inner p-4 text-center">
+                <span class="text-xs text-muted d-block mb-1">Recruitment Drives</span>
+                <strong class="text-2xl text-placement tabular-nums" id="company-drives-count">0</strong>
+                <span class="text-xs text-muted d-block mt-1">Institutional Drives Hosted</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Drives Hosted -->
+          <div class="bezel-outer mb-6">
+            <div class="bezel-inner p-5">
+              <h2 class="text-base fw-bold mb-4 text-ink">Campus Recruitment Drives Associated</h2>
+              <div id="company-drives-container"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import api from '/js/api.js';
+    import ui from '/js/ui.js';
+
+    if (!auth.requireAuth()) {
+      // redirected
+    } else {
+      ui.initLayout('drives');
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const companyId = urlParams.get('id');
+
+      if (!companyId) {
+        window.location.href = '/institute/pages/2-company-drives/drive-list.html';
+      }
+
+      async function init() {
+        const loader = document.getElementById('company-loader');
+        const content = document.getElementById('company-content');
+        loader.innerHTML = ui.renderLoader('Loading company profile...');
+
+        try {
+          const company = await api.get(`/api/companies/${companyId}`);
+          loader.classList.add('d-none');
+          content.classList.remove('d-none');
+
+          document.getElementById('company-name').textContent = company.name || '';
+          document.getElementById('company-industry').textContent = company.industry || 'General Industry';
+          document.getElementById('company-contact').textContent = company.contactPerson || 'Campus HR Partner';
+          document.getElementById('company-email').textContent = company.contactEmail || 'Not specified';
+
+          const webEl = document.getElementById('company-website');
+          if (company.website) {
+            webEl.href = company.website;
+          } else {
+            webEl.classList.add('d-none');
+          }
+
+          loadCompanyDrives(company.id);
+
+        } catch (err) {
+          loader.innerHTML = ui.renderError(err.message);
+        }
+      }
+
+      async function loadCompanyDrives(cId) {
+        const container = document.getElementById('company-drives-container');
+        try {
+          const res = await api.get('/api/drives', { companyId: cId, size: 50 });
+          const drives = res.content || [];
+
+          document.getElementById('company-drives-count').textContent = drives.length;
+
+          if (drives.length === 0) {
+            container.innerHTML = ui.renderEmpty('No drives hosted yet', 'There are no active or past drives recorded for this company.');
+            return;
+          }
+
+          let html = '<div class="d-flex flex-column gap-3">';
+          drives.forEach(d => {
+            html += `
+              <div class="bezel-outer">
+                <div class="bezel-inner p-4 d-flex flex-wrap justify-between align-center gap-3">
+                  <div>
+                    <h3 class="text-base fw-bold mb-1">
+                      <a href="/institute/pages/2-company-drives/drive-detail.html?id=${d.id}" class="text-ink text-decoration-none">
+                        ${ui.escapeHtml(d.title)}
+                      </a>
+                    </h3>
+                    <div class="text-xs text-muted">
+                      Roles: <span class="text-ink-2 fw-semibold">${ui.escapeHtml(d.roles || 'Multiple Openings')}</span> &bull; 
+                      CTC: <strong class="text-placement tabular-nums">${d.packageMin || 0} - ${d.packageMax || 0} LPA</strong>
+                    </div>
+                  </div>
+                  <div class="d-flex align-center gap-3">
+                    <span class="chip chip-muted uppercase text-xs">${d.status}</span>
+                    <span class="text-xs text-muted tabular-nums">Date: ${d.driveDate || 'TBD'}</span>
+                    <a href="/institute/pages/2-company-drives/drive-detail.html?id=${d.id}" class="btn-pill-nested">
+                      <span>View</span>
+                      <span class="btn-nested-circle">
+                        <svg class="icon icon-xs"><use href="/icons/sprite.svg#arrow-up-right"></use></svg>
+                      </span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            `;
+          });
+          html += '</div>';
+          container.innerHTML = html;
+
+        } catch (err) {
+          container.innerHTML = `<div class="p-4 text-muted text-sm">Could not load company drives.</div>`;
+        }
+      }
+
+      init();
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-domain="institute">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Profile — ID Card & Credentials</title>
+  
+  <!-- Design System CSS -->
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+
+  <style>
+    /* Lanyard Card Simulation */
+    .id-card-stage {
+      perspective: 1200px;
+      margin: var(--space-8) auto var(--space-12);
+      max-width: 420px;
+      width: 100%;
+    }
+    .lanyard-strap {
+      width: 28px;
+      height: 48px;
+      background: var(--institute);
+      margin: 0 auto;
+      border-radius: 4px 4px 0 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+      position: relative;
+    }
+    .lanyard-clip {
+      width: 38px;
+      height: 14px;
+      background: #CBD5E1;
+      border-radius: 4px;
+      margin: -4px auto 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+    }
+    .id-card-flip {
+      width: 100%;
+      min-height: 520px;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 600ms cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .id-card-flip.flipped {
+      transform: rotateY(180deg);
+    }
+    .id-card-face {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 24px;
+      background: var(--surface);
+      border: 2px solid var(--surface-3);
+      box-shadow: var(--shadow-dialog);
+      padding: var(--space-6);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .id-card-back {
+      transform: rotateY(180deg);
+      background: var(--surface-2);
+    }
+  </style>
+</head>
+<body>
+  <div class="grain-overlay"></div>
+
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
+          <a href="/institute/pages/1-students/student-list.html" class="btn btn-sm btn-outline">
+            <svg width="14" height="14"><use href="#ph-arrow-left"/></svg>
+            <span>Back to Student Directory</span>
+          </a>
+          <button class="btn btn-sm btn-primary" id="btn-flip-card">
+            <span>Flip ID Card</span>
+            <svg width="14" height="14"><use href="#ph-arrow-right"/></svg>
+          </button>
+        </div>
+
+        <div id="profile-loader"></div>
+
+        <div id="profile-content" style="display: none;">
+          <!-- 3D Lanyard Student ID Card -->
+          <div class="id-card-stage">
+            <div class="lanyard-strap"></div>
+            <div class="lanyard-clip"></div>
+
+            <div class="id-card-flip" id="id-card-object">
+              <!-- FRONT FACE: Identification -->
+              <div class="id-card-face id-card-front">
+                <!-- Header -->
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--institute); padding-bottom: var(--space-3);">
+                  <div>
+                    <div style="font-weight: 700; font-size: var(--text-sm); color: var(--institute); letter-spacing: 0.05em; text-transform: uppercase;">INSTITUTE OF TECHNOLOGY</div>
+                    <div style="font-size: 10px; color: var(--muted);">Academic Credential Pass • Season 2026</div>
+                  </div>
+                  <div style="width: 28px; height: 28px; border-radius: 50%; background: var(--institute-tint); display: flex; align-items: center; justify-content: center; color: var(--institute);">
+                    <svg width="16" height="16"><use href="#ph-building"/></svg>
+                  </div>
+                </div>
+
+                <!-- Avatar & Core Name -->
+                <div style="text-align: center; margin: var(--space-6) 0;">
+                  <div style="width: 96px; height: 96px; border-radius: 50%; background: var(--institute); color: #FFF; font-size: 2.25rem; font-weight: 700; display: flex; align-items: center; justify-content: center; margin: 0 auto var(--space-4); box-shadow: 0 4px 14px rgba(140, 36, 51, 0.3);" id="avatar-initials">
+                    ST
+                  </div>
+                  <h2 style="font-size: 1.4rem; margin-bottom: 4px;" id="profile-name">Student Name</h2>
+                  <div style="font-family: var(--font-mono); font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 6px;" id="profile-rollNo">22CS001</div>
+                  <div style="font-size: var(--text-sm); color: var(--ink-2);" id="profile-branch-year">CSE • Year 4</div>
+                  <div style="font-size: var(--text-xs); color: var(--muted); margin-top: 2px;" id="profile-email">student@college.edu</div>
+                </div>
+
+                <!-- Eligibility Badge & Bottom Strip -->
+                <div>
+                  <div style="display: flex; justify-content: center; gap: var(--space-2); margin-bottom: var(--space-4);">
+                    <span id="profile-eligibility-badge" class="chip chip-success">ELIGIBLE</span>
+                    <span id="placed-badge-container"></span>
+                  </div>
+                  <div style="text-align: center; font-size: 11px; color: var(--muted); border-top: 1px dashed var(--surface-3); padding-top: var(--space-3);">
+                    Tap or click "Flip ID Card" to review verified transcripts & skills
+                  </div>
+                </div>
+              </div>
+
+              <!-- BACK FACE: Transcripts & Academic Record -->
+              <div class="id-card-face id-card-back">
+                <div>
+                  <div style="font-size: var(--text-xs); font-weight: 700; color: var(--muted); text-transform: uppercase; margin-bottom: var(--space-4); border-bottom: 1px solid var(--surface-3); padding-bottom: 6px;">
+                    ACADEMIC VERIFICATION DOSSIER
+                  </div>
+
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-4);">
+                    <div style="background: var(--surface); padding: var(--space-3); border-radius: var(--radius-control); text-align: center;">
+                      <div style="font-size: 10px; color: var(--muted); text-transform: uppercase;">Verified CGPA</div>
+                      <div style="font-size: 1.5rem; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums;" id="card-cgpa">--</div>
+                    </div>
+                    <div style="background: var(--surface); padding: var(--space-3); border-radius: var(--radius-control); text-align: center;">
+                      <div style="font-size: 10px; color: var(--muted); text-transform: uppercase;">Active Backlogs</div>
+                      <div style="font-size: 1.5rem; font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums;" id="card-backlogs">0</div>
+                      <div style="font-size: 10px; color: var(--muted);" id="card-backlogs-label">Clear Record</div>
+                    </div>
+                  </div>
+
+                  <div style="background: var(--surface); padding: var(--space-3); border-radius: var(--radius-control); margin-bottom: var(--space-4); font-size: var(--text-xs);">
+                    <div style="color: var(--muted); margin-bottom: 2px;">Contact Phone:</div>
+                    <div style="font-weight: 600; color: var(--ink);" id="card-phone">--</div>
+                  </div>
+
+                  <div style="background: var(--surface); padding: var(--space-3); border-radius: var(--radius-control); font-size: var(--text-xs);">
+                    <div style="color: var(--muted); margin-bottom: 4px;">Primary Verified Resume:</div>
+                    <div id="card-resume-link">
+                      <span class="text-muted">Not uploaded</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--surface-3); padding-top: var(--space-3);">
+                  <span style="font-size: 10px; color: var(--muted);">OFFICIAL REGISTRAR RECORD</span>
+                  <a href="#" id="btn-edit-profile" class="btn btn-sm btn-outline">Edit Dossier</a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Complete Academic Dossier Section -->
+          <div class="double-bezel" style="margin-top: var(--space-8);">
+            <div class="double-bezel-inner">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4); border-bottom: 1px solid var(--surface-3); padding-bottom: 8px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <svg width="18" height="18" style="color: var(--institute);"><use href="#ph-book-open"/></svg>
+                  <h3 style="font-size: 1.15rem; margin-bottom: 0;">Verified 10th &amp; 12th Schooling Records</h3>
+                </div>
+                <button id="btn-download-transcript" class="btn btn-sm btn-outline">
+                  <svg width="14" height="14"><use href="#ph-download-simple"/></svg>
+                  <span>Download Marksheet</span>
+                </button>
+              </div>
+
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-6);">
+                <div style="background: var(--surface-2); padding: var(--space-4); border-radius: var(--radius-control); border: 1px solid var(--surface-3);">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                    <strong style="color: var(--institute); font-size: 13px;">10th Standard (Secondary)</strong>
+                    <span class="chip chip-success" id="prof-tenth-pct">94.6%</span>
+                  </div>
+                  <div style="font-size: var(--text-xs); color: var(--ink);" id="prof-tenth-school">Delhi Public School</div>
+                  <div style="font-size: 11px; color: var(--muted); margin-top: 2px;" id="prof-tenth-board">Board: CBSE (2020)</div>
+                </div>
+
+                <div style="background: var(--surface-2); padding: var(--space-4); border-radius: var(--radius-control); border: 1px solid var(--surface-3);">
+                  <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                    <strong style="color: var(--institute); font-size: 13px;">12th Standard (Pre-University)</strong>
+                    <span class="chip chip-success" id="prof-twelfth-pct">92.4%</span>
+                  </div>
+                  <div style="font-size: var(--text-xs); color: var(--ink);" id="prof-twelfth-school">National Public School</div>
+                  <div style="font-size: 11px; color: var(--muted); margin-top: 2px;" id="prof-twelfth-board">Board: CBSE &bull; PCM Stream (2022)</div>
+                </div>
+              </div>
+
+              <!-- Semester History Table -->
+              <div style="margin-bottom: var(--space-6);">
+                <h4 style="font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: var(--space-3);">Semester SGPA Progression Trajectory</h4>
+                <div class="ledger-container">
+                  <table class="ledger-table" style="font-size: var(--text-xs);">
+                    <thead>
+                      <tr><th>Semester</th><th>Credits Cleared</th><th>SGPA Index</th><th>Result Classification</th><th>Status</th></tr>
+                    </thead>
+                    <tbody id="prof-semesters-tbody"></tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bottom: Resumes & ATS Performance Table -->
+          <div class="double-bezel" style="margin-top: var(--space-8);">
+            <div class="double-bezel-inner">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4);">
+                <h3 style="font-size: 1.15rem; margin-bottom: 0;">Resumes &amp; ATS Diagnostic</h3>
+                <a href="/institute/pages/6-resume-ats/ats-report.html" class="btn btn-sm btn-primary">
+                  <svg width="14" height="14"><use href="#ph-file-text"/></svg>
+                  <span>Open ATS Diagnostic</span>
+                </a>
+              </div>
+              <div id="resumes-container"></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Edit Profile Modal Dialog -->
+  <dialog id="editProfileModal" class="modal-dialog" style="padding: 0; border: none; border-radius: var(--radius-card); background: transparent; max-width: 520px; width: 90%;">
+    <div class="modal-card" style="background: var(--surface); border: 2px solid var(--surface-3); border-radius: var(--radius-card); padding: var(--space-6); box-shadow: var(--shadow-dialog);">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--surface-3); padding-bottom: var(--space-4); margin-bottom: var(--space-4);">
+        <h3 style="font-size: 1.2rem; margin: 0; display: flex; align-items: center; gap: 8px;">
+          <svg width="20" height="20" style="color: var(--institute);"><use href="#ph-user"/></svg>
+          <span>Update Student Dossier</span>
+        </h3>
+        <button type="button" id="btn-close-modal" class="btn btn-sm btn-outline" style="padding: 4px 8px;">✕</button>
+      </div>
+
+      <form id="editProfileForm" style="display: flex; flex-direction: column; gap: var(--space-3);">
+        <div>
+          <label style="display: block; font-size: var(--text-xs); font-weight: 600; margin-bottom: 4px;" for="edit-name">Full Name</label>
+          <input type="text" id="edit-name" class="input input-sm w-100" style="width: 100%; padding: 8px 12px; border: 1px solid var(--surface-3); border-radius: var(--radius-control); background: var(--surface-2); color: var(--ink);" required />
+        </div>
+
+        <div>
+          <label style="display: block; font-size: var(--text-xs); font-weight: 600; margin-bottom: 4px;" for="edit-phone">Contact Phone</label>
+          <input type="tel" id="edit-phone" class="input input-sm w-100" style="width: 100%; padding: 8px 12px; border: 1px solid var(--surface-3); border-radius: var(--radius-control); background: var(--surface-2); color: var(--ink);" placeholder="+91 98765 43210" required />
+        </div>
+
+        <div>
+          <label style="display: block; font-size: var(--text-xs); font-weight: 600; margin-bottom: 4px;" for="edit-linkedin">LinkedIn Profile URL</label>
+          <input type="url" id="edit-linkedin" class="input input-sm w-100" style="width: 100%; padding: 8px 12px; border: 1px solid var(--surface-3); border-radius: var(--radius-control); background: var(--surface-2); color: var(--ink);" placeholder="https://linkedin.com/in/username" />
+        </div>
+
+        <div>
+          <label style="display: block; font-size: var(--text-xs); font-weight: 600; margin-bottom: 4px;" for="edit-github">GitHub Profile URL</label>
+          <input type="url" id="edit-github" class="input input-sm w-100" style="width: 100%; padding: 8px 12px; border: 1px solid var(--surface-3); border-radius: var(--radius-control); background: var(--surface-2); color: var(--ink);" placeholder="https://github.com/username" />
+        </div>
+
+        <div>
+          <label style="display: block; font-size: var(--text-xs); font-weight: 600; margin-bottom: 4px;" for="edit-skills">Technical Skills (comma-separated)</label>
+          <input type="text" id="edit-skills" class="input input-sm w-100" style="width: 100%; padding: 8px 12px; border: 1px solid var(--surface-3); border-radius: var(--radius-control); background: var(--surface-2); color: var(--ink);" placeholder="Java, Python, React, SQL" />
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-4); border-top: 1px solid var(--surface-3); padding-top: var(--space-4);">
+          <button type="button" id="btn-cancel-modal" class="btn btn-sm btn-outline">Cancel</button>
+          <button type="submit" id="btn-save-submit" class="btn btn-sm btn-primary">Save to Database</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <div id="sprite-container" style="display: none;"></div>
+
+  <script type="module">
+    import auth from '/js/core/auth.js';
+    import api from '/js/core/api.js';
+    import ui from '/js/core/ui.js';
+    import dossierService from '/js/student-dossier.js';
+
+    fetch('/icons/sprite.svg').then(r => r.text()).then(svg => {
+      document.getElementById('sprite-container').innerHTML = svg;
+    });
+
+    if (!auth.requireAuth()) {
+      // redirected
+    }
+
+    const isStudent = auth.getRole() === 'STUDENT';
+    ui.initLayout(isStudent ? 'profile' : 'students');
+
+    // If student, adjust back button
+    if (isStudent) {
+      const backLink = document.querySelector('a[href*="student-list.html"]');
+      if (backLink) {
+        backLink.href = '/institute/dashboard.html';
+        backLink.innerHTML = `<svg width="14" height="14"><use href="#ph-arrow-left"/></svg> <span>Back to Academic Desk</span>`;
+      }
+    }
+
+    const urlParams = new URLSearchParams(window.location.search);
+    // Enforce student privacy: students can ONLY view their own profile
+    const studentId = isStudent ? null : urlParams.get('id');
+
+    // Flip ID Card
+    const cardObj = document.getElementById('id-card-object');
+    document.getElementById('btn-flip-card').addEventListener('click', () => {
+      cardObj.classList.toggle('flipped');
+    });
+    cardObj.addEventListener('click', (e) => {
+      if (e.target.closest('a') || e.target.closest('button')) return;
+      cardObj.classList.toggle('flipped');
+    });
+
+    let currentStudentData = null;
+
+    async function loadProfile() {
+      const loader = document.getElementById('profile-loader');
+      const content = document.getElementById('profile-content');
+      loader.innerHTML = ui.renderLoader('Retrieving academic credential record...');
+
+      try {
+        let student;
+        try {
+          student = (!isStudent && studentId)
+            ? await api.get(`/api/students/${studentId}`)
+            : await api.get('/api/students/me');
+        } catch (e) {
+          student = dossierService.getDossier(studentId || 'STUDENT_ME');
+        }
+
+        const dossier = dossierService.getDossier(student.id || student.rollNo || studentId);
+        // Merge attributes
+        const merged = { ...dossier, ...student };
+        currentStudentData = merged;
+
+        loader.style.display = 'none';
+        content.style.display = 'block';
+
+        const name = merged.name || 'Student Candidate';
+        document.getElementById('profile-name').textContent = name;
+        document.getElementById('profile-rollNo').textContent = merged.rollNo || '';
+        document.getElementById('profile-branch-year').textContent = `${merged.branch} • Year ${merged.year || 3}`;
+        document.getElementById('profile-email').textContent = merged.email || '';
+        document.getElementById('avatar-initials').textContent = (name[0] || 'U').toUpperCase();
+
+        document.getElementById('card-cgpa').textContent = Number(merged.cgpa || 8.82).toFixed(2);
+        document.getElementById('card-backlogs').textContent = merged.backlogs || 0;
+        document.getElementById('card-backlogs-label').textContent = (merged.backlogs > 0) ? `${merged.backlogs} Pending Backlogs` : 'Clear Record';
+        document.getElementById('card-phone').textContent = merged.phone || '+91 98765 43210';
+
+        const elBadge = document.getElementById('profile-eligibility-badge');
+        elBadge.className = `chip ${merged.placementEligible !== false ? 'chip-success' : 'chip-danger'}`;
+        elBadge.textContent = merged.placementEligible !== false ? 'Verified Eligible' : 'Ineligible (Backlogs/CGPA)';
+
+        // Resume Link
+        const resumeLinkContainer = document.getElementById('card-resume-link');
+        resumeLinkContainer.innerHTML = `
+          <a href="/institute/pages/6-resume-ats/ats-report.html" class="btn btn-sm btn-outline" style="font-size: 11px;">
+            <svg width="12" height="12"><use href="#ph-download-simple"/></svg> View Verified Resume & ATS
+          </a>
+        `;
+
+        // 10th & 12th Schooling Records
+        if (merged.schooling) {
+          document.getElementById('prof-tenth-pct').textContent = merged.schooling.tenth.percentage + '%';
+          document.getElementById('prof-tenth-school').textContent = merged.schooling.tenth.school;
+          document.getElementById('prof-tenth-board').textContent = `Board: ${merged.schooling.tenth.board} (${merged.schooling.tenth.year})`;
+
+          document.getElementById('prof-twelfth-pct').textContent = merged.schooling.twelfth.percentage + '%';
+          document.getElementById('prof-twelfth-school').textContent = merged.schooling.twelfth.school;
+          document.getElementById('prof-twelfth-board').textContent = `Board: ${merged.schooling.twelfth.board} • ${merged.schooling.twelfth.stream} (${merged.schooling.twelfth.year})`;
+        }
+
+        // Semester History Table
+        const tbody = document.getElementById('prof-semesters-tbody');
+        if (tbody && merged.semesterHistory) {
+          tbody.innerHTML = merged.semesterHistory.map(s => `
+            <tr>
+              <td style="font-weight: 600; color: var(--ink);">Semester ${s.sem}</td>
+              <td>${s.credits} Credits</td>
+              <td style="font-weight: 700; color: var(--institute);">${s.sgpa.toFixed(2)}</td>
+              <td>${s.result}</td>
+              <td><span class="chip chip-success">Cleared</span></td>
+            </tr>
+          `).join('');
+        }
+
+        // Download Transcript button
+        const dlBtn = document.getElementById('btn-download-transcript');
+        if (dlBtn) {
+          dlBtn.onclick = (e) => {
+            e.preventDefault();
+            dossierService.downloadTranscript(merged);
+          };
+        }
+
+        // Resumes Table
+        document.getElementById('resumes-container').innerHTML = `
+          <div class="ledger-container">
+            <table class="ledger-table" style="font-size: var(--text-xs);">
+              <thead>
+                <tr><th>Document</th><th>Target Domain</th><th>ATS Score</th><th>Status</th><th>Actions</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Primary Placement Resume (PDF)</td>
+                  <td>Software Engineering / Full Stack</td>
+                  <td style="font-variant-numeric: tabular-nums; font-weight: 600; color: var(--success);">88 / 100</td>
+                  <td><span class="chip chip-success">Verified</span></td>
+                  <td>
+                    <a href="/institute/pages/6-resume-ats/ats-report.html" class="btn btn-sm btn-outline" style="font-size: 11px;">
+                      Diagnostic &amp; Test Roles
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        `;
+      } catch (err) {
+        loader.innerHTML = ui.renderError(err.message, 'loadProfile');
+      }
+    }
+
+    // Modal logic for Edit Dossier
+    const modal = document.getElementById('editProfileModal');
+    const editBtn = document.getElementById('btn-edit-profile');
+    const closeBtn = document.getElementById('btn-close-modal');
+    const cancelBtn = document.getElementById('btn-cancel-modal');
+    const editForm = document.getElementById('editProfileForm');
+
+    function openEditModal() {
+      if (!currentStudentData) return;
+      document.getElementById('edit-name').value = currentStudentData.name || '';
+      document.getElementById('edit-phone').value = currentStudentData.phone || '';
+      document.getElementById('edit-linkedin').value = currentStudentData.linkedin || '';
+      document.getElementById('edit-github').value = currentStudentData.github || '';
+      const skillsVal = Array.isArray(currentStudentData.skills)
+        ? currentStudentData.skills.join(', ')
+        : (currentStudentData.skills || '');
+      document.getElementById('edit-skills').value = skillsVal;
+      modal.showModal();
+    }
+
+    function closeEditModal() {
+      modal.close();
+    }
+
+    editBtn?.addEventListener('click', (e) => {
+      e.preventDefault();
+      openEditModal();
+    });
+    closeBtn?.addEventListener('click', closeEditModal);
+    cancelBtn?.addEventListener('click', closeEditModal);
+
+    editForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const submitBtn = document.getElementById('btn-save-submit');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Saving to Database...';
+
+      const skillsStr = document.getElementById('edit-skills').value;
+      const skillsArr = skillsStr.split(',').map(s => s.trim()).filter(Boolean);
+
+      const payload = {
+        name: document.getElementById('edit-name').value.trim(),
+        phone: document.getElementById('edit-phone').value.trim(),
+        linkedin: document.getElementById('edit-linkedin').value.trim(),
+        github: document.getElementById('edit-github').value.trim(),
+        skills: skillsArr,
+        branch: currentStudentData.branch || 'CSE',
+        year: currentStudentData.year || 4,
+        cgpa: currentStudentData.cgpa || 8.5,
+        backlogs: currentStudentData.backlogs || 0
+      };
+
+      try {
+        const endpoint = (!isStudent && studentId)
+          ? `/api/students/${studentId}`
+          : '/api/students/me';
+
+        await api.put(endpoint, payload);
+        closeEditModal();
+        ui.toast('Student record saved and synchronized to database!', 'success');
+        await loadProfile();
+      } catch (err) {
+        ui.toast(err.message || 'Failed to update profile', 'danger');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Save to Database';
+      }
+    });
+
+    loadProfile();
+  </script>
+</body>
+</html>

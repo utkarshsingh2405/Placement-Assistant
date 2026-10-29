@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-domain="institute">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Registration — Academic Institute Pillar</title>
+  
+  <!-- Preload Display Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Design System CSS -->
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+
+  <style>
+    .stepper-progress {
+      width: 100%;
+      height: 4px;
+      background: var(--surface-3);
+      border-radius: 2px;
+      margin-bottom: var(--space-8);
+      position: relative;
+    }
+    .stepper-bar {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 2px;
+      transition: width var(--dur-normal) var(--ease-out);
+    }
+    .step-pane {
+      display: none;
+      animation: fadeIn var(--dur-normal) var(--ease-out);
+    }
+    .step-pane.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="grain-overlay"></div>
+
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-6);">
+          <div>
+            <h1 class="page-title" id="form-title" style="margin-bottom: 2px;">Register Student Profile</h1>
+            <p class="text-muted text-sm">3-step verified entry into the Master Academic Registry.</p>
+          </div>
+          <a href="/institute/pages/1-students/student-list.html" class="btn btn-sm btn-outline">
+            <svg width="14" height="14"><use href="#ph-arrow-left"/></svg>
+            <span>Back to Directory</span>
+          </a>
+        </div>
+
+        <div class="double-bezel" style="max-width: 680px; margin: 0 auto;">
+          <div class="double-bezel-inner">
+            <!-- Progress Line -->
+            <div class="stepper-progress">
+              <div class="stepper-bar" id="stepper-bar" style="width: 33.3%;"></div>
+            </div>
+
+            <form id="student-form" novalidate>
+              <!-- STEP 1: Personal & Identity -->
+              <div class="step-pane active" id="step-1">
+                <span class="chip chip-neutral" style="margin-bottom: var(--space-3);">STEP 1 OF 3 • CANDIDATE IDENTITY</span>
+                <h2 class="font-display" style="font-size: 1.8rem; margin-bottom: var(--space-6);">Who is the student?</h2>
+
+                <div class="form-group">
+                  <label class="form-label" for="name">Full Name *</label>
+                  <input type="text" id="name" class="input-field" required placeholder="e.g. Aarav Sharma" autocomplete="name">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="rollNo">College Roll Number *</label>
+                  <input type="text" id="rollNo" class="input-field roll-no" required placeholder="e.g. 22CS099" style="text-transform: uppercase;">
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; margin-top: var(--space-8);">
+                  <button type="button" class="btn btn-primary" id="btn-next-1">
+                    <span>Continue to Academic Department</span>
+                    <svg width="14" height="14"><use href="#ph-arrow-right"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- STEP 2: Academic Department & Year -->
+              <div class="step-pane" id="step-2">
+                <span class="chip chip-neutral" style="margin-bottom: var(--space-3);">STEP 2 OF 3 • ACADEMIC RECORD</span>
+                <h2 class="font-display" style="font-size: 1.8rem; margin-bottom: var(--space-6);">Department & Cohort</h2>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4); margin-bottom: var(--space-4);">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="branch">Academic Branch *</label>
+                    <select id="branch" class="select-field" required>
+                      <option value="">Select Department</option>
+                      <option value="CSE">Computer Science & Engineering (CSE)</option>
+                      <option value="IT">Information Technology (IT)</option>
+                      <option value="ECE">Electronics & Communication (ECE)</option>
+                      <option value="EEE">Electrical & Electronics (EEE)</option>
+                      <option value="MECH">Mechanical Engineering (MECH)</option>
+                      <option value="CIVIL">Civil Engineering (CIVIL)</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="year">Year of Study *</label>
+                    <select id="year" class="select-field" required>
+                      <option value="1">1st Year</option>
+                      <option value="2">2nd Year</option>
+                      <option value="3">3rd Year</option>
+                      <option value="4" selected>4th Year (Graduating Cohort)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-4);">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="cgpa">Cumulative CGPA (0.00 – 10.00) *</label>
+                    <input type="number" id="cgpa" class="input-field" step="0.01" min="0" max="10" required placeholder="8.50">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="backlogs">Active Backlogs</label>
+                    <input type="number" id="backlogs" class="input-field" min="0" value="0">
+                  </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; margin-top: var(--space-8);">
+                  <button type="button" class="btn btn-secondary" id="btn-back-2">Previous</button>
+                  <button type="button" class="btn btn-primary" id="btn-next-2">
+                    <span>Continue to Contact & Verification</span>
+                    <svg width="14" height="14"><use href="#ph-arrow-right"/></svg>
+                  </button>
+                </div>
+              </div>
+
+              <!-- STEP 3: Contact & Eligibility Approval -->
+              <div class="step-pane" id="step-3">
+                <span class="chip chip-neutral" style="margin-bottom: var(--space-3);">STEP 3 OF 3 • VERIFICATION</span>
+                <h2 class="font-display" style="font-size: 1.8rem; margin-bottom: var(--space-6);">Contact & Eligibility</h2>
+
+                <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: var(--space-4); margin-bottom: var(--space-4);">
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="email">Institutional Email *</label>
+                    <input type="email" id="email" class="input-field" required placeholder="name@college.edu">
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0;">
+                    <label class="form-label" for="phone">Primary Mobile</label>
+                    <input type="tel" id="phone" class="input-field" placeholder="9876543210">
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="resumeUrl">Resume PDF Drive Link</label>
+                  <input type="url" id="resumeUrl" class="input-field" placeholder="https://drive.google.com/...">
+                </div>
+
+                <div style="background: var(--surface-2); padding: var(--space-4); border-radius: var(--radius-control); margin-top: var(--space-4);">
+                  <label style="display: flex; align-items: flex-start; gap: var(--space-3); cursor: pointer;">
+                    <input type="checkbox" id="placementEligible" checked style="accent-color: var(--accent); width: 18px; height: 18px; margin-top: 2px;">
+                    <div>
+                      <div style="font-weight: 600; font-size: var(--text-sm);">Authorize for Campus Recruitment (Eligible)</div>
+                      <div style="font-size: var(--text-xs); color: var(--muted);">Candidate can view and apply for campus drives meeting their cutoff criteria.</div>
+                    </div>
+                  </label>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; margin-top: var(--space-8);">
+                  <button type="button" class="btn btn-secondary" id="btn-back-3">Previous</button>
+                  <button type="submit" class="btn btn-primary" id="btn-save">
+                    <svg width="14" height="14"><use href="#ph-check"/></svg>
+                    <span>Save Student to Registry</span>
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="sprite-container" style="display: none;"></div>
+
+  <script type="module">
+    import auth from '/js/core/auth.js';
+    import api from '/js/core/api.js';
+    import ui from '/js/core/ui.js';
+
+    fetch('/icons/sprite.svg').then(r => r.text()).then(svg => {
+      document.getElementById('sprite-container').innerHTML = svg;
+    });
+
+    if (!auth.requireAuth(['ADMIN', 'TPO', 'DIRECTOR'])) {
+      // restricted
+    }
+
+    ui.initLayout('students');
+
+    const bar = document.getElementById('stepper-bar');
+    const step1 = document.getElementById('step-1');
+    const step2 = document.getElementById('step-2');
+    const step3 = document.getElementById('step-3');
+
+    document.getElementById('btn-next-1').addEventListener('click', () => {
+      const name = document.getElementById('name').value.trim();
+      const roll = document.getElementById('rollNo').value.trim();
+      if (!name || !roll) {
+        ui.toast('Please provide candidate name and roll number', 'warning');
+        return;
+      }
+      step1.classList.remove('active');
+      step2.classList.add('active');
+      bar.style.width = '66.6%';
+    });
+
+    document.getElementById('btn-back-2').addEventListener('click', () => {
+      step2.classList.remove('active');
+      step1.classList.add('active');
+      bar.style.width = '33.3%';
+    });
+
+    document.getElementById('btn-next-2').addEventListener('click', () => {
+      const branch = document.getElementById('branch').value;
+      const cgpa = document.getElementById('cgpa').value;
+      if (!branch || !cgpa) {
+        ui.toast('Please select department and enter CGPA', 'warning');
+        return;
+      }
+      step2.classList.remove('active');
+      step3.classList.add('active');
+      bar.style.width = '100%';
+    });
+
+    document.getElementById('btn-back-3').addEventListener('click', () => {
+      step3.classList.remove('active');
+      step2.classList.add('active');
+      bar.style.width = '66.6%';
+    });
+
+    document.getElementById('student-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('btn-save');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      const payload = {
+        name: document.getElementById('name').value.trim(),
+        rollNo: document.getElementById('rollNo').value.trim().toUpperCase(),
+        email: document.getElementById('email').value.trim().toLowerCase(),
+        phone: document.getElementById('phone').value.trim(),
+        branch: document.getElementById('branch').value,
+        year: parseInt(document.getElementById('year').value, 10),
+        cgpa: parseFloat(document.getElementById('cgpa').value),
+        backlogs: parseInt(document.getElementById('backlogs').value || 0, 10),
+        resumeUrl: document.getElementById('resumeUrl').value.trim(),
+        placementEligible: document.getElementById('placementEligible').checked
+      };
+
+      try {
+        await api.post('/api/students', payload);
+        ui.toast('Student record saved to master registry', 'success');
+        setTimeout(() => {
+          window.location.href = '/institute/pages/1-students/student-list.html';
+        }, 800);
+      } catch (err) {
+        ui.toast(err.message, 'danger');
+        btn.disabled = false;
+        btn.textContent = 'Save Student to Registry';
+      }
+    });
+  </script>
+</body>
+</html>

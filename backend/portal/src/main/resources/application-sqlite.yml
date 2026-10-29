@@ -1,0 +1,18 @@
+spring:
+  datasource:
+    url: jdbc:sqlite:${DB_PATH:../database/portal.db}
+    driver-class-name: org.sqlite.JDBC
+    hikari:
+      maximum-pool-size: 1
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      connection-init-sql: "PRAGMA foreign_keys = ON; PRAGMA journal_mode = WAL;"
+
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: update
+
+  flyway:
+    enabled: false

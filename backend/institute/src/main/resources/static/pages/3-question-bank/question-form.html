@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="institute">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Question Authoring — Academic Institute</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+</head>
+<body class="theme-ground">
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <div class="d-flex align-center gap-2 mb-1">
+              <a href="/institute/pages/3-question-bank/question-list.html" class="text-xs text-muted text-decoration-none">&larr; Back to Question Bank</a>
+              <span class="text-xs text-muted">&bull;</span>
+              <span class="chip chip-muted uppercase text-xs">Section 03</span>
+            </div>
+            <h1 class="page-title" id="form-title">Add Placement Question</h1>
+            <p class="page-subtitle">Add aptitude, DSA coding puzzles, or technical interview questions to the institutional repository.</p>
+          </div>
+          <div class="d-flex gap-2">
+            <a href="/institute/pages/3-question-bank/question-list.html" class="btn btn-secondary">Discard</a>
+          </div>
+        </header>
+
+        <!-- Form Card (Double Bezel) -->
+        <div class="bezel-outer mb-8" style="max-width: 960px; margin: 0 auto;">
+          <div class="bezel-inner p-6">
+            <form id="question-form" novalidate>
+              <div class="form-grid g-4">
+                <!-- Title -->
+                <div class="form-col-12">
+                  <label class="form-label fw-semibold" for="title">Question Title / Topic <span class="text-danger">*</span></label>
+                  <input type="text" id="title" class="form-control" required placeholder="e.g. Reverse Linked List in O(n) space and time">
+                </div>
+
+                <!-- Category & Difficulty -->
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="category">Category <span class="text-danger">*</span></label>
+                  <select id="category" class="form-select" required>
+                    <option value="APTITUDE">Aptitude & Quantitative</option>
+                    <option value="CODING" selected>Data Structures & Algorithms</option>
+                    <option value="TECHNICAL">Core Technical (OS, DBMS, Networks)</option>
+                    <option value="HR">HR & Behavioral Interview</option>
+                  </select>
+                </div>
+
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="difficulty">Difficulty Band <span class="text-danger">*</span></label>
+                  <select id="difficulty" class="form-select" required>
+                    <option value="EASY">Easy</option>
+                    <option value="MEDIUM" selected>Medium</option>
+                    <option value="HARD">Hard</option>
+                  </select>
+                </div>
+
+                <!-- Company & Tags -->
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="company">Target Enterprise / Recruiter (Optional)</label>
+                  <input type="text" id="company" class="form-control" placeholder="e.g. Amazon, TCS, Microsoft">
+                </div>
+
+                <div class="form-col-6">
+                  <label class="form-label fw-semibold" for="tags">Topic Tags (Comma-separated)</label>
+                  <input type="text" id="tags" class="form-control" placeholder="e.g. Arrays, Two Pointers, Dynamic Programming">
+                </div>
+
+                <!-- Question Text -->
+                <div class="form-col-12">
+                  <label class="form-label fw-semibold" for="questionText">Full Problem Statement & Specifications <span class="text-danger">*</span></label>
+                  <textarea id="questionText" class="form-control" rows="6" required placeholder="State problem statement, input formats, constraints, sample cases, and expected time complexities..."></textarea>
+                </div>
+
+                <!-- MCQ Options (Optional) -->
+                <div class="form-col-12 pt-3 border-top">
+                  <h3 class="text-base fw-bold mb-1 text-ink">Objective MCQ Options (Optional)</h3>
+                  <p class="text-xs text-muted mb-3">Leave blank if this is an open-ended coding challenge or descriptive question.</p>
+                  
+                  <div class="form-grid g-3">
+                    <div class="form-col-6">
+                      <label class="form-label text-xs fw-semibold">Option A</label>
+                      <input type="text" id="optionA" class="form-control" placeholder="Option A text">
+                    </div>
+                    <div class="form-col-6">
+                      <label class="form-label text-xs fw-semibold">Option B</label>
+                      <input type="text" id="optionB" class="form-control" placeholder="Option B text">
+                    </div>
+                    <div class="form-col-6">
+                      <label class="form-label text-xs fw-semibold">Option C</label>
+                      <input type="text" id="optionC" class="form-control" placeholder="Option C text">
+                    </div>
+                    <div class="form-col-6">
+                      <label class="form-label text-xs fw-semibold">Option D</label>
+                      <input type="text" id="optionD" class="form-control" placeholder="Option D text">
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Correct Answer -->
+                <div class="form-col-12">
+                  <label class="form-label fw-semibold" for="correctAnswer">Official Answer / Key</label>
+                  <input type="text" id="correctAnswer" class="form-control" placeholder="e.g. Option B, or expected optimal output">
+                </div>
+
+                <!-- Explanation -->
+                <div class="form-col-12">
+                  <label class="form-label fw-semibold" for="explanation">Comprehensive Solution & Code Walkthrough</label>
+                  <textarea id="explanation" class="form-control" rows="5" placeholder="Step-by-step logic, Python/Java reference solution, algorithmic analysis, edge case considerations..."></textarea>
+                </div>
+
+                <!-- Submit Bar -->
+                <div class="form-col-12 d-flex justify-end gap-3 mt-4 pt-4 border-top">
+                  <a href="/institute/pages/3-question-bank/question-list.html" class="btn btn-secondary px-5">Cancel</a>
+                  <button type="submit" class="btn btn-primary px-6" id="btn-save">Save Question</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script type="module">
+    import auth from '/js/auth.js';
+    import api from '/js/api.js';
+    import ui from '/js/ui.js';
+
+    if (!auth.requireAuth(['ADMIN', 'TPO'])) {
+      // restricted
+    } else {
+      ui.initLayout('questions');
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const questionId = urlParams.get('id');
+
+      if (questionId) {
+        document.getElementById('form-title').textContent = 'Edit Question';
+        document.getElementById('btn-save').textContent = 'Update Question';
+        loadQuestion(questionId);
+      }
+
+      async function loadQuestion(id) {
+        try {
+          const q = await api.get(`/api/questions/${id}`);
+          document.getElementById('title').value = q.title || '';
+          document.getElementById('category').value = q.category || 'APTITUDE';
+          document.getElementById('difficulty').value = q.difficulty || 'MEDIUM';
+          document.getElementById('company').value = q.company || '';
+          document.getElementById('tags').value = q.tags || '';
+          document.getElementById('questionText').value = q.questionText || '';
+          document.getElementById('optionA').value = q.optionA || '';
+          document.getElementById('optionB').value = q.optionB || '';
+          document.getElementById('optionC').value = q.optionC || '';
+          document.getElementById('optionD').value = q.optionD || '';
+          document.getElementById('correctAnswer').value = q.correctAnswer || '';
+          document.getElementById('explanation').value = q.explanation || '';
+        } catch (err) {
+          ui.showToast('Could not load question: ' + err.message, 'danger');
+        }
+      }
+
+      document.getElementById('question-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        if (!form.checkValidity()) {
+          form.reportValidity();
+          return;
+        }
+
+        const payload = {
+          title: document.getElementById('title').value.trim(),
+          category: document.getElementById('category').value,
+          difficulty: document.getElementById('difficulty').value,
+          company: document.getElementById('company').value.trim() || null,
+          tags: document.getElementById('tags').value.trim() || null,
+          questionText: document.getElementById('questionText').value.trim(),
+          optionA: document.getElementById('optionA').value.trim() || null,
+          optionB: document.getElementById('optionB').value.trim() || null,
+          optionC: document.getElementById('optionC').value.trim() || null,
+          optionD: document.getElementById('optionD').value.trim() || null,
+          correctAnswer: document.getElementById('correctAnswer').value.trim() || null,
+          explanation: document.getElementById('explanation').value.trim() || null
+        };
+
+        const saveBtn = document.getElementById('btn-save');
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'Saving...';
+
+        try {
+          if (questionId) {
+            await api.put(`/api/questions/${questionId}`, payload);
+            ui.showToast('Question updated successfully!');
+          } else {
+            await api.post('/api/questions', payload);
+            ui.showToast('Question added to bank successfully!');
+          }
+          setTimeout(() => {
+            window.location.href = '/institute/pages/3-question-bank/question-list.html';
+          }, 600);
+        } catch (err) {
+          ui.showToast(err.message || 'Failed to save question', 'danger');
+          saveBtn.disabled = false;
+          saveBtn.textContent = questionId ? 'Update Question' : 'Save Question';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

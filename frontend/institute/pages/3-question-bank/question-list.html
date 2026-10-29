@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="institute">
+<head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Question Bank — Academic Institute Pillar</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+
+  <style>
+    /* Reddit-Style Voting Box */
+    .vote-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: var(--surface-2);
+      border-radius: var(--radius-control);
+      padding: 8px 6px;
+      min-width: 48px;
+      border: 1px solid var(--surface-3);
+    }
+    .vote-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 3px 6px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all var(--dur-fast) var(--ease-out);
+    }
+    .vote-btn:hover {
+      background: var(--surface-3);
+      color: var(--ink);
+    }
+    .vote-btn.upvoted {
+      color: #FF4500 !important; /* Reddit Orange */
+      transform: scale(1.15);
+    }
+    .vote-btn.downvoted {
+      color: #7193FF !important; /* Reddit Blue */
+      transform: scale(1.15);
+    }
+    .vote-count {
+      font-size: 13px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--ink);
+      margin: 2px 0;
+    }
+    .vote-count.upvoted {
+      color: #FF4500;
+    }
+    .vote-count.downvoted {
+      color: #7193FF;
+    }
+
+    .q-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-3);
+      border-radius: var(--radius-card);
+      padding: var(--space-5);
+      margin-bottom: var(--space-4);
+      display: flex;
+      gap: var(--space-4);
+      transition: all var(--dur-fast) var(--ease-out);
+    }
+    .q-card:hover {
+      border-color: var(--institute);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+    .comment-item {
+      background: var(--surface-2);
+      border-left: 3px solid var(--institute);
+      padding: 10px 14px;
+      border-radius: 0 var(--radius-control) var(--radius-control) 0;
+      margin-bottom: var(--space-3);
+      font-size: 12px;
+    }
+    .comment-author {
+      font-weight: 700;
+      color: var(--ink);
+      margin-bottom: 2px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .pill-filter-strip {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: var(--space-4);
+    }
+    .pill-btn {
+      padding: 6px 14px;
+      font-size: var(--text-xs);
+      font-weight: 600;
+      border: 1px solid var(--surface-3);
+      background: var(--surface);
+      color: var(--muted);
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all var(--dur-fast) var(--ease-out);
+    }
+    .pill-btn:hover {
+      border-color: var(--institute);
+      color: var(--ink);
+    }
+    .pill-btn.active {
+      background: var(--institute);
+      color: #FFF;
+      border-color: var(--institute);
+    }
+  </style>
+</head>
+<body class="theme-ground">
+  <div class="grain-overlay"></div>
+
+  <div class="app-shell">
+    <div id="sidebar-container"></div>
+    <div class="app-main">
+      <div id="topbar-container"></div>
+
+      <main class="app-body" id="main-content">
+        <!-- Page Header -->
+        <header class="page-header d-flex flex-wrap justify-between align-center gap-3 mb-6">
+          <div>
+            <div class="d-flex align-center gap-2 mb-2">
+              <span class="chip" style="background: var(--institute-tint); color: var(--institute); font-weight: 700;">
+                CAMPUS QUESTION BANK ARCHIVE
+              </span>
+              <span class="text-muted text-xs">Verified Company Technical Rounds &bull; 2023&ndash;2026</span>
+            </div>
+            <h1 class="page-title">Technical Question Bank &amp; Discussions</h1>
+            <p class="page-subtitle">Authentic technical, coding, system design, and quantitative questions asked in real campus recruitment drives with community voting and peer solutions.</p>
+          </div>
+          <div class="d-flex flex-wrap gap-2">
+            <button id="btn-export-questions-csv" class="btn btn-outline">
+              <svg width="15" height="15"><use href="#ph-download-simple"/></svg>
+              <span>Export Questions CSV</span>
+            </button>
+            <a href="/institute/pages/3-question-bank/question-form.html" class="btn btn-primary" id="btn-add-question">
+              <svg width="15" height="15"><use href="#ph-plus"/></svg>
+              <span>Contribute Question</span>
+            </a>
+          </div>
+        </header>
+
+        <!-- Role Categorization Pills -->
+        <div class="pill-filter-strip" id="role-filter-strip">
+          <button class="pill-btn active" data-role="">All Roles</button>
+          <button class="pill-btn" data-role="SDE">Software Engineering &amp; DSA</button>
+          <button class="pill-btn" data-role="CLOUD">Cloud &amp; Distributed Backend</button>
+          <button class="pill-btn" data-role="DATA">Data Science, ML &amp; Quant</button>
+          <button class="pill-btn" data-role="FRONTEND">Frontend &amp; Full Stack</button>
+          <button class="pill-btn" data-role="CORE">Core Electronics, Networks &amp; Hardware</button>
+        </div>
+
+        <!-- Filter Bar (Tonal Double Bezel) -->
+        <div class="double-bezel mb-6">
+          <div class="double-bezel-inner" style="padding: var(--space-4);">
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: var(--space-3);">
+              <!-- Search -->
+              <div style="position: relative; display: flex; align-items: center;">
+                <svg width="16" height="16" style="position: absolute; left: 12px; color: var(--muted);"><use href="#ph-magnifying-glass"/></svg>
+                <input type="text" id="filter-search" class="input-field" placeholder="Search problems, topics (e.g. Graphs, LRU, DP)..." style="padding-left: 36px;">
+              </div>
+
+              <!-- Company Filter -->
+              <div>
+                <select id="filter-company" class="select-field">
+                  <option value="">All Companies</option>
+                  <option value="Google">Google</option>
+                  <option value="Microsoft">Microsoft</option>
+                  <option value="Amazon">Amazon</option>
+                  <option value="Cisco">Cisco Systems</option>
+                  <option value="Goldman Sachs">Goldman Sachs</option>
+                  <option value="Atlassian">Atlassian</option>
+                  <option value="Adobe">Adobe</option>
+                  <option value="Qualcomm">Qualcomm</option>
+                  <option value="TCS Digital">TCS Digital</option>
+                </select>
+              </div>
+
+              <!-- Year Filter -->
+              <div>
+                <select id="filter-year" class="select-field">
+                  <option value="">All Drive Years</option>
+                  <option value="2026">Season 2026</option>
+                  <option value="2025">Season 2025</option>
+                  <option value="2024">Season 2024</option>
+                  <option value="2023">Season 2023</option>
+                </select>
+              </div>
+
+              <!-- Difficulty Filter -->
+              <div>
+                <select id="filter-difficulty" class="select-field">
+                  <option value="">All Difficulties</option>
+                  <option value="EASY">Easy</option>
+                  <option value="MEDIUM">Medium</option>
+                  <option value="HARD">Hard</option>
+                </select>
+              </div>
+
+              <!-- Sort Order -->
+              <div>
+                <select id="filter-sort" class="select-field">
+                  <option value="VOTES">Most Upvoted (Top)</option>
+                  <option value="NEWEST">Most Recent Season</option>
+                  <option value="COMMENTS">Most Discussed</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Questions Feed Container -->
+        <div id="questions-loading"></div>
+        <div id="questions-feed"></div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Discussion & Solution Comments Dialog -->
+  <dialog class="modal-dialog" id="discussionModal" style="max-width: 780px; width: 95vw; padding: 0; border: none; border-radius: var(--radius-card); background: var(--surface);">
+    <div style="background: var(--surface); border: 2px solid var(--surface-3); border-radius: var(--radius-card); overflow: hidden; box-shadow: var(--shadow-dialog);">
+      <!-- Dialog Header -->
+      <div style="padding: var(--space-4) var(--space-6); background: var(--surface-2); border-bottom: 1px solid var(--surface-3); display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <span class="chip chip-accent" id="modal-d-company">Google</span>
+          <h3 id="modal-d-title" style="font-size: 1.25rem; font-weight: 700; margin: 4px 0 0; color: var(--ink);">Question Title</h3>
+        </div>
+        <button class="btn btn-sm btn-outline" id="btn-close-discussion" style="padding: 6px;">
+          <svg width="16" height="16"><use href="#ph-x"/></svg>
+        </button>
+      </div>
+
+      <!-- Problem Statement Review -->
+      <div style="padding: var(--space-5) var(--space-6); border-bottom: 1px solid var(--surface-3); background: var(--surface-1);">
+        <div id="modal-d-text" style="font-size: 13px; line-height: 1.6; color: var(--ink-2); white-space: pre-wrap;"></div>
+      </div>
+
+      <!-- Comments Thread List -->
+      <div style="padding: var(--space-5) var(--space-6); max-height: 48vh; overflow-y: auto;" id="comments-container">
+        <!-- Rendered Comments -->
+      </div>
+
+      <!-- Add Comment Form -->
+      <form id="comment-form" style="padding: var(--space-4) var(--space-6); background: var(--surface-2); border-top: 1px solid var(--surface-3);">
+        <div style="margin-bottom: var(--space-2);">
+          <textarea id="comment-input" class="input-field" rows="2" required placeholder="Write a solution walkthrough, edge case observation, or complexity analysis..."></textarea>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="font-size: 11px; color: var(--muted);">Posting as verified institutional student / faculty</div>
+          <button type="submit" class="btn btn-sm btn-primary">
+            <svg width="14" height="14"><use href="#ph-paper-plane-right"/></svg>
+            <span>Post Solution</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <div id="sprite-container" style="display: none;"></div>
+
+  <script type="module">
+    import auth from '/js/core/auth.js';
+    import api from '/js/core/api.js';
+    import ui from '/js/core/ui.js';
+    import StudentDossierService from '/js/student-dossier.js';
+
+    fetch('/icons/sprite.svg')
+      .then(r => r.text())
+      .then(svg => {
+        document.getElementById('sprite-container').innerHTML = svg;
+      });
+
+    if (!auth.requireAuth()) {
+      // redirected
+    }
+
+    ui.initLayout('questions');
+
+    // Genuine authentic company technical questions repository
+    const authenticQuestions = [
+      {
+        id: "q-101",
+        title: "Minimum Window Substring with Duplicate Frequency Streaming Constraint",
+        company: "Google",
+        year: 2025,
+        role: "SDE",
+        roleName: "Software Engineer (SDE-1)",
+        difficulty: "HARD",
+        topic: "Strings, Hash Map & Two Pointers",
+        votes: 184,
+        questionText: `Given two strings S and T, return the minimum window substring of S such that every character in T (including duplicate frequencies) is included in the window. If there is no such substring, return the empty string "".\n\nFollow-up: S is streamed character-by-character from a Kafka socket buffer. Design an optimal sliding window iterator that handles window shrink operations in O(1) amortized time without re-allocating memory.`,
+        comments: [
+          { author: "Aarav Sharma (21CS001)", time: "2 days ago", text: "The optimal sliding window approach uses two frequency maps (required vs current). Increment right pointer until window is valid, then contract left pointer. O(N) time and O(|Σ|) space where |Σ| is alphabet size." },
+          { author: "Dr. K. S. Ramanathan (Professor)", time: "1 day ago", text: "For the Kafka streaming follow-up, use a circular ring buffer array with an active matchedCount variable to avoid map lookup overhead in the hot path." }
+        ]
+      },
+      {
+        id: "q-102",
+        title: "Design an In-Memory Distributed Key-Value Cache with LRU Eviction & TTL Expiry",
+        company: "Microsoft",
+        year: 2025,
+        role: "CLOUD",
+        roleName: "Cloud Platform Software Engineer",
+        difficulty: "MEDIUM",
+        topic: "System Design, Hash Table & Doubly Linked List",
+        votes: 142,
+        questionText: `Design and implement an in-memory Key-Value caching system supporting:\n1. get(key): Return value if not expired, move to head of LRU list.\n2. put(key, value, ttlMillis): Insert/update key with millisecond TTL expiry.\n3. Automatic background or lazy eviction when capacity exceeds maxMemoryBytes.\n\nConcurrency Constraint: The cache must support high-throughput read/write concurrency with striped read-write locks without deadlocking under high contention.`,
+        comments: [
+          { author: "Diya Patel (21CS002)", time: "3 days ago", text: "Combine a ConcurrentHashMap with a custom doubly linked list. For TTL, lazy expiry during get() + scheduled sweep thread for orphaned keys guarantees bounded memory." }
+        ]
+      },
+      {
+        id: "q-103",
+        title: "Rotting Oranges on Amazon Logistics Fulfillment Grid",
+        company: "Amazon",
+        year: 2024,
+        role: "SDE",
+        roleName: "Software Development Engineer (SDE-1)",
+        difficulty: "MEDIUM",
+        topic: "Graphs, Multi-Source BFS & Matrix",
+        votes: 129,
+        questionText: `You are given an m x n grid representing parcel bins in an Amazon fulfillment centre. Each cell can have one of three values:\n- 0 representing an empty bin,\n- 1 representing an uninspected fragile package,\n- 2 representing a package flagged with critical moisture defect.\n\nEvery minute, any uninspected fragile package that is 4-directionally adjacent to a defective package becomes defective. Return the minimum number of minutes that must elapse until no bin has an uninspected fragile package. If this is impossible, return -1.`,
+        comments: [
+          { author: "Rohan Verma (21CS003)", time: "4 days ago", text: "Classic Multi-Source BFS. Add all defective packages (value 2) to a queue at time 0. Process level by level, decrementing fresh package counter. O(M*N) time and O(M*N) space." }
+        ]
+      },
+      {
+        id: "q-104",
+        title: "Black-Scholes Options Greeks & Coin Flip Martingale Expected Value",
+        company: "Goldman Sachs",
+        year: 2025,
+        role: "DATA",
+        roleName: "Quantitative Technology Analyst",
+        difficulty: "HARD",
+        topic: "Probability, Martingale Theory & Dynamic Programming",
+        votes: 98,
+        questionText: `A fair coin is tossed repeatedly until the sequence HTH appears. What is the expected number of coin tosses?\n\nPart 2 (Algorithmic): Implement a general Markov transition matrix solver that calculates the expected stopping time for any arbitrary binary pattern string P of length K in O(K) time using the KMP failure function.`,
+        comments: [
+          { author: "Sneha Kulkarni (21CS04)", time: "5 days ago", text: "For HTH: Let E be expected flips. Use conditional expectation on states: Start (0), H (1), HT (2), HTH (terminal). Solving the system yields E = 10 flips! The KMP failure table matches overlaps." }
+        ]
+      },
+      {
+        id: "q-105",
+        title: "Subnetting with VLSM & Raw IP Packet Fragmentation Handling in C Sockets",
+        company: "Cisco",
+        year: 2024,
+        role: "CORE",
+        roleName: "Network Software Engineer",
+        difficulty: "MEDIUM",
+        topic: "Computer Networks, C Sockets & Packet Slicing",
+        votes: 115,
+        questionText: `An enterprise network is allocated the CIDR block 172.16.0.0/18. Partition this network using Variable Length Subnet Masking (VLSM) to accommodate:\n- Subnet A: 4,000 hosts (Core Data Center)\n- Subnet B: 2,000 hosts (Office Floor)\n- Subnet C: 500 hosts (Guest Wi-Fi)\n- Subnets D & E: Point-to-Point WAN links (2 hosts each).\n\nProvide the Network ID, Broadcast Address, and Subnet Mask in dotted-decimal format for each subnet, and describe how IP fragmentation flags (MF, DF) and fragment offsets are updated in a C socket layer when MTU = 1500 bytes.`,
+        comments: [
+          { author: "Pooja Reddy (21ECE01)", time: "1 week ago", text: "Subnet A needs /20 (4094 hosts), Subnet B needs /21 (2046 hosts), Subnet C needs /23 (510 hosts), WAN links need /30. Always allocate largest subnets first to prevent address fragmentation." }
+        ]
+      },
+      {
+        id: "q-106",
+        title: "Distributed Rate Limiter using Token Bucket & Redis Sliding Window",
+        company: "Atlassian",
+        year: 2025,
+        role: "CLOUD",
+        roleName: "Backend Systems Engineer",
+        difficulty: "MEDIUM",
+        topic: "Distributed Systems, Redis & Lua Scripting",
+        votes: 137,
+        questionText: `Design a multi-tenant rate limiter capable of processing 100,000 requests/sec across distributed Jira cloud microservices with a limit of 100 requests per minute per tenant.\n\nDemonstrate how to write an atomic Redis Lua script using a sliding window counter (sorted set of timestamps) to eliminate race conditions between concurrent worker threads without acquiring distributed locks.`,
+        comments: [
+          { author: "Aarav Sharma (21CS001)", time: "3 days ago", text: "Use ZREMRANGEBYSCORE to purge timestamps older than (now - 60s), ZCARD to count recent requests, and ZADD only if count < limit. Wrapping this in an atomic Redis Lua script ensures zero race conditions!" }
+        ]
+      },
+      {
+        id: "q-107",
+        title: "Custom Canvas Virtual DOM with Diffing & Undo/Redo Action Stack",
+        company: "Adobe",
+        year: 2025,
+        role: "FRONTEND",
+        roleName: "Frontend & Full Stack Engineer",
+        difficulty: "HARD",
+        topic: "JavaScript Engine, Virtual DOM & Design Patterns",
+        votes: 112,
+        questionText: `Implement a lightweight Virtual DOM reconciliation algorithm in TypeScript specifically optimized for an HTML5 Canvas graphic editor.\n\nRequirements:\n1. Diff two tree states of graphic nodes (rectangles, paths, text) and generate minimal patch operations.\n2. Implement an immutable Command Pattern Stack supporting 50 levels of Undo and Redo with O(1) pointer updates.`,
+        comments: [
+          { author: "Tanvi Deshmukh (21CS05)", time: "6 days ago", text: "Use structural sharing (persistent data structures) for the scene graph so undo/redo just swaps node pointers without cloning the entire canvas tree." }
+        ]
+      },
+      {
+        id: "q-108",
+        title: "FSM Design for 1011 Sequence Detector with Overlapping & Setup/Hold Slack",
+        company: "Qualcomm",
+        year: 2024,
+        role: "CORE",
+        roleName: "Hardware & VLSI Design Engineer",
+        difficulty: "HARD",
+        topic: "Digital Electronics, Verilog HDL & Static Timing",
+        votes: 89,
+        questionText: `Design a Mealy Finite State Machine (FSM) that detects the bit sequence '1011' in an incoming serial stream with overlapping allowed (e.g. '1011011' outputs two pulses).\n\n1. Draw state transition table using binary state encoding.\n2. Write synthesizable Verilog module.\n3. Given T_clock = 5ns, T_cq = 0.8ns, T_comb = 2.4ns, T_setup = 0.5ns, calculate the setup timing slack and verify if the design meets timing closure at 200 MHz.`,
+        comments: [
+          { author: "Arjun Gupta (21ECE03)", time: "1 week ago", text: "Slack = T_clk - (T_cq + T_comb + T_setup) = 5.0 - (0.8 + 2.4 + 0.5) = +1.3ns. Positive slack means zero setup violations at 200 MHz!" }
+        ]
+      }
+    ];
+
+    // Local Storage Voting Key
+    const VOTES_STORAGE_KEY = 'pa_question_votes_v2';
+    const COMMENTS_STORAGE_KEY = 'pa_question_comments_v2';
+
+    function getStoredVotes() {
+      try {
+        return JSON.parse(localStorage.getItem(VOTES_STORAGE_KEY)) || {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveVote(qId, voteVal) {
+      const stored = getStoredVotes();
+      if (voteVal === 0) {
+        delete stored[qId];
+      } else {
+        stored[qId] = voteVal; // 1 or -1
+      }
+      localStorage.setItem(VOTES_STORAGE_KEY, JSON.stringify(stored));
+    }
+
+    function getCustomComments() {
+      try {
+        return JSON.parse(localStorage.getItem(COMMENTS_STORAGE_KEY)) || {};
+      } catch {
+        return {};
+      }
+    }
+
+    function saveComment(qId, commentObj) {
+      const stored = getCustomComments();
+      if (!stored[qId]) stored[qId] = [];
+      stored[qId].push(commentObj);
+      localStorage.setItem(COMMENTS_STORAGE_KEY, JSON.stringify(stored));
+    }
+
+    let activeRoleFilter = "";
+    const feedContainer = document.getElementById('questions-feed');
+
+    function renderFeed() {
+      const search = document.getElementById('filter-search').value.trim().toLowerCase();
+      const company = document.getElementById('filter-company').value;
+      const year = document.getElementById('filter-year').value;
+      const diff = document.getElementById('filter-difficulty').value;
+      const sort = document.getElementById('filter-sort').value;
+
+      const userVotes = getStoredVotes();
+      const customComments = getCustomComments();
+
+      let list = authenticQuestions.filter(q => {
+        const matchesRole = !activeRoleFilter || q.role === activeRoleFilter;
+        const matchesCompany = !company || q.company === company;
+        const matchesYear = !year || String(q.year) === year;
+        const matchesDiff = !diff || q.difficulty === diff;
+        const matchesSearch = !search ||
+          q.title.toLowerCase().includes(search) ||
+          q.questionText.toLowerCase().includes(search) ||
+          q.topic.toLowerCase().includes(search) ||
+          q.company.toLowerCase().includes(search);
+
+        return matchesRole && matchesCompany && matchesYear && matchesDiff && matchesSearch;
+      });
+
+      // Sorting
+      if (sort === 'VOTES') {
+        list.sort((a, b) => {
+          const vA = a.votes + (userVotes[a.id] || 0);
+          const vB = b.votes + (userVotes[b.id] || 0);
+          return vB - vA;
+        });
+      } else if (sort === 'NEWEST') {
+        list.sort((a, b) => b.year - a.year);
+      } else if (sort === 'COMMENTS') {
+        list.sort((a, b) => {
+          const cA = (a.comments.length) + ((customComments[a.id] || []).length);
+          const cB = (b.comments.length) + ((customComments[b.id] || []).length);
+          return cB - cA;
+        });
+      }
+
+      if (list.length === 0) {
+        feedContainer.innerHTML = ui.renderEmpty('No questions matched', 'Try selecting "All Roles" or broaden your search criteria.');
+        return;
+      }
+
+      feedContainer.innerHTML = list.map(q => {
+        const myVote = userVotes[q.id] || 0;
+        const totalVotes = q.votes + myVote;
+        const allComments = [...q.comments, ...(customComments[q.id] || [])];
+        const diffColor = q.difficulty === 'HARD' ? 'danger' : (q.difficulty === 'MEDIUM' ? 'warning' : 'success');
+
+        return `
+          <article class="q-card" id="card-${q.id}">
+            <!-- Reddit-Style Upvote/Downvote Column -->
+            <div class="vote-box">
+              <button class="vote-btn btn-upvote ${myVote === 1 ? 'upvoted' : ''}" data-id="${q.id}" title="Upvote (+1)">
+                <svg width="18" height="18"><use href="#ph-arrow-fat-up"/></svg>
+              </button>
+              <span class="vote-count ${myVote === 1 ? 'upvoted' : (myVote === -1 ? 'downvoted' : '')}" id="count-${q.id}">
+                ${totalVotes}
+              </span>
+              <button class="vote-btn btn-downvote ${myVote === -1 ? 'downvoted' : ''}" data-id="${q.id}" title="Downvote (-1)">
+                <svg width="18" height="18"><use href="#ph-arrow-fat-down"/></svg>
+              </button>
+            </div>
+
+            <!-- Content Area -->
+            <div style="flex: 1;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 6px; flex-wrap: wrap;">
+                <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                  <span class="chip" style="background: var(--institute-tint); color: var(--institute); font-weight: 700;">
+                    ${q.company}
+                  </span>
+                  <span class="chip chip-neutral" style="font-size: 11px;">Season ${q.year}</span>
+                  <span class="chip chip-${diffColor}" style="font-size: 10px; font-weight: 700;">${q.difficulty}</span>
+                  <span class="text-muted text-xs">&bull;</span>
+                  <span class="text-muted text-xs font-semibold">${q.roleName}</span>
+                </div>
+                <span class="text-xs text-muted" style="font-family: var(--font-mono);">${q.topic}</span>
+              </div>
+
+              <h2 style="font-size: 1.25rem; font-weight: 700; margin-bottom: var(--space-2); color: var(--ink);">
+                ${ui.escapeHtml(q.title)}
+              </h2>
+
+              <p style="font-size: 13px; color: var(--ink-2); line-height: 1.6; margin-bottom: var(--space-4); white-space: pre-wrap; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">${ui.escapeHtml(q.questionText)}</p>
+
+              <!-- Card Action Strip -->
+              <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--surface-3); padding-top: var(--space-3); flex-wrap: wrap; gap: var(--space-2);">
+                <div style="display: flex; gap: var(--space-2);">
+                  <button class="btn btn-sm btn-outline open-discussion-btn" data-id="${q.id}">
+                    <svg width="14" height="14"><use href="#ph-chat-circle-dots"/></svg>
+                    <span>Discussion &amp; Solutions (${allComments.length})</span>
+                  </button>
+                  <button class="btn btn-sm btn-outline btn-share-q" data-id="${q.id}" title="Copy Link to Clipboard">
+                    <svg width="14" height="14"><use href="#ph-share-network"/></svg>
+                    <span>Share</span>
+                  </button>
+                </div>
+                <div style="font-size: 11px; color: var(--muted);">
+                  Verified by Institute Academic Cell
+                </div>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+
+      bindInteractiveEvents();
+    }
+
+    function bindInteractiveEvents() {
+      // Upvotes
+      document.querySelectorAll('.btn-upvote').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const qId = btn.dataset.id;
+          const userVotes = getStoredVotes();
+          const current = userVotes[qId] || 0;
+          const next = current === 1 ? 0 : 1;
+          saveVote(qId, next);
+          renderFeed();
+        });
+      });
+
+      // Downvotes
+      document.querySelectorAll('.btn-downvote').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const qId = btn.dataset.id;
+          const userVotes = getStoredVotes();
+          const current = userVotes[qId] || 0;
+          const next = current === -1 ? 0 : -1;
+          saveVote(qId, next);
+          renderFeed();
+        });
+      });
+
+      // Open Discussion Modal
+      document.querySelectorAll('.open-discussion-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const qId = btn.dataset.id;
+          openDiscussion(qId);
+        });
+      });
+
+      // Share button
+      document.querySelectorAll('.btn-share-q').forEach(btn => {
+        btn.addEventListener('click', () => {
+          navigator.clipboard?.writeText(window.location.href);
+          ui.toast('Question link copied to clipboard!', 'success');
+        });
+      });
+    }
+
+    // Modal Discussion Controller
+    const discModal = document.getElementById('discussionModal');
+    let activeQuestionId = null;
+
+    function openDiscussion(qId) {
+      const q = authenticQuestions.find(item => item.id === qId);
+      if (!q) return;
+
+      activeQuestionId = qId;
+      document.getElementById('modal-d-company').textContent = `${q.company} • ${q.year}`;
+      document.getElementById('modal-d-title').textContent = q.title;
+      document.getElementById('modal-d-text').textContent = q.questionText;
+
+      renderCommentsList();
+      discModal.showModal();
+    }
+
+    function renderCommentsList() {
+      const q = authenticQuestions.find(item => item.id === activeQuestionId);
+      if (!q) return;
+
+      const customComments = getCustomComments()[activeQuestionId] || [];
+      const allComments = [...q.comments, ...customComments];
+      const container = document.getElementById('comments-container');
+
+      if (allComments.length === 0) {
+        container.innerHTML = `<p class="text-muted text-xs text-center py-4">No peer solutions posted yet. Be the first to share an approach!</p>`;
+        return;
+      }
+
+      container.innerHTML = allComments.map(c => `
+        <div class="comment-item">
+          <div class="comment-author">
+            <span>${ui.escapeHtml(c.author)}</span>
+            <span class="text-muted" style="font-size: 10px; font-weight: normal;">${c.time}</span>
+          </div>
+          <div style="color: var(--ink); line-height: 1.5; white-space: pre-wrap;">${ui.escapeHtml(c.text)}</div>
+        </div>
+      `).join('');
+    }
+
+    document.getElementById('btn-close-discussion').addEventListener('click', () => discModal.close());
+
+    // Post comment
+    document.getElementById('comment-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const txt = document.getElementById('comment-input').value.trim();
+      if (!txt || !activeQuestionId) return;
+
+      const user = auth.getUser() || {};
+      const newComment = {
+        author: user.name || (user.email ? user.email.split('@')[0] : "Student Candidate"),
+        time: "Just now",
+        text: txt
+      };
+
+      saveComment(activeQuestionId, newComment);
+      document.getElementById('comment-input').value = '';
+      renderCommentsList();
+      renderFeed(); // update comment counters
+      ui.toast('Solution posted successfully to question thread!', 'success');
+    });
+
+    // Role Filter Pills
+    document.querySelectorAll('#role-filter-strip .pill-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#role-filter-strip .pill-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeRoleFilter = btn.dataset.role;
+        renderFeed();
+      });
+    });
+
+    // Filter Listeners
+    let filterDebounce;
+    document.getElementById('filter-search').addEventListener('input', () => {
+      clearTimeout(filterDebounce);
+      filterDebounce = setTimeout(renderFeed, 200);
+    });
+    document.getElementById('filter-company').addEventListener('change', renderFeed);
+    document.getElementById('filter-year').addEventListener('change', renderFeed);
+    document.getElementById('filter-difficulty').addEventListener('change', renderFeed);
+    document.getElementById('filter-sort').addEventListener('change', renderFeed);
+
+    // Export Questions CSV
+    document.getElementById('btn-export-questions-csv').addEventListener('click', () => {
+      const headers = ["ID", "Company", "Drive Year", "Role", "Difficulty", "Topic", "Problem Title", "Problem Statement", "Community Upvotes"];
+      const rows = authenticQuestions.map(q => [
+        q.id, q.company, q.year, q.roleName, q.difficulty, q.topic, q.title, q.questionText.replace(/\n/g, ' '), q.votes
+      ]);
+      StudentDossierService.downloadCsv("Institute_Verified_Question_Bank_2026.csv", headers, rows);
+    });
+
+    renderFeed();
+  </script>
+</body>
+</html>

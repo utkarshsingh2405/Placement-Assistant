@@ -1,0 +1,163 @@
+/**
+ * Placement Assistance Platform Design System
+ * 02-typography.css: Instrument Serif (Display) + Geist (Interface & Body)
+ */
+
+/* Google Fonts Import with display=swap */
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&family=Noto+Sans+Devanagari:wght@400;500;600&display=swap');
+
+/* Typography Utilities & Rules */
+
+body {
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: var(--leading-normal);
+  color: var(--ink);
+}
+
+/* Headings - Stylized Editorial Display Typography Everywhere */
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6,
+.app-heading,
+.card-title,
+.modal-title,
+.section-title,
+.page-title,
+.hero-title,
+.font-display {
+  font-family: var(--font-display, 'Instrument Serif', Georgia, serif) !important;
+  font-weight: 400 !important;
+  color: var(--ink);
+  line-height: var(--leading-tight);
+  text-wrap: balance;
+  margin-bottom: var(--space-2);
+  letter-spacing: -0.015em;
+}
+
+/* Public Editorial Display Headings */
+.display-xl {
+  font-family: var(--font-display, 'Instrument Serif', Georgia, serif) !important;
+  font-size: var(--text-display-xl);
+  font-weight: 400 !important;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.display-lg {
+  font-family: var(--font-display, 'Instrument Serif', Georgia, serif) !important;
+  font-size: var(--text-display-lg);
+  font-weight: 400 !important;
+  line-height: 0.96;
+  letter-spacing: -0.025em;
+  text-wrap: balance;
+}
+
+h1, .h1 {
+  font-size: var(--text-h1);
+  letter-spacing: -0.02em;
+}
+
+h2, .h2 {
+  font-size: var(--text-h2);
+  letter-spacing: -0.015em;
+}
+
+h3, .h3 {
+  font-size: var(--text-h3);
+  letter-spacing: -0.01em;
+}
+
+h4, .h4 {
+  font-size: clamp(1.2rem, 1.8vw, 1.55rem);
+  letter-spacing: -0.01em;
+}
+
+h5, .h5 {
+  font-size: clamp(1.1rem, 1.4vw, 1.3rem);
+}
+
+h6, .h6 {
+  font-size: 1.05rem;
+}
+
+/* App Interior Headings: Same Stylized Display Typography */
+.app-heading {
+  font-family: var(--font-display, 'Instrument Serif', Georgia, serif) !important;
+  font-weight: 400 !important;
+  font-size: var(--text-h1);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--ink);
+}
+
+/* Paragraphs & Text Measures */
+p {
+  margin-bottom: var(--space-4);
+  max-width: 72ch;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+.lead {
+  font-size: 1.15rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.text-muted {
+  color: var(--muted) !important;
+}
+
+.text-ink {
+  color: var(--ink) !important;
+}
+
+.text-ink-2 {
+  color: var(--ink-2) !important;
+}
+
+.text-sm {
+  font-size: var(--text-sm);
+  line-height: 1.4;
+}
+
+.text-xs {
+  font-size: var(--text-xs);
+  line-height: 1.35;
+}
+
+/* Tabular Numbers */
+.tabular-nums,
+table td,
+.stat-value,
+.countdown-chip,
+.tag-package,
+.percentage-dial,
+.roll-no {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Hindi / Bilingual Support */
+[lang="hi"],
+.bilingual-notice {
+  font-family: var(--font-hindi);
+  line-height: 1.6;
+}
+
+/* Label styling */
+.label-field {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: var(--space-1);
+}
+
+.label-hint {
+  font-size: var(--text-xs);
+  color: var(--muted);
+  margin-top: var(--space-1);
+}
