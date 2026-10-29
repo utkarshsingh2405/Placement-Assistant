@@ -30,6 +30,8 @@ public class CorsConfig {
         config.addAllowedOriginPattern("https://localhost:*");
         config.addAllowedOriginPattern("http://127.0.0.1:*");
         config.addAllowedOriginPattern("https://127.0.0.1:*");
+        config.addAllowedOriginPattern("https://*.onrender.com");
+        config.addAllowedOriginPattern("http://*.onrender.com");
         config.addAllowedOriginPattern("*");
 
         if (allowedOrigins != null && !allowedOrigins.isBlank()) {

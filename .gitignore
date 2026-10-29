@@ -10,7 +10,8 @@ logs/
 Thumbs.db
 .vscode/
 
-# Keep root or temporary databases ignored except database/
+# Keep root or temporary databases ignored except database directories
 *.db
 !database/*.db
+!backend/database/*.db
 

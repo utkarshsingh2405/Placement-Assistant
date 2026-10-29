@@ -32,16 +32,13 @@ class ApiClient {
     if (typeof window !== 'undefined') {
       if (window.__API_BASE__) return window.__API_BASE__.replace(/\/+$/, '');
       const stored = localStorage.getItem('pa_api_base');
-      if (stored) return stored.replace(/\/+$/, '');
+      if (stored && stored.trim() !== '') return stored.replace(/\/+$/, '');
+
       const port = window.location.port;
-      // When served on common standalone frontend dev ports (3000, 5000, 5173, 5500, 8000), default target is Gateway 8080
-      if (port === '8080' || port === '8088') {
-        try { localStorage.setItem('pa_gateway_port', port); } catch (e) {}
-      }
+      // When served on common standalone frontend dev tools (Vite, LiveServer, etc.)
       if (['3000', '5000', '5173', '5500', '8000'].includes(port)) {
-        let gw = '8080';
-        try { gw = localStorage.getItem('pa_gateway_port') || '8088'; } catch (e) {}
-        return 'http://' + (window.location.hostname || 'localhost') + ':' + gw;
+        let gw = localStorage.getItem('pa_gateway_port') || '8080';
+        return window.location.protocol + '//' + (window.location.hostname || 'localhost') + ':' + gw;
       }
       return window.location.origin;
     }
@@ -71,7 +68,9 @@ class ApiClient {
       return `${base}${clean}`;
     }
 
-    // Portal Gateway Auth, Status, and Admin User endpoints must not be prefixed with /institute or /placement
+    // Auth and status endpoints:
+    // If we are currently browsing an isolated or context-routed pillar (/institute or /placement),
+    // retain the pillar prefix so standalone and multi-pillar deployments both work properly.
     if (
       clean.startsWith('/api/auth') || 
       clean.startsWith('/auth') || 
@@ -79,9 +78,8 @@ class ApiClient {
       clean.startsWith('/api/admin')
     ) {
       if (clean.startsWith('/auth')) clean = `/api${clean}`;
-      if (typeof window !== 'undefined' && (window.location.port === '8081' || window.location.port === '8082')) {
-        let gw = '8080'; try { gw = localStorage.getItem('pa_gateway_port') || '8088'; } catch (e) {}
-        return 'http://' + window.location.hostname + ':' + gw + clean;
+      if (prefix && (clean.startsWith('/api/auth') || clean.startsWith('/api/status'))) {
+        return `${base}${prefix}${clean}`;
       }
       return `${base}${clean}`;
     }

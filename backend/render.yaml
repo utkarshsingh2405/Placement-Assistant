@@ -12,22 +12,16 @@ services:
     dockerfilePath: ./institute/Dockerfile
     plan: free
     region: oregon
-    healthCheckPath: /institute/actuator/health
+    healthCheckPath: /institute/healthz
     envVars:
-      - key: PORT
-        value: 8081
       - key: SERVER_PORT
-        value: 8081
+        value: "8081"
       - key: CONTEXT_PATH
         value: /institute
       - key: SPRING_PROFILES_ACTIVE
-        value: dev
-      - key: SPRING_DATASOURCE_URL
-        value: jdbc:mysql://${MYSQL_HOST:-localhost}:${MYSQL_PORT:-3306}/placement_institute?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-      - key: MYSQL_USER
-        value: root
-      - key: MYSQL_PASSWORD
-        value: root
+        value: sqlite
+      - key: DB_PATH
+        value: /app/database/institute.db
       - key: UPLOAD_DIR
         value: /app/uploads/resumes
       - key: INSTITUTE_API_KEY
@@ -47,22 +41,16 @@ services:
     dockerfilePath: ./placement/Dockerfile
     plan: free
     region: oregon
-    healthCheckPath: /placement/actuator/health
+    healthCheckPath: /placement/healthz
     envVars:
-      - key: PORT
-        value: 8082
-      - key: PLACEMENT_PORT
-        value: 8082
+      - key: SERVER_PORT
+        value: "8082"
       - key: CONTEXT_PATH
         value: /placement
       - key: SPRING_PROFILES_ACTIVE
-        value: dev
-      - key: SPRING_DATASOURCE_URL
-        value: jdbc:mysql://${MYSQL_HOST:-localhost}:${MYSQL_PORT:-3306}/placement_placement?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-      - key: MYSQL_USER
-        value: root
-      - key: MYSQL_PASSWORD
-        value: root
+        value: sqlite
+      - key: DB_PATH
+        value: /app/database/placement.db
       - key: UPLOAD_DIR
         value: /app/data/placement/uploads
       - key: INSTITUTE_URL
@@ -86,20 +74,14 @@ services:
     dockerfilePath: ./portal/Dockerfile
     plan: free
     region: oregon
-    healthCheckPath: /actuator/health
+    healthCheckPath: /healthz
     envVars:
-      - key: PORT
-        value: 8080
-      - key: PORTAL_PORT
-        value: 8080
+      - key: SERVER_PORT
+        value: "8080"
       - key: SPRING_PROFILES_ACTIVE
-        value: dev
-      - key: SPRING_DATASOURCE_URL
-        value: jdbc:mysql://${MYSQL_HOST:-localhost}:${MYSQL_PORT:-3306}/placement_portal?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-      - key: MYSQL_USER
-        value: root
-      - key: MYSQL_PASSWORD
-        value: root
+        value: sqlite
+      - key: DB_PATH
+        value: /app/database/portal.db
       - key: INSTITUTE_URL
         value: http://placement-assist-institute:8081
       - key: PLACEMENT_URL

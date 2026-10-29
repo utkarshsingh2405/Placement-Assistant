@@ -24,14 +24,16 @@ WORKDIR /app
 RUN apk add --no-cache curl
 
 # Create data directories
-RUN mkdir -p /app/data /app/data/portal/uploads
+RUN mkdir -p /app/data /app/database /app/data/portal/uploads
 
+# Copy pre-seeded SQLite databases and executable JAR
+COPY database/ /app/database/
 COPY --from=build /app/portal/target/*.jar /app/app.jar
 
-ENV PORT=8080
 ENV SERVER_PORT=8080
-ENV SPRING_PROFILES_ACTIVE=dev
+ENV SPRING_PROFILES_ACTIVE=sqlite
+ENV DB_PATH=/app/database/portal.db
 
-EXPOSE 8080
+EXPOSE 8080 10000
 
 ENTRYPOINT ["java", "-jar", "/app/app.jar"]

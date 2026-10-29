@@ -48,6 +48,8 @@ public class SecurityConfig {
                                 "/js/**",
                                 "/assets/**",
                                 "/favicon.ico",
+                                "/healthz",
+                                "/dashboard.html",
                                 "/error"
                         ).permitAll()
                         // Public endpoints (highlights ticker, placed lookup)

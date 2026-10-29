@@ -88,6 +88,7 @@ public class SecurityConfig {
                                 "/api/auth/forgot-password",
                                 "/api/auth/reset-password",
                                 "/api/status/**",
+                                "/healthz",
                                 "/actuator/**",
                                 "/fallback/**",
                                 "/error"

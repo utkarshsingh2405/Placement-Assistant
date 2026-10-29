@@ -134,12 +134,16 @@ class DomainSwitcher {
 
   switchDomain(domain) {
     localStorage.setItem(this.STORAGE_KEY, domain);
+    const placementTarget = window.__PLACEMENT_URL__ || localStorage.getItem('pa_placement_url') || '/placement/dashboard.html';
+    const instituteTarget = window.__INSTITUTE_URL__ || localStorage.getItem('pa_institute_url') || '/institute/dashboard.html';
+    const portalTarget = window.__PORTAL_URL__ || localStorage.getItem('pa_portal_url') || '/choose-domain.html';
+
     if (domain === 'placement') {
-      window.location.href = '/placement/dashboard.html';
+      window.location.href = placementTarget;
     } else if (domain === 'institute') {
-      window.location.href = '/institute/dashboard.html';
+      window.location.href = instituteTarget;
     } else {
-      window.location.href = '/choose-domain.html';
+      window.location.href = portalTarget;
     }
   }
 }

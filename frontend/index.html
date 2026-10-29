@@ -64,10 +64,8 @@
       <div class="d-inline-flex align-center gap-2 p-2 surface-tone rounded-3" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);">
         <label for="api-base-select" class="text-xs fw-semibold" style="color: #A0B0B4;">Backend API Target:</label>
         <select id="api-base-select" class="form-select form-select-sm" style="background: #141E22; color: #FFF; border: 1px solid rgba(255,255,255,0.2); width: auto;">
-          <option value="">Relative / Gateway (Default)</option>
-          <option value="http://localhost:8080">Local Gateway (Port 8080)</option>
-          <option value="http://localhost:8081">Direct Institute (Port 8081)</option>
-          <option value="custom">Custom Cloud URL...</option>
+          <option value="">Auto-Detect (Current Origin)</option>
+          <option value="custom">Custom Backend URL...</option>
         </select>
         <button id="theme-toggle" class="btn btn-secondary btn-sm" title="Toggle Dark/Light Mode">
           🌓 Theme
@@ -208,21 +206,20 @@
     const apiSelect = document.getElementById('api-base-select');
     const storedBase = localStorage.getItem('pa_api_base');
     if (storedBase) {
-      if (storedBase === 'http://localhost:8080' || storedBase === 'http://localhost:8081') {
-        apiSelect.value = storedBase;
-      } else {
-        apiSelect.value = 'custom';
-      }
+      apiSelect.value = 'custom';
+    } else {
+      apiSelect.value = '';
     }
 
     apiSelect.addEventListener('change', () => {
       if (apiSelect.value === 'custom') {
-        const customUrl = prompt('Enter backend API Base URL (e.g. https://your-render-app.onrender.com):', storedBase || '');
+        const customUrl = prompt('Enter backend API Base URL (e.g. https://your-render-app.onrender.com):', storedBase || window.location.origin);
         if (customUrl) {
           localStorage.setItem('pa_api_base', customUrl.replace(/\/$/, ''));
+        } else {
+          apiSelect.value = '';
+          localStorage.removeItem('pa_api_base');
         }
-      } else if (apiSelect.value) {
-        localStorage.setItem('pa_api_base', apiSelect.value);
       } else {
         localStorage.removeItem('pa_api_base');
       }

@@ -1,7 +1,7 @@
 spring:
   datasource:
-    url: jdbc:sqlite:${DB_PATH:../database/portal.db}
-    driver-class-name: org.sqlite.JDBC
+    url: ${SPRING_DATASOURCE_URL:jdbc:sqlite:${DB_PATH:database/portal.db}}
+    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:org.sqlite.JDBC}
     hikari:
       maximum-pool-size: 1
       connection-timeout: 30000
