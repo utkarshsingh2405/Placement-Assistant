@@ -15,7 +15,7 @@ COPY shared-web/ shared-web/
 COPY placement/ placement/
 
 # Package application
-RUN mvn clean package -DskipTests -pl placement -am
+RUN mvn clean package -Dmaven.test.skip=true -pl placement -am
 
 # Runtime stage
 FROM eclipse-temurin:17-jre-alpine

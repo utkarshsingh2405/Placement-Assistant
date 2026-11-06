@@ -26,4 +26,21 @@ public class DriveRoundResponse {
     private Double cutoff;
     private String instructions;
     private LocalDateTime createdAt;
+
+    public Integer getSequence() {
+        return orderNo;
+    }
+
+    public String getRoundName() {
+        if (roundType == null) return "Evaluation Round";
+        return roundType.name().replace('_', ' ');
+    }
+
+    public String getPlatformVenue() {
+        return venue;
+    }
+
+    public Double getCutoffScore() {
+        return cutoff;
+    }
 }

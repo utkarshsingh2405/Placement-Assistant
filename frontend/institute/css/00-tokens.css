@@ -174,61 +174,63 @@ html[data-domain="portal"] {
 
 /* ==========================================================================
    COLOR TOKENS - DARK THEME (data-theme="dark")
-   Obsidian & Nocturnal Dark Surface
+   Refined Graphite & Slate Charcoal Surface (based on user approved reference)
    ========================================================================== */
 html[data-theme="dark"] {
   color-scheme: dark;
 
-  --ground: #0C1214;         /* Night canvas ground */
-  --surface: #121C1F;        /* Elevated dark surface */
-  --surface-2: #182529;      /* Outer shell, inputs, zebra striping */
-  --surface-3: #1F3036;      /* Deeper tone step, pressed controls, borders */
+  --ground: #1C1D21;         /* Refined graphite dark ground */
+  --surface: #22242A;        /* Elevated dark surface / card ground */
+  --surface-2: #191A1E;      /* Inset surface, rails, inputs */
+  --surface-3: #2E323B;      /* Hairline borders & subtle dividers */
+  --surface-elevated: #282A32;
+  --surface-sunken: #141518;
 
-  --ink: #E8EEEC;            /* Crisp light text */
-  --ink-2: #B9C6C9;          /* Secondary descriptive text */
-  --muted: #8FA0A5;          /* Metadata & hint labels (WCAG AA) */
+  --ink: #FFFFFF;            /* Pure crisp white text */
+  --ink-2: #A0A6B2;          /* Secondary slate text */
+  --muted: #717885;          /* Metadata & hint labels (WCAG AA) */
 
   /* Cross-token Aliases */
   --bg: var(--ground);
   --bg-subtle: var(--surface-2);
   --surface-elevated: var(--surface);
   --border: var(--surface-3);
-  --border-subtle: var(--surface-2);
-  --border-focus: var(--muted);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-focus: rgba(255, 255, 255, 0.25);
   --text: var(--ink);
   --text-muted: var(--ink-2);
   --text-dim: var(--muted);
 
-  /* Institute Dark Accent */
-  --institute: #E0808C;
-  --institute-hover: #F09CA6;
-  --institute-tint: #2A1418;
-  --door-institute: #2A0D13;
+  /* Institute Dark Accent (Rich heraldic wine / crimson) */
+  --institute: #A12638;
+  --institute-hover: #B83247;
+  --institute-tint: rgba(161, 38, 56, 0.18);
+  --door-institute: #240E13;
 
-  /* Placement Dark Accent */
-  --placement: #4FD1B8;
-  --placement-hover: #6EE7CF;
-  --placement-tint: #0B2A26;
-  --door-placement: #06231E;
+  /* Placement Dark Accent (Sleek pine emerald) */
+  --placement: #149B85;
+  --placement-hover: #1BB39B;
+  --placement-tint: rgba(20, 155, 133, 0.18);
+  --door-placement: #0B221E;
 
   /* Brass Dark Accent */
   --brass: #E0B552;
   --brass-light: #F2CA68;
-  --brass-tint: #2A2210;
+  --brass-tint: rgba(224, 181, 82, 0.18);
 
   /* Semantics Dark */
-  --success: #5CC389;
-  --success-tint: #0E291B;
-  --warning: #F0A04B;
-  --warning-tint: #33200A;
-  --danger: #FF7A7F;
-  --danger-tint: #331215;
-  --info: #6BB6E0;
-  --info-tint: #102533;
+  --success: #22C55E;
+  --success-tint: rgba(34, 197, 94, 0.15);
+  --warning: #F59E0B;
+  --warning-tint: rgba(245, 158, 11, 0.15);
+  --danger: #EF4444;
+  --danger-tint: rgba(239, 68, 68, 0.15);
+  --info: #38BDF8;
+  --info-tint: rgba(56, 189, 248, 0.15);
 
-  --focus-ring: 0 0 0 3px rgba(79, 209, 184, 0.35);
-  --shadow-float: 0 16px 36px -8px rgba(0, 0, 0, 0.45), 0 4px 12px -2px rgba(0, 0, 0, 0.25);
-  --shadow-dialog: 0 24px 48px -12px rgba(0, 0, 0, 0.6), 0 8px 16px -4px rgba(0, 0, 0, 0.3);
+  --focus-ring: 0 0 0 3px rgba(161, 38, 56, 0.35);
+  --shadow-float: 0 16px 36px -8px rgba(0, 0, 0, 0.55), 0 4px 12px -2px rgba(0, 0, 0, 0.35);
+  --shadow-dialog: 0 24px 48px -12px rgba(0, 0, 0, 0.7), 0 8px 16px -4px rgba(0, 0, 0, 0.4);
 }
 
 /* ==========================================================================
@@ -335,7 +337,7 @@ html[data-theme="light"] .btn-outline:hover {
   border-color: #94A3B8 !important;
 }
 
-/* DARK MODE SURFACES */
+/* DARK MODE SURFACES (Graphite & Slate Charcoal Aesthetics based on reference) */
 html[data-theme="dark"] body,
 html[data-theme="dark"] .app-shell,
 html[data-theme="dark"] .app-wrapper,
@@ -346,17 +348,22 @@ html[data-theme="dark"] .main-wrapper,
 html[data-theme="dark"] .app-body,
 html[data-theme="dark"] .content-body,
 html[data-theme="dark"] .page-content {
-  background-color: #0C1214 !important;
-  color: #E8EEEC !important;
+  background-color: #1C1D21 !important;
+  color: #FFFFFF !important;
 }
 
 html[data-theme="dark"] .app-rail,
-html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .sidebar {
+  background-color: #191A1E !important;
+  border-color: #2E323B !important;
+  color: #FFFFFF !important;
+}
+
 html[data-theme="dark"] .app-topbar,
 html[data-theme="dark"] .topbar {
-  background-color: #121C1F !important;
-  border-color: #1F3036 !important;
-  color: #E8EEEC !important;
+  background-color: #1C1D21 !important;
+  border-color: #2E323B !important;
+  color: #FFFFFF !important;
 }
 
 html[data-theme="dark"] .card,
@@ -368,27 +375,35 @@ html[data-theme="dark"] .hall-ticket,
 html[data-theme="dark"] .checker-card,
 html[data-theme="dark"] .listing-stub,
 html[data-theme="dark"] .dialog-card {
-  background-color: #121C1F !important;
-  border-color: #1F3036 !important;
-  color: #E8EEEC !important;
+  background-color: #22242A !important;
+  border-color: #2E323B !important;
+  color: #FFFFFF !important;
 }
 
-html[data-theme="dark"] .double-bezel {
-  background-color: #182529 !important;
-  border-color: #1F3036 !important;
+html[data-theme="dark"] .double-bezel,
+html[data-theme="dark"] .bezel-outer {
+  background-color: #191A1E !important;
+  border-color: #2E323B !important;
+}
+
+html[data-theme="dark"] .double-bezel-inner,
+html[data-theme="dark"] .bezel-inner {
+  background-color: #22242A !important;
+  border-color: #2E323B !important;
+  color: #FFFFFF !important;
 }
 
 html[data-theme="dark"] .nav-rail-section {
-  color: #8FA0A5 !important;
+  color: #717885 !important;
 }
 
 html[data-theme="dark"] .nav-rail-item {
-  color: #B9C6C9 !important;
+  color: #A0A6B2 !important;
 }
 
 html[data-theme="dark"] .nav-rail-item:hover {
-  background-color: #182529 !important;
-  color: #E8EEEC !important;
+  background-color: #282A32 !important;
+  color: #FFFFFF !important;
 }
 
 html[data-theme="dark"] .nav-rail-item.active {
@@ -401,41 +416,46 @@ html[data-theme="dark"] .form-select,
 html[data-theme="dark"] .input-field,
 html[data-theme="dark"] .select-field,
 html[data-theme="dark"] .textarea-field {
-  background-color: #182529 !important;
-  color: #E8EEEC !important;
-  border-color: #1F3036 !important;
+  background-color: #191A1E !important;
+  color: #FFFFFF !important;
+  border-color: #2E323B !important;
+}
+
+html[data-theme="dark"] .table {
+  background-color: #22242A !important;
+  color: #FFFFFF !important;
 }
 
 html[data-theme="dark"] .table th,
 html[data-theme="dark"] .table-light th,
 html[data-theme="dark"] .table thead th,
 html[data-theme="dark"] .ledger-table th {
-  background-color: #182529 !important;
-  color: #8FA0A5 !important;
-  border-bottom-color: #1F3036 !important;
+  background-color: #191A1E !important;
+  color: #A0A6B2 !important;
+  border-bottom-color: #2E323B !important;
 }
 
 html[data-theme="dark"] .table td,
 html[data-theme="dark"] .ledger-table td {
-  color: #E8EEEC !important;
-  border-bottom-color: #182529 !important;
+  color: #FFFFFF !important;
+  border-bottom-color: #2E323B !important;
 }
 
 html[data-theme="dark"] .btn-secondary {
-  background-color: #182529 !important;
-  color: #E8EEEC !important;
+  background-color: #282A32 !important;
+  color: #FFFFFF !important;
 }
 
 html[data-theme="dark"] .btn-outline {
-  border-color: #1F3036 !important;
-  color: #B9C6C9 !important;
+  border-color: #2E323B !important;
+  color: #A0A6B2 !important;
   background-color: transparent !important;
 }
 
 html[data-theme="dark"] .btn-outline:hover {
-  background-color: #182529 !important;
-  color: #E8EEEC !important;
-  border-color: #8FA0A5 !important;
+  background-color: #282A32 !important;
+  color: #FFFFFF !important;
+  border-color: #4A4E5A !important;
 }
 
 /* Reduced Motion Fallback */

@@ -15,7 +15,7 @@ COPY shared-web/ shared-web/
 COPY portal/ portal/
 
 # Package application
-RUN mvn clean package -DskipTests -pl portal -am
+RUN mvn clean package -Dmaven.test.skip=true -pl portal -am
 
 # Runtime stage
 FROM eclipse-temurin:17-jre-alpine

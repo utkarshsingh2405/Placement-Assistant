@@ -24,20 +24,31 @@ public class DriveRoundController {
         this.service = service;
     }
 
-    @GetMapping("/api/drives/{driveId}/rounds")
+    @GetMapping("/api/rounds/{roundId}")
+    @Operation(summary = "Get single evaluation round details")
+    public ResponseEntity<ApiResponse<DriveRoundResponse>> getRound(@PathVariable Long roundId) {
+        DriveRoundResponse response = service.getRound(roundId);
+        return ResponseEntity.ok(ApiResponse.ok(response));
+    }
+
+    @GetMapping({"/api/drives/{driveId}/rounds", "/api/rounds/drive/{driveId}"})
     @Operation(summary = "Get all evaluation rounds for a drive ordered by sequence")
     public ResponseEntity<ApiResponse<List<DriveRoundResponse>>> getRoundsForDrive(@PathVariable Long driveId) {
         List<DriveRoundResponse> response = service.getRoundsForDrive(driveId);
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
 
-    @PostMapping("/api/drives/{driveId}/rounds")
+    @PostMapping({"/api/drives/{driveId}/rounds", "/api/rounds"})
     @PreAuthorize("hasAnyRole('TPO', 'DIRECTOR', 'ADMIN')")
     @Operation(summary = "Add an evaluation round to a placement drive")
     public ResponseEntity<ApiResponse<DriveRoundResponse>> createRound(
-            @PathVariable Long driveId,
+            @PathVariable(required = false) Long driveId,
             @Valid @RequestBody CreateRoundRequest request) {
-        DriveRoundResponse response = service.createRound(driveId, request);
+        Long targetDriveId = driveId != null ? driveId : request.getDriveId();
+        if (targetDriveId == null) {
+            throw new com.placementassist.shared.exception.ApiException(HttpStatus.BAD_REQUEST, "MISSING_DRIVE_ID", "driveId is required to create a round");
+        }
+        DriveRoundResponse response = service.createRound(targetDriveId, request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.ok("Round created successfully", response));
     }

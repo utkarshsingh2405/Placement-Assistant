@@ -54,6 +54,13 @@ public class DriveRoundService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
+    public DriveRoundResponse getRound(Long roundId) {
+        DriveRound round = driveRoundRepository.findById(roundId)
+                .orElseThrow(() -> new NotFoundException("DriveRound", roundId));
+        return mapper.toRoundResponse(round);
+    }
+
     @Transactional
     public DriveRoundResponse createRound(Long driveId, CreateRoundRequest request) {
         Drive drive = driveRepository.findById(driveId)

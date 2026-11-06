@@ -3,7 +3,7 @@
  * theme-init.js: Zero-Flicker Early Theme Initializer
  * Executed synchronously in <head> to eliminate Flash of Unstyled Content (FOUC).
  */
-(function() {
+(function () {
   function getTheme() {
     try {
       // 1. Check document.cookie first (seamless cross-port sharing on localhost)
@@ -26,7 +26,7 @@
           if (val === 'dark' || val === 'light') return val;
         }
       }
-    } catch (e) {}
+    } catch (e) { }
 
     // Default to 'light' for optimal, crisp enterprise white experience
     return 'light';
@@ -36,7 +36,7 @@
   document.documentElement.setAttribute('data-theme', active);
   try {
     document.documentElement.style.colorScheme = active;
-  } catch (e) {}
+  } catch (e) { }
 
   // Explicitly guard against automated dark-mode filters / Dark Reader
   try {

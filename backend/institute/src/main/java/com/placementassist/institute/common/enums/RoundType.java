@@ -5,5 +5,10 @@ public enum RoundType {
     TECHNICAL,
     MANAGERIAL,
     SD,
-    GD
+    GD,
+    ONLINE_TEST,
+    CODING_ROUND,
+    TECHNICAL_INTERVIEW,
+    HR_INTERVIEW,
+    GROUP_DISCUSSION
 }

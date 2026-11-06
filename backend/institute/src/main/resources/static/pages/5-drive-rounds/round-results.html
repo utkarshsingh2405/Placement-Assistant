@@ -204,17 +204,31 @@
         loader.innerHTML = ui.renderLoader('Loading round evaluation results...');
 
         try {
-          roundData = await api.get(`/api/rounds/${roundId}`);
-          document.getElementById('round-name').textContent = roundData.roundName;
-          document.getElementById('round-seq-type').textContent = `Round ${roundData.sequence} • ${roundData.roundType}`;
-          document.getElementById('round-date').textContent = roundData.roundDate || 'TBD';
-          document.getElementById('round-cutoff').textContent = roundData.cutoffScore ? `${roundData.cutoffScore} marks` : 'None';
+          const res = await api.get(`/api/rounds/${roundId}`);
+          roundData = res.data || res;
+          const seq = roundData.orderNo || roundData.sequence || 1;
+          const rType = roundData.roundType ? roundData.roundType.replace(/_/g, ' ') : 'ASSESSMENT';
+          const rName = roundData.roundName || `Round ${seq}: ${rType}`;
+          const cutoff = (roundData.cutoff != null) ? roundData.cutoff : (roundData.cutoffScore || null);
 
-          document.getElementById('link-back-board').href = `/institute/pages/5-drive-rounds/rounds-board.html?driveId=${roundData.driveId}`;
+          document.getElementById('round-name').textContent = rName;
+          document.getElementById('round-seq-type').textContent = `Round ${seq} • ${rType}`;
+          document.getElementById('round-date').textContent = roundData.roundDate || 'TBD';
+          document.getElementById('round-cutoff').textContent = cutoff ? `${cutoff} marks` : 'None';
+
+          const dId = roundData.driveId || new URLSearchParams(window.location.search).get('driveId');
+          document.getElementById('link-back-board').href = `/institute/pages/5-drive-rounds/rounds-board.html?driveId=${dId || ''}`;
 
           // Load drive details for name
-          const drive = await api.get(`/api/drives/${roundData.driveId}`);
-          document.getElementById('round-drive-title').textContent = `${drive.title || drive.roles} (${drive.companyName || drive.company?.name || 'Company'})`;
+          if (dId) {
+            try {
+              const driveRes = await api.get(`/api/drives/${dId}`);
+              const drive = driveRes.data || driveRes;
+              const compName = drive.companyName || drive.company?.name || 'Enterprise Partner';
+              const title = drive.title || (Array.isArray(drive.roles) ? drive.roles.join(', ') : drive.roles) || 'Campus Drive';
+              document.getElementById('round-drive-title').textContent = `${title} (${compName})`;
+            } catch (ignored) {}
+          }
 
           // Load student options for modal
           loadStudentsDropdown();
@@ -233,13 +247,13 @@
       async function loadStudentsDropdown() {
         try {
           const res = await api.get('/api/students', { size: 100 });
-          const students = res.content || res.data?.content || res || [];
+          const students = res.data?.content || res.content || (Array.isArray(res.data) ? res.data : (Array.isArray(res) ? res : []));
           const select = document.getElementById('modal-student-id');
           select.innerHTML = '<option value="">Choose student...</option>';
           students.forEach(s => {
             const opt = document.createElement('option');
             opt.value = s.id;
-            opt.textContent = `${s.rollNo} - ${s.name} (${s.branch})`;
+            opt.textContent = `${s.rollNo} - ${s.name || s.fullName} (${s.branch || s.department || 'Eng'})`;
             select.appendChild(opt);
           });
         } catch {}
@@ -247,14 +261,14 @@
 
       async function fetchResults() {
         try {
-          const results = await api.get(`/api/rounds/${roundId}/results`);
-          allResults = results || [];
+          const res = await api.get(`/api/rounds/${roundId}/results`);
+          allResults = Array.isArray(res) ? res : (Array.isArray(res.data) ? res.data : (res.content || []));
 
           let passed = 0;
           let failed = 0;
           allResults.forEach(r => {
-            if (r.status === 'PASSED') passed++;
-            if (r.status === 'FAILED') failed++;
+            if (r.status === 'PASSED' || r.result === 'PASSED') passed++;
+            if (r.status === 'FAILED' || r.result === 'FAILED') failed++;
           });
 
           document.getElementById('stat-total').textContent = allResults.length;

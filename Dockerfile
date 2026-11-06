@@ -23,7 +23,7 @@ COPY backend/institute/ backend/institute/
 COPY backend/placement/ backend/placement/
 
 # Build and package all executable JARs
-RUN mvn clean package -DskipTests
+RUN mvn clean package -Dmaven.test.skip=true
 
 # Stage 2: Unified Runtime image
 FROM eclipse-temurin:17-jre-jammy

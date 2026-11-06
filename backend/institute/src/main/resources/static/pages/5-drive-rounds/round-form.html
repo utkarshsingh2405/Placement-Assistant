@@ -157,14 +157,15 @@
 
       async function loadRoundDetails(id) {
         try {
-          const r = await api.get(`/api/rounds/${id}`);
-          document.getElementById('roundName').value = r.roundName || '';
-          document.getElementById('sequence').value = r.sequence || 1;
+          const res = await api.get(`/api/rounds/${id}`);
+          const r = res.data || res;
+          document.getElementById('roundName').value = r.roundName || (r.roundType ? r.roundType.replace(/_/g, ' ') : '');
+          document.getElementById('sequence').value = r.orderNo || r.sequence || 1;
           document.getElementById('roundType').value = r.roundType || 'ONLINE_TEST';
           document.getElementById('status').value = r.status || 'SCHEDULED';
           document.getElementById('roundDate').value = r.roundDate || '';
-          document.getElementById('cutoffScore').value = r.cutoffScore || '';
-          document.getElementById('platformVenue').value = r.platformVenue || '';
+          document.getElementById('cutoffScore').value = (r.cutoff != null) ? r.cutoff : (r.cutoffScore || '');
+          document.getElementById('platformVenue').value = r.venue || r.platformVenue || '';
           document.getElementById('instructions').value = r.instructions || '';
         } catch (err) {
           ui.showToast('Failed to load round details: ' + err.message, 'danger');
@@ -176,12 +177,15 @@
 
         const payload = {
           driveId: parseInt(driveId, 10),
-          roundName: document.getElementById('roundName').value.trim(),
+          orderNo: parseInt(document.getElementById('sequence').value || 1, 10),
           sequence: parseInt(document.getElementById('sequence').value || 1, 10),
           roundType: document.getElementById('roundType').value,
+          roundName: document.getElementById('roundName').value.trim() || document.getElementById('roundType').value,
           status: document.getElementById('status').value,
           roundDate: document.getElementById('roundDate').value || null,
+          cutoff: document.getElementById('cutoffScore').value ? parseFloat(document.getElementById('cutoffScore').value) : null,
           cutoffScore: document.getElementById('cutoffScore').value ? parseFloat(document.getElementById('cutoffScore').value) : null,
+          venue: document.getElementById('platformVenue').value.trim() || null,
           platformVenue: document.getElementById('platformVenue').value.trim() || null,
           instructions: document.getElementById('instructions').value.trim() || null
         };
@@ -195,7 +199,7 @@
             await api.put(`/api/rounds/${roundId}`, payload);
             ui.showToast('Round updated successfully!');
           } else {
-            await api.post('/api/rounds', payload);
+            await api.post(`/api/drives/${driveId}/rounds`, payload);
             ui.showToast('Round created successfully!');
           }
           setTimeout(() => {

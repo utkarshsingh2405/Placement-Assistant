@@ -15,7 +15,7 @@ COPY shared-web/ shared-web/
 COPY institute/ institute/
 
 # Package application
-RUN mvn clean package -DskipTests -pl institute -am
+RUN mvn clean package -Dmaven.test.skip=true -pl institute -am
 
 # Runtime stage
 FROM eclipse-temurin:17-jre-alpine
