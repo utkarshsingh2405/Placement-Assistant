@@ -3,28 +3,42 @@
  * 00-tokens.css: Master Color Tokens, Typography Metrics, Spacing, Radii, and Motion
  */
 
-html {
-  background-color: #F8FAFC;
-  color: #0F172A;
-}
-html[data-theme="dark"] {
-  background-color: #0C1214 !important;
-  color: #E8EEEC !important;
-}
-html[data-theme="light"] {
-  background-color: #F8FAFC !important;
-  color: #0F172A !important;
+/* ============================================================
+   THEME BASELINE & COLOR-SCHEME DECLARATION
+   Tells browsers & extensions that the site manages its own themes
+   ============================================================ */
+:root {
+  color-scheme: light dark;
 }
 
-:root {
-  /* ==========================================================================
-     COLOR SCHEME
-     ========================================================================== */
+html {
+  background-color: var(--ground, #F8FAFC);
+  color: var(--ink, #0F172A);
+  min-height: 100%;
+}
+
+body {
+  background-color: var(--ground, #F8FAFC);
+  color: var(--ink, #0F172A);
+  min-height: 100dvh;
+}
+
+body, .app-rail, .app-topbar, .app-main, .sidebar, .topbar, .card, 
+.double-bezel, .double-bezel-inner, .modal-content, .table, .table th, 
+.table td, .drive-card, .ledger-container, .hall-ticket {
+  transition: background-color 160ms cubic-bezier(0.4, 0, 0.2, 1),
+              color 160ms cubic-bezier(0.4, 0, 0.2, 1),
+              border-color 160ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ==========================================================================
+   COLOR TOKENS - LIGHT (Default & Explicit html[data-theme="light"])
+   Crisp, Clean, Premium Enterprise White Palette
+   ========================================================================== */
+:root,
+html[data-theme="light"] {
   color-scheme: light;
 
-  /* ==========================================================================
-     COLOR TOKENS - LIGHT (Default: Crisp, Optimal White & Deep Slate)
-     ========================================================================== */
   --ground: #F8FAFC;         /* Crisp, clean light canvas background */
   --surface: #FFFFFF;        /* Pure pristine white for cards, panels, topbars, rails, dialogs */
   --surface-2: #F1F5F9;      /* Crisp tonal step: double-bezel shells, inputs, zebra rows */
@@ -33,7 +47,7 @@ html[data-theme="light"] {
   --ink: #0F172A;            /* Deep slate black for high-contrast primary typography */
   --ink-2: #334155;          /* Clean dark slate for secondary body & descriptions */
   --muted: #64748B;          /* Polished neutral slate for metadata, hints, column labels */
-  --night: #0C1214;          /* Nocturnal deep ground (Hero, stats band, dark canvas) */
+  --night: #0C1214;          /* Nocturnal deep ground for dark mode */
 
   /* Cross-token Aliases for Global Theme Parity */
   --bg: var(--ground);
@@ -46,7 +60,7 @@ html[data-theme="light"] {
   --text-muted: var(--ink-2);
   --text-dim: var(--muted);
 
-  /* Domain Identifiers */
+  /* Domain Identifiers (Light) */
   --institute: #8C2433;      /* Heraldic Oxblood - Academic Ledger */
   --institute-hover: #721C29;
   --institute-tint: #F4E3E5;
@@ -61,7 +75,7 @@ html[data-theme="light"] {
   --brass-light: #E0B552;
   --brass-tint: #FAF3E3;
 
-  /* Semantics (Strictly Functional) */
+  /* Semantics (Light) */
   --success: #2E7D4F;
   --success-tint: #EAF5EE;
   --warning: #B45309;
@@ -73,42 +87,38 @@ html[data-theme="light"] {
 
   /* Focus & Elevation */
   --focus-ring: 0 0 0 3px rgba(14, 107, 92, 0.35);
-  --shadow-float: 0 16px 36px -8px rgba(16, 24, 32, 0.12), 0 4px 12px -2px rgba(16, 24, 32, 0.06);
-  --shadow-dialog: 0 24px 48px -12px rgba(16, 24, 32, 0.2), 0 8px 16px -4px rgba(16, 24, 32, 0.08);
+  --shadow-float: 0 16px 36px -8px rgba(16, 24, 32, 0.08), 0 4px 12px -2px rgba(16, 24, 32, 0.04);
+  --shadow-dialog: 0 24px 48px -12px rgba(16, 24, 32, 0.16), 0 8px 16px -4px rgba(16, 24, 32, 0.06);
 
-  /* Dynamic Active Accent (Defaults to Brass for Portal) */
+  /* Dynamic Active Accent */
   --accent: var(--brass);
   --accent-hover: #9E7422;
   --accent-tint: var(--brass-tint);
 
-  /* ==========================================================================
-     TYPOGRAPHIC STACK - STYLIZED DISPLAY HEADINGS EVERYWHERE
-     ========================================================================== */
+  /* Typography Stack */
   --font-display: 'Instrument Serif', Georgia, serif;
   --font-heading: 'Instrument Serif', Georgia, serif;
   --font-body: 'Geist', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-hindi: 'Noto Sans Devanagari', 'Geist', sans-serif;
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* Fluid Scale with clamp() */
+  /* Fluid Scale */
   --text-display-xl: clamp(3.25rem, 8.5vw, 8.5rem);
   --text-display-lg: clamp(2.5rem, 5.5vw, 5.25rem);
   --text-h1: clamp(2rem, 3.8vw, 3.5rem);
   --text-h2: clamp(1.5rem, 2.6vw, 2.25rem);
   --text-h3: clamp(1.2rem, 1.8vw, 1.5rem);
   --text-body: clamp(1rem, 1.05vw, 1.125rem);
-  --text-sm: 0.875rem;       /* 14px */
-  --text-xs: 0.75rem;        /* 12px */
+  --text-sm: 0.875rem;
+  --text-xs: 0.75rem;
 
   --leading-tight: 0.95;
   --leading-snug: 1.15;
   --leading-normal: 1.55;
 
-  /* ==========================================================================
-     RADII & SPACING
-     ========================================================================== */
-  --radius-outer: 32px;      /* Tonal double-bezel outer shell */
-  --radius-inner: 26px;      /* Tonal double-bezel inner core */
+  /* Radii & Spacing */
+  --radius-outer: 32px;
+  --radius-inner: 26px;
   --radius-card: 20px;
   --radius-control: 12px;
   --radius-pill: 9999px;
@@ -127,9 +137,7 @@ html[data-theme="light"] {
   --space-24: 96px;
   --space-32: 128px;
 
-  /* ==========================================================================
-     PHYSICAL MOTION TOKENS
-     ========================================================================== */
+  /* Motion */
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-settle: cubic-bezier(0.32, 0.72, 0, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
@@ -166,6 +174,7 @@ html[data-domain="portal"] {
 
 /* ==========================================================================
    COLOR TOKENS - DARK THEME (data-theme="dark")
+   Obsidian & Nocturnal Dark Surface
    ========================================================================== */
 html[data-theme="dark"] {
   color-scheme: dark;
@@ -179,7 +188,7 @@ html[data-theme="dark"] {
   --ink-2: #B9C6C9;          /* Secondary descriptive text */
   --muted: #8FA0A5;          /* Metadata & hint labels (WCAG AA) */
 
-  /* Cross-token Aliases for Global Theme Parity */
+  /* Cross-token Aliases */
   --bg: var(--ground);
   --bg-subtle: var(--surface-2);
   --surface-elevated: var(--surface);
@@ -220,6 +229,213 @@ html[data-theme="dark"] {
   --focus-ring: 0 0 0 3px rgba(79, 209, 184, 0.35);
   --shadow-float: 0 16px 36px -8px rgba(0, 0, 0, 0.45), 0 4px 12px -2px rgba(0, 0, 0, 0.25);
   --shadow-dialog: 0 24px 48px -12px rgba(0, 0, 0, 0.6), 0 8px 16px -4px rgba(0, 0, 0, 0.3);
+}
+
+/* ==========================================================================
+   ROCK-SOLID ELEMENT-LEVEL THEMING GUARDS
+   Guarantees true crisp white in light mode and rich obsidian in dark mode
+   ========================================================================== */
+
+/* LIGHT MODE SURFACES */
+html[data-theme="light"] body,
+html[data-theme="light"] .app-shell,
+html[data-theme="light"] .app-wrapper,
+html[data-theme="light"] .app-container,
+html[data-theme="light"] .app-main,
+html[data-theme="light"] .main-content,
+html[data-theme="light"] .main-wrapper,
+html[data-theme="light"] .app-body,
+html[data-theme="light"] .content-body,
+html[data-theme="light"] .page-content {
+  background-color: #F8FAFC !important;
+  color: #0F172A !important;
+}
+
+html[data-theme="light"] .app-rail,
+html[data-theme="light"] .sidebar,
+html[data-theme="light"] .app-topbar,
+html[data-theme="light"] .topbar {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+html[data-theme="light"] .card,
+html[data-theme="light"] .double-bezel-inner,
+html[data-theme="light"] .modal-content,
+html[data-theme="light"] .drive-card,
+html[data-theme="light"] .ledger-container,
+html[data-theme="light"] .hall-ticket,
+html[data-theme="light"] .checker-card,
+html[data-theme="light"] .listing-stub,
+html[data-theme="light"] .dialog-card {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #0F172A !important;
+}
+
+html[data-theme="light"] .double-bezel {
+  background-color: #F1F5F9 !important;
+  border-color: #E2E8F0 !important;
+}
+
+html[data-theme="light"] .nav-rail-item {
+  color: #334155 !important;
+}
+
+html[data-theme="light"] .nav-rail-item:hover {
+  background-color: #F1F5F9 !important;
+  color: #0F172A !important;
+}
+
+html[data-theme="light"] .nav-rail-item.active {
+  background-color: var(--accent) !important;
+  color: #FFFFFF !important;
+}
+
+html[data-theme="light"] .form-control,
+html[data-theme="light"] .form-select,
+html[data-theme="light"] .input-field,
+html[data-theme="light"] .select-field,
+html[data-theme="light"] .textarea-field {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+}
+
+html[data-theme="light"] .table th,
+html[data-theme="light"] .table-light th,
+html[data-theme="light"] .table thead th,
+html[data-theme="light"] .ledger-table th {
+  background-color: #F1F5F9 !important;
+  color: #64748B !important;
+  border-bottom-color: #E2E8F0 !important;
+}
+
+html[data-theme="light"] .table td,
+html[data-theme="light"] .ledger-table td {
+  color: #0F172A !important;
+  border-bottom-color: #F1F5F9 !important;
+}
+
+html[data-theme="light"] .btn-secondary {
+  background-color: #F1F5F9 !important;
+  color: #0F172A !important;
+}
+
+html[data-theme="light"] .btn-outline {
+  border-color: #CBD5E1 !important;
+  color: #334155 !important;
+  background-color: transparent !important;
+}
+
+html[data-theme="light"] .btn-outline:hover {
+  background-color: #F1F5F9 !important;
+  color: #0F172A !important;
+  border-color: #94A3B8 !important;
+}
+
+/* DARK MODE SURFACES */
+html[data-theme="dark"] body,
+html[data-theme="dark"] .app-shell,
+html[data-theme="dark"] .app-wrapper,
+html[data-theme="dark"] .app-container,
+html[data-theme="dark"] .app-main,
+html[data-theme="dark"] .main-content,
+html[data-theme="dark"] .main-wrapper,
+html[data-theme="dark"] .app-body,
+html[data-theme="dark"] .content-body,
+html[data-theme="dark"] .page-content {
+  background-color: #0C1214 !important;
+  color: #E8EEEC !important;
+}
+
+html[data-theme="dark"] .app-rail,
+html[data-theme="dark"] .sidebar,
+html[data-theme="dark"] .app-topbar,
+html[data-theme="dark"] .topbar {
+  background-color: #121C1F !important;
+  border-color: #1F3036 !important;
+  color: #E8EEEC !important;
+}
+
+html[data-theme="dark"] .card,
+html[data-theme="dark"] .double-bezel-inner,
+html[data-theme="dark"] .modal-content,
+html[data-theme="dark"] .drive-card,
+html[data-theme="dark"] .ledger-container,
+html[data-theme="dark"] .hall-ticket,
+html[data-theme="dark"] .checker-card,
+html[data-theme="dark"] .listing-stub,
+html[data-theme="dark"] .dialog-card {
+  background-color: #121C1F !important;
+  border-color: #1F3036 !important;
+  color: #E8EEEC !important;
+}
+
+html[data-theme="dark"] .double-bezel {
+  background-color: #182529 !important;
+  border-color: #1F3036 !important;
+}
+
+html[data-theme="dark"] .nav-rail-section {
+  color: #8FA0A5 !important;
+}
+
+html[data-theme="dark"] .nav-rail-item {
+  color: #B9C6C9 !important;
+}
+
+html[data-theme="dark"] .nav-rail-item:hover {
+  background-color: #182529 !important;
+  color: #E8EEEC !important;
+}
+
+html[data-theme="dark"] .nav-rail-item.active {
+  background-color: var(--accent) !important;
+  color: #FFFFFF !important;
+}
+
+html[data-theme="dark"] .form-control,
+html[data-theme="dark"] .form-select,
+html[data-theme="dark"] .input-field,
+html[data-theme="dark"] .select-field,
+html[data-theme="dark"] .textarea-field {
+  background-color: #182529 !important;
+  color: #E8EEEC !important;
+  border-color: #1F3036 !important;
+}
+
+html[data-theme="dark"] .table th,
+html[data-theme="dark"] .table-light th,
+html[data-theme="dark"] .table thead th,
+html[data-theme="dark"] .ledger-table th {
+  background-color: #182529 !important;
+  color: #8FA0A5 !important;
+  border-bottom-color: #1F3036 !important;
+}
+
+html[data-theme="dark"] .table td,
+html[data-theme="dark"] .ledger-table td {
+  color: #E8EEEC !important;
+  border-bottom-color: #182529 !important;
+}
+
+html[data-theme="dark"] .btn-secondary {
+  background-color: #182529 !important;
+  color: #E8EEEC !important;
+}
+
+html[data-theme="dark"] .btn-outline {
+  border-color: #1F3036 !important;
+  color: #B9C6C9 !important;
+  background-color: transparent !important;
+}
+
+html[data-theme="dark"] .btn-outline:hover {
+  background-color: #182529 !important;
+  color: #E8EEEC !important;
+  border-color: #8FA0A5 !important;
 }
 
 /* Reduced Motion Fallback */

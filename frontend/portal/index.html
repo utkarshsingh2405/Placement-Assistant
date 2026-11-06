@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <meta name="darkreader-lock">
   <title>Placement Secretariat — Institutional Campus Placement Portal</title>
   
   <!-- Preload Display Typography -->
@@ -36,9 +38,9 @@
   <div class="grain-overlay"></div>
 
   <!-- Header (Solid Grounded Bar) -->
-  <header class="app-topbar" style="background-color: var(--night); border-bottom-color: #1A262B; color: #FFFFFF;">
+  <header class="app-topbar portal-topbar" id="main-header">
     <div style="display: flex; align-items: center; gap: var(--space-4);">
-      <a href="/" class="brand-wordmark" style="color: #FFFFFF;">
+      <a href="/" class="brand-wordmark portal-topbar-link">
         <span class="brand-dot" style="background-color: var(--brass);"></span>
         <span>Placement Secretariat</span>
       </a>
@@ -47,17 +49,17 @@
 
     <!-- Center Nav Links -->
     <nav class="hide-on-mobile" style="display: flex; align-items: center; gap: var(--space-6); font-size: var(--text-sm); font-weight: 500;">
-      <a href="#journey" style="color: #A0B0B4; transition: color 150ms;">Journey</a>
-      <a href="#doors" style="color: #A0B0B4; transition: color 150ms;">Two Desks</a>
-      <a href="#checker" style="color: #A0B0B4; transition: color 150ms;">Eligibility</a>
-      <a href="#notices" style="color: #A0B0B4; transition: color 150ms;">Notice Board</a>
-      <a href="#operations" style="color: #A0B0B4; transition: color 150ms;">Operations</a>
+      <a href="#journey" class="portal-topbar-link">Journey</a>
+      <a href="#doors" class="portal-topbar-link">Two Desks</a>
+      <a href="#checker" class="portal-topbar-link">Eligibility</a>
+      <a href="#notices" class="portal-topbar-link">Notice Board</a>
+      <a href="#operations" class="portal-topbar-link">Operations</a>
     </nav>
 
     <!-- Header Actions -->
     <div style="display: flex; align-items: center; gap: var(--space-3);">
-      <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-btn" title="Toggle Theme" aria-label="Toggle Theme" style="border-color: #2A383E; color: #E8EEEC; padding: 8px;">
-        <span id="theme-icon" class="theme-icon" style="display: flex; align-items: center; justify-content: center;">
+      <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-btn" title="Toggle Theme" aria-label="Toggle Theme" style="padding: 8px; cursor: pointer;">
+        <span id="theme-icon" class="theme-icon" style="display: flex; align-items: center; justify-content: center; pointer-events: none;">
           <svg width="16" height="16"><use href="#ph-moon"/></svg>
         </span>
       </button>
@@ -76,19 +78,19 @@
         <div class="split-hero">
           <!-- Left: Editorial Typography & Primary CTA -->
           <div class="hero-content">
-            <div style="display: inline-flex; align-items: center; gap: 8px; background: rgba(217, 119, 6, 0.12); border: 1px solid rgba(217, 119, 6, 0.32); border-radius: 9999px; padding: 6px 14px; margin-bottom: var(--space-4);">
+            <div class="hero-tag-pill">
               <span class="status-dot status-live-pulse" style="background: var(--brass);"></span>
-              <span style="font-size: 11px; font-weight: 600; color: var(--brass); letter-spacing: 0.08em; text-transform: uppercase;">Placement Secretariat • Season 2026</span>
+              <span class="hero-tag-text">Placement Secretariat • Season 2026</span>
             </div>
 
-            <h1 class="display-xl hero-title" style="font-family: 'Instrument Serif', Georgia, serif; font-size: clamp(3rem, 5.8vw, 4.75rem); line-height: 1.05; color: #FFFFFF; margin-bottom: var(--space-3); letter-spacing: -0.01em;">
-              Placement <span style="font-style: italic; color: var(--brass); font-weight: 400; text-shadow: 0 0 32px rgba(217,119,6,0.35);">Secretariat</span>
-              <span style="display: block; font-family: 'Geist', -apple-system, sans-serif; font-size: clamp(1.4rem, 2.6vw, 2.1rem); font-weight: 600; letter-spacing: -0.02em; color: #E8EEEC; margin-top: 10px;">
+            <h1 class="display-xl hero-title">
+              Placement <span class="hero-title-italic">Secretariat</span>
+              <span class="hero-title-sub">
                 Round by round, to your dream offer.
               </span>
             </h1>
 
-            <p class="hero-subtitle" style="color: #A0B0B4; font-size: clamp(1.05rem, 1.25vw, 1.2rem); line-height: 1.55; margin-bottom: var(--space-6); max-width: 50ch;">
+            <p class="hero-subtitle">
               One unified portal for the Academic Institute and Live Recruitment Season. Eligibility audits, real-time stage progression, QR admit passes, and instant offer confirmations.
             </p>
 
@@ -100,26 +102,26 @@
                 </span>
               </a>
 
-              <a href="/placement/pages/1-drives/drive-list.html" class="btn btn-sm btn-outline" style="border-color: rgba(255,255,255,0.2); color: #E8EEEC; padding: 12px 20px; font-weight: 500; font-size: var(--text-sm);">
+              <a href="/placement/pages/1-drives/drive-list.html" class="hero-secondary-btn">
                 <span>Browse Active Drives &rarr;</span>
               </a>
             </div>
 
             <!-- Key Proof Points Strip -->
-            <div style="display: flex; flex-wrap: wrap; gap: var(--space-6); padding-top: var(--space-5); border-top: 1px solid rgba(255,255,255,0.08); width: 100%; max-width: 520px;">
+            <div class="hero-proof-strip">
               <div>
-                <div style="font-size: 1.6rem; font-weight: 700; color: #FFFFFF; font-variant-numeric: tabular-nums;">96.4%</div>
-                <div style="font-size: 10px; color: #8A9CA0; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600;">Placement Ratio</div>
+                <div class="hero-proof-val">96.4%</div>
+                <div class="hero-proof-label">Placement Ratio</div>
               </div>
-              <div style="width: 1px; height: 38px; background: rgba(255,255,255,0.1);"></div>
+              <div class="hero-proof-divider"></div>
               <div>
-                <div style="font-size: 1.6rem; font-weight: 700; color: var(--brass); font-variant-numeric: tabular-nums;">44.0 LPA</div>
-                <div style="font-size: 10px; color: #8A9CA0; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600;">Highest Package</div>
+                <div class="hero-proof-val hero-proof-val-brass">44.0 LPA</div>
+                <div class="hero-proof-label">Highest Package</div>
               </div>
-              <div style="width: 1px; height: 38px; background: rgba(255,255,255,0.1);"></div>
+              <div class="hero-proof-divider"></div>
               <div>
-                <div style="font-size: 1.6rem; font-weight: 700; color: #FFFFFF; font-variant-numeric: tabular-nums;">140+</div>
-                <div style="font-size: 10px; color: #8A9CA0; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 600;">Visiting Leaders</div>
+                <div class="hero-proof-val">140+</div>
+                <div class="hero-proof-label">Visiting Leaders</div>
               </div>
             </div>
           </div>
@@ -233,7 +235,7 @@
 
         <div class="doors-grid">
           <!-- Door 1: Institute Academic -->
-          <div class="door-panel door-institute" onclick="window.location.href='/login.html?next=/institute/pages/1-students/student-list.html'">
+          <div class="door-panel door-institute" onclick="window.location.href='/login.html?next=/institute/dashboard.html'">
             <div>
               <div class="chip" style="background: rgba(255,255,255,0.2); color: #FFF; margin-bottom: var(--space-4);">
                 DESK 1 • ACADEMIC REGISTRY
@@ -255,7 +257,7 @@
           </div>
 
           <!-- Door 2: Placement Recruitment -->
-          <div class="door-panel door-placement" onclick="window.location.href='/login.html?next=/placement/pages/1-drives/drive-list.html'">
+          <div class="door-panel door-placement" onclick="window.location.href='/login.html?next=/placement/dashboard.html'">
             <div>
               <div class="chip" style="background: rgba(255,255,255,0.2); color: #FFF; margin-bottom: var(--space-4);">
                 DESK 2 • RECRUITMENT SEASON
@@ -524,7 +526,7 @@
     <div class="container">
       <div style="display: flex; flex-direction: column; gap: var(--space-8); margin-bottom: var(--space-12);">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
-          <div class="brand-wordmark" style="color: #FFFFFF; font-size: 1.4rem;">
+          <div class="brand-wordmark" style="font-size: 1.4rem;">
             <span class="brand-dot" style="background-color: var(--brass);"></span>
             <span>Placement Secretariat</span>
           </div>
@@ -532,16 +534,16 @@
           <!-- Pillar Service Status Indicators -->
           <div style="display: flex; align-items: center; gap: var(--space-4); font-size: var(--text-xs); font-family: var(--font-mono);">
             <div style="display: flex; align-items: center; gap: 6px;">
-              <span style="width: 6px; height: 6px; border-radius: 50%; background: #4FD1B8;"></span>
-              <span>Portal :8088</span>
+              <span id="portal-status-dot" style="width: 6px; height: 6px; border-radius: 50%; background: #4FD1B8;"></span>
+              <span id="portal-status-text">Gateway Active</span>
             </div>
             <div style="display: flex; align-items: center; gap: 6px;">
-              <span style="width: 6px; height: 6px; border-radius: 50%; background: #E0808C;"></span>
-              <span>Institute :8081</span>
+              <span id="inst-status-dot" style="width: 6px; height: 6px; border-radius: 50%; background: #4FD1B8;"></span>
+              <span id="inst-status-text">Institute /institute</span>
             </div>
             <div style="display: flex; align-items: center; gap: 6px;">
-              <span style="width: 6px; height: 6px; border-radius: 50%; background: #4FD1B8;"></span>
-              <span>Placement :8082</span>
+              <span id="plc-status-dot" style="width: 6px; height: 6px; border-radius: 50%; background: #4FD1B8;"></span>
+              <span id="plc-status-text">Placement /placement</span>
             </div>
           </div>
         </div>
@@ -573,8 +575,8 @@
       });
 
     // Theme toggle
-    document.getElementById('theme-btn').addEventListener('click', () => {
-      theme.toggleTheme();
+    document.getElementById('theme-btn')?.addEventListener('click', (e) => {
+      theme.toggleTheme(e);
     });
 
     // Update CTA for authenticated users
@@ -613,6 +615,29 @@
         }
         if (d && d.highestPackage) {
           document.getElementById('stat-highest').textContent = Number(d.highestPackage).toFixed(1);
+        }
+      })
+      .catch(() => {});
+
+    // Live Pillar Status Check
+    fetch('/api/status/pillars')
+      .then(r => r.json())
+      .then(res => {
+        const d = res.data || res;
+        const instDot = document.getElementById('inst-status-dot');
+        const instText = document.getElementById('inst-status-text');
+        const plcDot = document.getElementById('plc-status-dot');
+        const plcText = document.getElementById('plc-status-text');
+
+        if (d && d.institute) {
+          const isUp = d.institute.status === 'UP';
+          if (instDot) instDot.style.background = isUp ? '#4FD1B8' : '#E0808C';
+          if (instText) instText.textContent = `Institute: ${isUp ? 'Online' : 'Starting'}`;
+        }
+        if (d && d.placement) {
+          const isUp = d.placement.status === 'UP';
+          if (plcDot) plcDot.style.background = isUp ? '#4FD1B8' : '#E0808C';
+          if (plcText) plcText.textContent = `Placement: ${isUp ? 'Online' : 'Starting'}`;
         }
       })
       .catch(() => {});

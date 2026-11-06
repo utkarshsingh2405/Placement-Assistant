@@ -6,6 +6,8 @@
   </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <meta name="darkreader-lock">
   <title>Placement Assistant — Unified Frontend Suite</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -34,6 +36,39 @@
       overflow: hidden;
       border-bottom: 1px solid var(--border-color);
     }
+    html[data-theme="light"] .hero-banner {
+      background: linear-gradient(180deg, #F8FAFC 0%, #FFFFFF 100%);
+      color: var(--ink);
+      border-bottom: 1px solid #E2E8F0;
+    }
+    .hero-banner .hero-title-text {
+      color: #FFFFFF;
+    }
+    html[data-theme="light"] .hero-banner .hero-title-text {
+      color: #0F172A;
+    }
+    .hero-banner .hero-desc-text {
+      color: #A0B0B4;
+    }
+    html[data-theme="light"] .hero-banner .hero-desc-text {
+      color: #475569;
+    }
+    .hero-switcher-box {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+    html[data-theme="light"] .hero-switcher-box {
+      background: #F1F5F9;
+      border: 1px solid #CBD5E1;
+    }
+    html[data-theme="light"] .hero-switcher-box label {
+      color: #475569 !important;
+    }
+    html[data-theme="light"] .hero-switcher-box select {
+      background: #FFFFFF !important;
+      color: #0F172A !important;
+      border: 1px solid #CBD5E1 !important;
+    }
     .hero-banner::after {
       content: '';
       position: absolute;
@@ -55,15 +90,15 @@
   <header class="hero-banner text-center">
     <div style="max-width: 800px; margin: 0 auto; position: relative; z-index: 1;">
       <span class="chip chip-accent uppercase text-xs mb-3">Modular Frontend Architecture</span>
-      <h1 class="page-title text-3xl mb-2" style="color: #FFFFFF;">Institutional Placement Secretariat</h1>
-      <p class="text-sm" style="color: #A0B0B4; max-width: 620px; margin: 0 auto 1.5rem;">
+      <h1 class="page-title text-3xl mb-2 hero-title-text">Institutional Placement Secretariat</h1>
+      <p class="text-sm hero-desc-text" style="max-width: 620px; margin: 0 auto 1.5rem;">
         Enterprise-grade dual-pillar platform connecting student credentials, master timetable compliance, and high-velocity recruitment drives.
       </p>
       
       <!-- API Base Switcher -->
-      <div class="d-inline-flex align-center gap-2 p-2 surface-tone rounded-3" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);">
-        <label for="api-base-select" class="text-xs fw-semibold" style="color: #A0B0B4;">Backend API Target:</label>
-        <select id="api-base-select" class="form-select form-select-sm" style="background: #141E22; color: #FFF; border: 1px solid rgba(255,255,255,0.2); width: auto;">
+      <div class="d-inline-flex align-center gap-2 p-2 surface-tone rounded-3 hero-switcher-box">
+        <label for="api-base-select" class="text-xs fw-semibold">Backend API Target:</label>
+        <select id="api-base-select" class="form-select form-select-sm" style="width: auto;">
           <option value="">Auto-Detect (Current Origin)</option>
           <option value="custom">Custom Backend URL...</option>
         </select>

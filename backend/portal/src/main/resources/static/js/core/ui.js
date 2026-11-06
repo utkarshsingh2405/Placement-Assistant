@@ -35,9 +35,9 @@ class UIManager {
       auth.logout();
     });
 
-    document.getElementById('theme-toggle-btn')?.addEventListener('click', (e) => {
-      theme.toggleTheme(e);
-    });
+    // NOTE: Theme toggle is handled by the global capture-phase listener in theme.js
+    // Do NOT add a redundant click listener here — it causes double-toggle on some browsers.
+    // theme.updateToggleIcons() is called above after topbar injection.
 
     document.getElementById('sidebar-toggle')?.addEventListener('click', () => {
       document.querySelector('.app-rail')?.classList.toggle('show');

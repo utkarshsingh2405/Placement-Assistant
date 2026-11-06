@@ -75,9 +75,17 @@ class ThemeManager {
   setTheme(theme, persist = true) {
     const valid = (theme === 'dark') ? 'dark' : 'light';
 
+    // Apply data-theme attribute (triggers CSS token cascade)
     document.documentElement.setAttribute('data-theme', valid);
+
+    // Set color-scheme (native browser UI: scrollbars, inputs, etc.)
+    try { document.documentElement.style.colorScheme = valid; } catch (e) {}
+
+    // Force browser repaint to ensure CSS token re-computation (Safari/Chromium edge case fix)
     try {
-      document.documentElement.style.colorScheme = valid;
+      document.documentElement.classList.remove('theme-transitioning');
+      void document.documentElement.offsetWidth; // triggers reflow
+      document.documentElement.classList.add('theme-transitioning');
     } catch (e) {}
 
     if (persist) {

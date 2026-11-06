@@ -35,9 +35,9 @@ class UIManager {
       auth.logout();
     });
 
-    document.getElementById('theme-toggle-btn')?.addEventListener('click', () => {
-      theme.toggleTheme();
-    });
+    // NOTE: Theme toggle is handled by the global capture-phase listener in theme.js
+    // Do NOT add a redundant click listener here — it causes double-toggle on some browsers.
+    // theme.updateToggleIcons() is called above after topbar injection.
 
     document.getElementById('sidebar-toggle')?.addEventListener('click', () => {
       document.querySelector('.app-rail')?.classList.toggle('show');
@@ -148,9 +148,9 @@ class UIManager {
           </a>
 
           <!-- Theme Toggle Button -->
-          <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light/Dark Theme" aria-label="Toggle Light/Dark Theme" style="padding: 8px;">
-            <span id="theme-icon" class="theme-icon" style="display: flex; align-items: center; justify-content: center;">
-              <svg width="16" height="16"><use href="#ph-moon"/></svg>
+          <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light/Dark Theme" aria-label="Toggle Light/Dark Theme" style="padding: 8px; cursor: pointer;">
+            <span id="theme-icon" class="theme-icon" style="display: flex; align-items: center; justify-content: center; pointer-events: none;">
+              <svg width="16" height="16" style="pointer-events: none;"><use href="#ph-moon"/></svg>
             </span>
           </button>
 
@@ -181,7 +181,17 @@ class UIManager {
   }
 
   renderInstituteRail(role, activePageKey) {
-    const items = [
+    const isStudent = role === 'STUDENT';
+    const items = isStudent ? [
+      { key: 'dashboard', label: 'My Academic Desk', icon: 'ph-building', href: '/institute/dashboard.html' },
+      { key: 'profile', label: 'My Student Profile', icon: 'ph-users', href: '/institute/pages/1-students/student-profile.html' },
+      { key: 'drives', label: 'Master Drives', icon: 'ph-briefcase', href: '/institute/pages/2-company-drives/drive-list.html' },
+      { key: 'questions', label: 'Question Bank', icon: 'ph-clipboard-text', href: '/institute/pages/3-question-bank/question-list.html' },
+      { key: 'resume-ats', label: 'Resume & ATS Diagnostic', icon: 'ph-file-text', href: '/institute/pages/6-resume-ats/ats-report.html' },
+      { key: 'hackathons', label: 'National Hackathons', icon: 'ph-code', href: '/institute/pages/7-hackathons/hackathon-list.html' },
+      { key: 'internships', label: 'Internship Opportunities', icon: 'ph-briefcase', href: '/institute/pages/8-internships/internship-list.html' },
+      { key: 'jobs', label: 'Off-Campus Openings', icon: 'ph-buildings', href: '/institute/pages/9-offcampus-jobs/job-list.html' }
+    ] : [
       { key: 'dashboard', label: 'Dashboard', icon: 'ph-building', href: '/institute/dashboard.html' },
       { key: 'students', label: 'Student Directory', icon: 'ph-users', href: '/institute/pages/1-students/student-list.html' },
       { key: 'drives', label: 'Master Drives', icon: 'ph-briefcase', href: '/institute/pages/2-company-drives/drive-list.html' },
@@ -204,7 +214,7 @@ class UIManager {
           </div>
         </div>
         <div style="flex: 1; overflow-y: auto; padding: var(--space-3) 0;">
-          <div class="nav-rail-section">Academic Registry</div>
+          <div class="nav-rail-section">${isStudent ? 'Candidate Console' : 'Academic Registry'}</div>
           ${items.map(item => `
             <a href="${item.href}" class="nav-rail-item ${activePageKey === item.key ? 'active' : ''}">
               <svg width="18" height="18"><use href="#${item.icon}"/></svg>
@@ -336,6 +346,12 @@ class UIManager {
 
   showToast(message, type = 'info') {
     return this.toast(message, type);
+  }
+
+  handleApiError(error, defaultMessage = 'An unexpected error occurred.') {
+    console.error('[UI] API Error:', error);
+    const msg = error?.message || defaultMessage;
+    this.showToast(msg, 'error');
   }
 
   confirm(arg1, arg2 = '') {

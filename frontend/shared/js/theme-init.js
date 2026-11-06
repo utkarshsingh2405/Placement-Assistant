@@ -37,4 +37,19 @@
   try {
     document.documentElement.style.colorScheme = active;
   } catch (e) {}
+
+  // Explicitly guard against automated dark-mode filters / Dark Reader
+  try {
+    if (!document.querySelector('meta[name="color-scheme"]')) {
+      var metaCs = document.createElement('meta');
+      metaCs.name = 'color-scheme';
+      metaCs.content = 'light dark';
+      document.head.appendChild(metaCs);
+    }
+    if (!document.querySelector('meta[name="darkreader-lock"]')) {
+      var metaDr = document.createElement('meta');
+      metaDr.name = 'darkreader-lock';
+      document.head.appendChild(metaDr);
+    }
+  } catch (e) {}
 })();
