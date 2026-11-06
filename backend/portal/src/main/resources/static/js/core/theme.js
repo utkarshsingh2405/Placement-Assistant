@@ -6,11 +6,11 @@
 class ThemeManager {
   constructor() {
     this.STORAGE_KEY = 'pa_theme_preference';
-    this._lastToggle = 0;
+    this._lastToggleTick = 0;
 
-    // Self-contained, crisp SVG icons that do not depend on external SVG sprite loading latency
+    // Self-contained, crisp SVG icons with pointer-events: none to guarantee reliable click targeting
     this.SUN_SVG = `
-      <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" style="pointer-events: none; display: block;">
         <circle cx="128" cy="128" r="48"/>
         <line x1="128" y1="24" x2="128" y2="48" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
         <line x1="128" y1="208" x2="128" y2="232" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
@@ -24,7 +24,7 @@ class ThemeManager {
     `;
 
     this.MOON_SVG = `
-      <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true">
+      <svg width="16" height="16" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true" style="pointer-events: none; display: block;">
         <path d="M216.7,152.6A96,96,0,1,1,103.4,39.3,80,80,0,0,0,216.7,152.6Z"/>
       </svg>
     `;
@@ -40,19 +40,19 @@ class ThemeManager {
 
   getStoredPreference() {
     try {
-      // 1. Check localStorage
-      const ls = localStorage.getItem(this.STORAGE_KEY);
-      if (ls === 'dark' || ls === 'light') return ls;
-
-      // 2. Check sessionStorage
-      const ss = sessionStorage.getItem(this.STORAGE_KEY);
-      if (ss === 'dark' || ss === 'light') return ss;
-
-      // 3. Check document.cookie
+      // 1. Check document.cookie first (seamless cross-port sharing on localhost)
       const m = document.cookie.match(new RegExp('(?:^|; )' + this.STORAGE_KEY + '=(dark|light)'));
       if (m && m[1]) return m[1];
 
-      // 4. Check window.name (persists across all navigations in the same tab, even across file:// protocols)
+      // 2. Check localStorage
+      const ls = localStorage.getItem(this.STORAGE_KEY);
+      if (ls === 'dark' || ls === 'light') return ls;
+
+      // 3. Check sessionStorage
+      const ss = sessionStorage.getItem(this.STORAGE_KEY);
+      if (ss === 'dark' || ss === 'light') return ss;
+
+      // 4. Check window.name (persists across reloads & directory navigations)
       if (window.name && window.name.indexOf('pa_theme:') !== -1) {
         const parts = window.name.split('pa_theme:')[1];
         if (parts) {
@@ -65,7 +65,7 @@ class ThemeManager {
   }
 
   getSystemPreference() {
-    return 'light'; // Always default baseline to crisp enterprise white
+    return 'light'; // Clean enterprise baseline
   }
 
   getTheme() {
@@ -102,13 +102,20 @@ class ThemeManager {
     window.dispatchEvent(new CustomEvent('themechange', { detail: { theme: valid } }));
   }
 
-  toggleTheme() {
-    const now = Date.now();
-    // 250ms debounce lock to avoid double toggle when both delegated & inline listeners execute
-    if (this._lastToggle && now - this._lastToggle < 250) {
+  toggleTheme(e) {
+    if (e) {
+      if (e.__themeToggleHandled) return this.getTheme();
+      e.__themeToggleHandled = true;
+      if (typeof e.preventDefault === 'function') e.preventDefault();
+      if (typeof e.stopPropagation === 'function') e.stopPropagation();
+    }
+
+    // Atomic tick guard: eliminates duplicate executions from the same user click/tick
+    const currentTick = (typeof performance !== 'undefined' && performance.now) ? performance.now() : Date.now();
+    if (this._lastToggleTick && (currentTick - this._lastToggleTick < 80)) {
       return this.getTheme();
     }
-    this._lastToggle = now;
+    this._lastToggleTick = currentTick;
 
     const current = this.getTheme();
     const next = current === 'dark' ? 'light' : 'dark';
@@ -132,6 +139,7 @@ class ThemeManager {
     toggleButtons.forEach(btn => {
       btn.setAttribute('title', actionText);
       btn.setAttribute('aria-label', actionText);
+      btn.setAttribute('data-current-theme', isDark ? 'dark' : 'light');
       const hasIconContainer = btn.querySelector('#theme-icon, .theme-icon, [data-theme-icon]');
       if (!hasIconContainer) {
         const existingSvg = btn.querySelector('svg');
@@ -142,19 +150,23 @@ class ThemeManager {
     });
   }
 
+  _findThemeButton(target) {
+    if (!target) return null;
+    const el = target.nodeType === 1 ? target : target.parentElement;
+    if (!el || typeof el.closest !== 'function') return null;
+    return el.closest('#theme-btn, #theme-toggle-btn, [data-theme-toggle], .theme-toggle-btn');
+  }
+
   setupListeners() {
     if (typeof window === 'undefined') return;
 
-    // 1. Universal Delegated Click Listener: Works on any theme toggle button anywhere, anytime
+    // 1. Capture-phase delegated click listener: reliably intercepts theme buttons before bubbling quirks
     document.addEventListener('click', (e) => {
-      if (e.__themeToggleHandled) return;
-      const btn = e.target.closest('#theme-btn, #theme-toggle-btn, [data-theme-toggle], .theme-toggle-btn');
+      const btn = this._findThemeButton(e.target);
       if (btn) {
-        e.__themeToggleHandled = true;
-        e.preventDefault();
-        this.toggleTheme();
+        this.toggleTheme(e);
       }
-    });
+    }, { capture: true });
 
     // 2. DOM Ready synchronization
     if (document.readyState === 'loading') {
@@ -207,7 +219,7 @@ const theme = new ThemeManager();
 
 if (typeof window !== 'undefined') {
   window.ThemeManager = theme;
-  window.toggleTheme = () => theme.toggleTheme();
+  window.toggleTheme = (e) => theme.toggleTheme(e);
 }
 
 export default theme;

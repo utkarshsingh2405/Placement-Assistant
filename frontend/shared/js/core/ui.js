@@ -35,8 +35,8 @@ class UIManager {
       auth.logout();
     });
 
-    document.getElementById('theme-toggle-btn')?.addEventListener('click', () => {
-      theme.toggleTheme();
+    document.getElementById('theme-toggle-btn')?.addEventListener('click', (e) => {
+      theme.toggleTheme(e);
     });
 
     document.getElementById('sidebar-toggle')?.addEventListener('click', () => {
@@ -148,9 +148,9 @@ class UIManager {
           </a>
 
           <!-- Theme Toggle Button -->
-          <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light/Dark Theme" aria-label="Toggle Light/Dark Theme" style="padding: 8px;">
-            <span id="theme-icon" class="theme-icon" style="display: flex; align-items: center; justify-content: center;">
-              <svg width="16" height="16"><use href="#ph-moon"/></svg>
+          <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light/Dark Theme" aria-label="Toggle Light/Dark Theme" style="padding: 8px; cursor: pointer;">
+            <span id="theme-icon" class="theme-icon" style="display: flex; align-items: center; justify-content: center; pointer-events: none;">
+              <svg width="16" height="16" style="pointer-events: none;"><use href="#ph-moon"/></svg>
             </span>
           </button>
 
@@ -346,6 +346,12 @@ class UIManager {
 
   showToast(message, type = 'info') {
     return this.toast(message, type);
+  }
+
+  handleApiError(error, defaultMessage = 'An unexpected error occurred.') {
+    console.error('[UI] API Error:', error);
+    const msg = error?.message || defaultMessage;
+    this.showToast(msg, 'error');
   }
 
   confirm(arg1, arg2 = '') {

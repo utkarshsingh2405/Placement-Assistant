@@ -149,8 +149,8 @@
 
     <div style="display: flex; align-items: center; gap: var(--space-3);">
       <!-- Theme Toggle with guaranteed visible icon -->
-      <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-btn" title="Toggle Light/Dark Theme" aria-label="Toggle Light/Dark Theme" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;">
-        <span id="theme-icon" class="theme-icon" style="display: inline-flex; align-items: center;">
+      <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-btn" title="Toggle Light/Dark Theme" aria-label="Toggle Light/Dark Theme" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; cursor: pointer;">
+        <span id="theme-icon" class="theme-icon" style="display: inline-flex; align-items: center; pointer-events: none;">
           <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor">
             <path d="M216.7,152.6A96,96,0,1,1,103.4,39.3,80,80,0,0,0,216.7,152.6Z"/>
           </svg>
@@ -196,7 +196,7 @@
             <span>PILLAR 1 • ACADEMIC REGISTRY</span>
           </span>
           <span class="chip" id="inst-pill-status" style="background: rgba(0,0,0,0.3); color: #FFFFFF; font-family: var(--font-mono); font-size: 11px;">
-            ONLINE • 8081
+            ONLINE • /institute
           </span>
         </div>
 
@@ -250,7 +250,7 @@
             <span>PILLAR 2 • RECRUITMENT SEASON</span>
           </span>
           <span class="chip" id="plc-pill-status" style="background: rgba(0,0,0,0.3); color: #FFFFFF; font-family: var(--font-mono); font-size: 11px;">
-            ONLINE • 8082
+            ONLINE • /placement
           </span>
         </div>
 
@@ -356,36 +356,7 @@
       }
     }
 
-    // Theme Toggle
-    function updateThemeIcon() {
-      const current = document.documentElement.getAttribute('data-theme') || 'light';
-      const iconSpan = document.getElementById('theme-icon');
-      if (iconSpan) {
-        if (current === 'dark') {
-          iconSpan.innerHTML = `
-            <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor">
-              <circle cx="128" cy="128" r="48"/>
-              <line x1="128" y1="24" x2="128" y2="48" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
-              <line x1="128" y1="208" x2="128" y2="232" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
-              <line x1="24" y1="128" x2="48" y2="128" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
-              <line x1="208" y1="128" x2="232" y2="128" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
-              <line x1="54.5" y1="54.5" x2="71.5" y2="71.5" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
-              <line x1="184.5" y1="184.5" x2="201.5" y2="201.5" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
-              <line x1="54.5" y1="201.5" x2="71.5" y2="184.5" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
-              <line x1="184.5" y1="71.5" x2="201.5" y2="54.5" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
-            </svg>
-          `;
-        } else {
-          iconSpan.innerHTML = `
-            <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor">
-              <path d="M216.7,152.6A96,96,0,1,1,103.4,39.3,80,80,0,0,0,216.7,152.6Z"/>
-            </svg>
-          `;
-        }
-      }
-    }
-
-    // Theme Icon listener (ThemeManager handles click events and initial icon setup automatically)
+    // Theme change listener (ThemeManager handles click events and icon updates automatically)
     window.addEventListener('themechange', (e) => {
       if (typeof theme !== 'undefined') {
         theme.updateToggleIcons(e.detail?.theme || theme.getTheme());
@@ -430,11 +401,25 @@
       .then(r => r.json())
       .then(res => {
         const d = res.data || res;
-        if (d && d.institute && d.institute.status !== 'UP') {
-          document.getElementById('inst-pill-status').textContent = 'OFFLINE';
+        const instChip = document.getElementById('inst-pill-status');
+        const plcChip = document.getElementById('plc-pill-status');
+        if (d && d.institute && instChip) {
+          if (d.institute.status === 'UP') {
+            instChip.textContent = 'ONLINE • /institute';
+            instChip.style.color = '#4FD1B8';
+          } else {
+            instChip.textContent = 'STARTING...';
+            instChip.style.color = '#E0808C';
+          }
         }
-        if (d && d.placement && d.placement.status !== 'UP') {
-          document.getElementById('plc-pill-status').textContent = 'OFFLINE';
+        if (d && d.placement && plcChip) {
+          if (d.placement.status === 'UP') {
+            plcChip.textContent = 'ONLINE • /placement';
+            plcChip.style.color = '#4FD1B8';
+          } else {
+            plcChip.textContent = 'STARTING...';
+            plcChip.style.color = '#E0808C';
+          }
         }
       })
       .catch(() => {});

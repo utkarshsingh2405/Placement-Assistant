@@ -6,17 +6,17 @@
 (function() {
   function getTheme() {
     try {
-      // 1. Check localStorage
+      // 1. Check document.cookie first (seamless cross-port sharing on localhost)
+      var m = document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);
+      if (m && m[1]) return m[1];
+
+      // 2. Check localStorage
       var ls = localStorage.getItem('pa_theme_preference');
       if (ls === 'dark' || ls === 'light') return ls;
 
-      // 2. Check sessionStorage
+      // 3. Check sessionStorage
       var ss = sessionStorage.getItem('pa_theme_preference');
       if (ss === 'dark' || ss === 'light') return ss;
-
-      // 3. Check document.cookie
-      var m = document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);
-      if (m && m[1]) return m[1];
 
       // 4. Check window.name (persists across all page reloads & file:// directory switches)
       if (window.name && window.name.indexOf('pa_theme:') !== -1) {

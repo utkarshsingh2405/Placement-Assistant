@@ -791,4 +791,30 @@ dialog.custom-dialog::backdrop {
   color: var(--muted) !important;
 }
 
+/* Dark Mode Badge Contrast Overrides */
+html[data-theme="dark"] .badge.bg-success {
+  background-color: var(--success-tint, rgba(92, 195, 137, 0.18)) !important;
+  color: var(--success, #5CC389) !important;
+}
+
+html[data-theme="dark"] .badge.bg-danger {
+  background-color: var(--danger-tint, rgba(255, 122, 127, 0.18)) !important;
+  color: var(--danger, #FF7A7F) !important;
+}
+
+html[data-theme="dark"] .badge.bg-primary {
+  background-color: rgba(79, 209, 184, 0.2) !important;
+  color: var(--accent, #4FD1B8) !important;
+}
+
+html[data-theme="dark"] .badge.bg-warning {
+  background-color: var(--warning-tint, rgba(240, 160, 75, 0.18)) !important;
+  color: var(--warning, #F0A04B) !important;
+}
+
+html[data-theme="dark"] .badge.bg-secondary {
+  background-color: var(--surface-2) !important;
+  color: var(--ink-2, #B9C6C9) !important;
+}
+
 

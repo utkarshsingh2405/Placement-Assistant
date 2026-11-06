@@ -56,8 +56,8 @@
 
     <!-- Header Actions -->
     <div style="display: flex; align-items: center; gap: var(--space-3);">
-      <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-btn" title="Toggle Theme" aria-label="Toggle Theme" style="border-color: #2A383E; color: #E8EEEC; padding: 8px;">
-        <span id="theme-icon" class="theme-icon" style="display: flex; align-items: center; justify-content: center;">
+      <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-btn" title="Toggle Theme" aria-label="Toggle Theme" style="border-color: #2A383E; color: #E8EEEC; padding: 8px; cursor: pointer;">
+        <span id="theme-icon" class="theme-icon" style="display: flex; align-items: center; justify-content: center; pointer-events: none;">
           <svg width="16" height="16"><use href="#ph-moon"/></svg>
         </span>
       </button>
@@ -233,7 +233,7 @@
 
         <div class="doors-grid">
           <!-- Door 1: Institute Academic -->
-          <div class="door-panel door-institute" onclick="window.location.href='/login.html?next=/institute/pages/1-students/student-list.html'">
+          <div class="door-panel door-institute" onclick="window.location.href='/login.html?next=/institute/dashboard.html'">
             <div>
               <div class="chip" style="background: rgba(255,255,255,0.2); color: #FFF; margin-bottom: var(--space-4);">
                 DESK 1 • ACADEMIC REGISTRY
@@ -255,7 +255,7 @@
           </div>
 
           <!-- Door 2: Placement Recruitment -->
-          <div class="door-panel door-placement" onclick="window.location.href='/login.html?next=/placement/pages/1-drives/drive-list.html'">
+          <div class="door-panel door-placement" onclick="window.location.href='/login.html?next=/placement/dashboard.html'">
             <div>
               <div class="chip" style="background: rgba(255,255,255,0.2); color: #FFF; margin-bottom: var(--space-4);">
                 DESK 2 • RECRUITMENT SEASON
@@ -532,16 +532,16 @@
           <!-- Pillar Service Status Indicators -->
           <div style="display: flex; align-items: center; gap: var(--space-4); font-size: var(--text-xs); font-family: var(--font-mono);">
             <div style="display: flex; align-items: center; gap: 6px;">
-              <span style="width: 6px; height: 6px; border-radius: 50%; background: #4FD1B8;"></span>
-              <span>Portal :8088</span>
+              <span id="portal-status-dot" style="width: 6px; height: 6px; border-radius: 50%; background: #4FD1B8;"></span>
+              <span id="portal-status-text">Gateway Active</span>
             </div>
             <div style="display: flex; align-items: center; gap: 6px;">
-              <span style="width: 6px; height: 6px; border-radius: 50%; background: #E0808C;"></span>
-              <span>Institute :8081</span>
+              <span id="inst-status-dot" style="width: 6px; height: 6px; border-radius: 50%; background: #4FD1B8;"></span>
+              <span id="inst-status-text">Institute /institute</span>
             </div>
             <div style="display: flex; align-items: center; gap: 6px;">
-              <span style="width: 6px; height: 6px; border-radius: 50%; background: #4FD1B8;"></span>
-              <span>Placement :8082</span>
+              <span id="plc-status-dot" style="width: 6px; height: 6px; border-radius: 50%; background: #4FD1B8;"></span>
+              <span id="plc-status-text">Placement /placement</span>
             </div>
           </div>
         </div>
@@ -573,8 +573,8 @@
       });
 
     // Theme toggle
-    document.getElementById('theme-btn').addEventListener('click', () => {
-      theme.toggleTheme();
+    document.getElementById('theme-btn')?.addEventListener('click', (e) => {
+      theme.toggleTheme(e);
     });
 
     // Update CTA for authenticated users
@@ -613,6 +613,29 @@
         }
         if (d && d.highestPackage) {
           document.getElementById('stat-highest').textContent = Number(d.highestPackage).toFixed(1);
+        }
+      })
+      .catch(() => {});
+
+    // Live Pillar Status Check
+    fetch('/api/status/pillars')
+      .then(r => r.json())
+      .then(res => {
+        const d = res.data || res;
+        const instDot = document.getElementById('inst-status-dot');
+        const instText = document.getElementById('inst-status-text');
+        const plcDot = document.getElementById('plc-status-dot');
+        const plcText = document.getElementById('plc-status-text');
+
+        if (d && d.institute) {
+          const isUp = d.institute.status === 'UP';
+          if (instDot) instDot.style.background = isUp ? '#4FD1B8' : '#E0808C';
+          if (instText) instText.textContent = `Institute: ${isUp ? 'Online' : 'Starting'}`;
+        }
+        if (d && d.placement) {
+          const isUp = d.placement.status === 'UP';
+          if (plcDot) plcDot.style.background = isUp ? '#4FD1B8' : '#E0808C';
+          if (plcText) plcText.textContent = `Placement: ${isUp ? 'Online' : 'Starting'}`;
         }
       })
       .catch(() => {});
