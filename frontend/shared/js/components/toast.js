@@ -131,3 +131,4 @@ class ToastManager {
 
 const toast = new ToastManager();
 export default toast;
+

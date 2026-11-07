@@ -105,3 +105,4 @@ export class ModalComponent {
 }
 
 export default ModalComponent;
+

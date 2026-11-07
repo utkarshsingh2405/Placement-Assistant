@@ -134,17 +134,14 @@ class DomainSwitcher {
 
   switchDomain(domain) {
     localStorage.setItem(this.STORAGE_KEY, domain);
-    const placementTarget = window.__PLACEMENT_URL__ || localStorage.getItem('pa_placement_url') || '/placement/dashboard.html';
-    const instituteTarget = window.__INSTITUTE_URL__ || localStorage.getItem('pa_institute_url') || '/institute/dashboard.html';
-    const portalTarget = window.__PORTAL_URL__ || localStorage.getItem('pa_portal_url') || '/choose-domain.html';
-
+    // In unified gateway mode, always use root-relative paths to prevent legacy port lock-in
+    let target = '/choose-domain.html';
     if (domain === 'placement') {
-      window.location.href = placementTarget;
+      target = '/placement/dashboard.html';
     } else if (domain === 'institute') {
-      window.location.href = instituteTarget;
-    } else {
-      window.location.href = portalTarget;
+      target = '/institute/dashboard.html';
     }
+    window.location.href = target;
   }
 }
 

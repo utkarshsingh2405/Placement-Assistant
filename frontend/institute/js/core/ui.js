@@ -40,7 +40,21 @@ class UIManager {
     // theme.updateToggleIcons() is called above after topbar injection.
 
     document.getElementById('sidebar-toggle')?.addEventListener('click', () => {
-      document.querySelector('.app-rail')?.classList.toggle('show');
+      const rail = document.querySelector('.app-rail, .sidebar');
+      if (!rail) return;
+      rail.classList.toggle('show');
+      let backdrop = document.getElementById('sidebar-backdrop');
+      if (!backdrop) {
+        backdrop = document.createElement('div');
+        backdrop.id = 'sidebar-backdrop';
+        backdrop.className = 'sidebar-backdrop';
+        backdrop.addEventListener('click', () => {
+          rail.classList.remove('show');
+          backdrop.classList.remove('show');
+        });
+        document.body.appendChild(backdrop);
+      }
+      backdrop.classList.toggle('show', rail.classList.contains('show'));
     });
 
     document.getElementById('nav-back-btn')?.addEventListener('click', (e) => {

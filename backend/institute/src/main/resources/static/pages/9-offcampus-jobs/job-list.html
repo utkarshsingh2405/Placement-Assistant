@@ -71,7 +71,7 @@
 
         <!-- Grid -->
         <div id="jobs-loading"></div>
-        <div id="jobs-grid" class="bento-grid mb-6"></div>
+        <div id="jobs-grid" class="opportunities-grid mb-6"></div>
         <div id="pagination-container" class="mt-4"></div>
       </main>
     </div>
@@ -136,62 +136,84 @@
 
           list.forEach(item => {
             const isBookmarked = !!item.bookmarked;
-            const skills = (item.skillsRequired || '').split(',').filter(Boolean).map(s => `<span class="chip chip-muted">${ui.escapeHtml(s.trim())}</span>`).join(' ');
+            const title = item.role || item.title || 'Software Development Engineer';
+            const company = item.company || 'Enterprise Partner';
+            const location = item.location || '';
+            const ctcText = item.packageLpa ? `₹${item.packageLpa} LPA` : (item.salaryCtc || 'Competitive');
+            const batchText = item.batchEligible || 'Graduating 2026 Batch';
+            const deadlineText = item.deadline || item.registrationDeadline || 'Rolling';
+            const modeVal = (item.mode || 'FULL_TIME').toUpperCase();
+            
+            let modeChipStyle = 'background: rgba(14, 165, 233, 0.12); color: #0284c7;';
+            if (modeVal === 'OFFLINE') {
+              modeChipStyle = 'background: rgba(16, 185, 129, 0.12); color: #059669;';
+            } else if (modeVal === 'HYBRID') {
+              modeChipStyle = 'background: rgba(245, 158, 11, 0.12); color: #d97706;';
+            }
+
+            const rawSkills = item.skillsRequired || 'Problem Solving, Algorithms';
+            const skills = rawSkills.split(',').filter(Boolean).slice(0, 4).map(s => `<span class="chip chip-muted" style="font-size: 11px;">${ui.escapeHtml(s.trim())}</span>`).join(' ');
 
             const card = document.createElement('article');
-            card.className = 'bezel-outer listing-stub';
+            card.className = 'bezel-outer opportunity-card h-100';
             card.innerHTML = `
               <div class="bezel-inner p-5 d-flex flex-column h-100 justify-between">
                 <div>
-                  <div class="d-flex justify-between align-start mb-3">
-                    <span class="chip chip-accent uppercase tracking-wider text-xs">${ui.escapeHtml(item.mode || 'FULL_TIME')}</span>
+                  <div class="d-flex justify-between align-center mb-3">
+                    <div class="d-flex align-center gap-2">
+                      <span class="chip uppercase tracking-wider text-xs fw-semibold" style="${modeChipStyle}">${ui.escapeHtml(modeVal)}</span>
+                      <span class="chip chip-muted text-xs uppercase" style="font-size: 10px; font-weight: 600;">ACTIVE HIRING</span>
+                    </div>
                     <button type="button" class="btn-icon bookmark-btn" data-id="${item.id}" title="Toggle Bookmark" aria-label="Bookmark">
                       <svg class="icon icon-sm" style="${isBookmarked ? 'fill: var(--brass); stroke: var(--brass);' : ''}"><use href="/icons/sprite.svg#bookmark-simple"></use></svg>
                     </button>
                   </div>
 
-                  <h3 class="poster-title text-lg mb-1">
-                    <a href="/institute/pages/9-offcampus-jobs/job-detail.html?id=${item.id}" class="text-ink text-decoration-none">
-                      ${ui.escapeHtml(item.title)}
+                  <h3 class="poster-title text-lg mb-2" style="line-height: 1.35; min-height: 2.7rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                    <a href="/institute/pages/9-offcampus-jobs/job-detail.html?id=${item.id}" class="text-ink text-decoration-none hover-underline" title="${ui.escapeHtml(title)}">
+                      ${ui.escapeHtml(title)}
                     </a>
                   </h3>
                   
-                  <div class="text-xs text-muted mb-3 d-flex align-center gap-2">
-                    <svg class="icon icon-xs"><use href="/icons/sprite.svg#buildings"></use></svg>
-                    <span class="fw-semibold text-ink-2">${ui.escapeHtml(item.company || 'Enterprise')}</span>
-                    ${item.location ? `<span>&bull;</span> <span>${ui.escapeHtml(item.location)}</span>` : ''}
+                  <div class="text-xs text-muted mb-3 d-flex align-center gap-2 flex-wrap">
+                    <div class="d-flex align-center gap-1">
+                      <svg class="icon icon-xs"><use href="/icons/sprite.svg#buildings"></use></svg>
+                      <span class="fw-semibold text-ink-2">${ui.escapeHtml(company)}</span>
+                    </div>
+                    ${location ? `<span>&bull;</span> <span class="text-muted">${ui.escapeHtml(location)}</span>` : ''}
                   </div>
 
-                  <div class="grid-2-col gap-2 mb-3 text-center">
-                    <div class="p-2 surface-tone rounded-3">
-                      <span class="text-xs text-muted d-block">Compensation (CTC)</span>
-                      <strong class="text-sm text-placement tabular-nums">${ui.escapeHtml(item.salaryCtc || 'Competitive')}</strong>
+                  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-2); margin-bottom: var(--space-3);" class="text-center">
+                    <div class="p-2 surface-tone rounded-3" style="background: var(--surface-2); border-radius: var(--radius-sm);">
+                      <span class="text-xs text-muted d-block" style="font-size: 10px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em;">Compensation</span>
+                      <strong class="text-xs text-placement tabular-nums" style="font-size: 12px; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${ui.escapeHtml(ctcText)}">${ui.escapeHtml(ctcText)}</strong>
                     </div>
-                    <div class="p-2 surface-tone rounded-3">
-                      <span class="text-xs text-muted d-block">Eligible Batch</span>
-                      <strong class="text-sm text-ink tabular-nums">${ui.escapeHtml(item.batchEligible || '2025 / 2024')}</strong>
+                    <div class="p-2 surface-tone rounded-3" style="background: var(--surface-2); border-radius: var(--radius-sm);">
+                      <span class="text-xs text-muted d-block" style="font-size: 10px; text-transform: uppercase; font-weight: 600; letter-spacing: 0.04em;">Eligible Batch</span>
+                      <strong class="text-xs text-ink tabular-nums" style="font-size: 12px; display: block;">${ui.escapeHtml(batchText)}</strong>
                     </div>
                   </div>
 
-                  <div class="mb-3">
-                    <span class="text-xs text-muted d-block mb-1">Required Competencies</span>
+                  <div class="mb-2">
                     <div class="d-flex flex-wrap gap-1">
-                      ${skills || '<span class="chip chip-muted">Relevant Engineering Skills</span>'}
+                      ${skills}
                     </div>
                   </div>
                 </div>
 
-                <div class="pt-4 border-top d-flex justify-between align-center">
-                  <div>
-                    <span class="text-xs text-muted d-block">Apply Cutoff</span>
-                    <strong class="text-xs text-institute tabular-nums">${ui.escapeHtml(item.registrationDeadline || 'Rolling')}</strong>
+                <div class="pt-4 border-top d-flex justify-between align-center gap-2 mt-4">
+                  <div style="min-width: 0;">
+                    <span class="text-xs text-muted d-block" style="white-space: nowrap; font-size: 11px;">Apply Cutoff</span>
+                    <strong class="text-xs text-institute tabular-nums" style="white-space: nowrap; font-weight: 600;">${ui.escapeHtml(deadlineText)}</strong>
                   </div>
-                  <a href="/institute/pages/9-offcampus-jobs/job-detail.html?id=${item.id}" class="btn-pill-nested" title="View Opportunity">
-                    <span>Inspect</span>
-                    <span class="btn-nested-circle">
-                      <svg class="icon icon-xs"><use href="/icons/sprite.svg#arrow-up-right"></use></svg>
-                    </span>
-                  </a>
+                  <div class="d-flex align-center gap-2">
+                    <a href="/institute/pages/9-offcampus-jobs/job-detail.html?id=${item.id}" class="btn-pill-nested" title="View Opportunity Details">
+                      <span>Inspect</span>
+                      <span class="btn-nested-circle">
+                        <svg class="icon icon-xs"><use href="/icons/sprite.svg#arrow-up-right"></use></svg>
+                      </span>
+                    </a>
+                  </div>
                 </div>
               </div>
             `;

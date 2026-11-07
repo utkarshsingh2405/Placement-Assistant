@@ -260,6 +260,14 @@
   </symbol>
   <symbol id="git-commit" viewBox="0 0 256 256"><use href="#ph-git-commit"/></symbol>
 
+    <!-- Flow Arrow / Rounds Pipeline -->
+  <symbol id="ph-flow-arrow" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="52" cy="180" r="28"/>
+      <path d="M80 180h80a48 48 0 0 0 48-48V68"/>
+      <polyline points="180 92 208 64 236 92"/>
+  </symbol>
+  <symbol id="flow-arrow" viewBox="0 0 256 256"><use href="#ph-flow-arrow"/></symbol>
+
     <!-- Layers -->
   <symbol id="ph-layers" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
       <polygon points="128 32 24 88 128 144 232 88 128 32"/>
