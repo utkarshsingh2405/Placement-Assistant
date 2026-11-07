@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en" data-domain="portal">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Platform Sitemap &amp; System Directory | Placement Assistant</title>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <style>
+    .sitemap-card {
+      background: var(--surface);
+      border: 1px solid var(--surface-3);
+      border-radius: var(--radius-card);
+      padding: var(--space-4);
+      transition: all var(--dur-fast) var(--ease-out);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      text-decoration: none;
+    }
+    .sitemap-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-float);
+    }
+    .role-badge {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: var(--radius-pill);
+    }
+    .badge-all { background: rgba(14, 165, 233, 0.12); color: #0284c7; }
+    .badge-student { background: rgba(20, 155, 133, 0.15); color: var(--placement); }
+    .badge-admin { background: rgba(161, 38, 56, 0.15); color: var(--institute); }
+    .badge-recruiter { background: rgba(245, 158, 11, 0.15); color: #d97706; }
+  </style>
+</head>
+<body class="theme-ground">
+  <div class="grain-overlay"></div>
+
+  <!-- Header / Navigation -->
+  <header class="app-topbar px-6">
+    <div class="d-flex align-center gap-3">
+      <a href="/" class="brand-wordmark text-decoration-none">
+        <span class="brand-dot"></span>
+        <span class="text-base fw-bold text-ink">Placement Assistant</span>
+      </a>
+      <span class="text-muted text-xs hide-on-mobile">/ Interactive Platform Sitemap</span>
+    </div>
+    <div class="d-flex align-center gap-2">
+      <a href="/choose-domain.html" class="btn btn-sm btn-outline">
+        <span>Gateway Portal</span>
+        <span>&rarr;</span>
+      </a>
+      <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light/Dark Theme" style="padding: 8px;">
+        <span class="theme-icon">
+          <svg width="16" height="16"><use href="/icons/sprite.svg#moon"/></svg>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <main class="container py-8" style="max-width: 1200px;">
+    <!-- Page Header -->
+    <header class="mb-8 text-center">
+      <div class="d-flex justify-center gap-2 mb-2">
+        <span class="chip chip-accent uppercase tracking-wider text-xs">Directory Index</span>
+        <span class="chip chip-neutral text-xs">38 Active Platform Screens</span>
+      </div>
+      <h1 class="page-title text-3xl font-display mb-2">Platform Sitemap &amp; Routing Directory</h1>
+      <p class="text-muted text-sm" style="max-width: 650px; margin: 0 auto;">
+        Comprehensive architecture directory mapping every module across the Central SSO Gateway, Academic Institute Registry, and Live Placement Operations Suite.
+      </p>
+
+      <!-- Quick Search & Filter Controls -->
+      <div class="mt-6" style="max-width: 580px; margin-left: auto; margin-right: auto;">
+        <div class="input-icon-wrap mb-4">
+          <svg class="icon input-icon"><use href="/icons/sprite.svg#magnifying-glass"></use></svg>
+          <input type="text" id="sitemap-search" class="form-control" placeholder="Search by screen title, URL, or feature keyword...">
+        </div>
+        <div class="d-flex justify-center flex-wrap gap-2" id="persona-filters">
+          <button type="button" class="btn btn-sm btn-outline active" data-filter="all">All Screens</button>
+          <button type="button" class="btn btn-sm btn-outline" data-filter="student">Student Views</button>
+          <button type="button" class="btn btn-sm btn-outline" data-filter="admin">TPO &amp; Admin</button>
+          <button type="button" class="btn btn-sm btn-outline" data-filter="recruiter">Corporate Partners</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- SECTION 1: Gateway & Central Identity -->
+    <section class="mb-8 sitemap-section">
+      <div class="d-flex align-center gap-2 mb-4 pb-2 border-bottom">
+        <span style="width: 10px; height: 10px; border-radius: 50%; background: #0284c7;"></span>
+        <h2 class="text-lg fw-bold text-ink mb-0">1. Central Gateway &amp; Shared Identity Services</h2>
+        <span class="text-xs text-muted ml-auto font-mono">Context: /</span>
+      </div>
+      <div class="opportunities-grid" style="grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));">
+        <a href="/" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Public</span>
+              <span class="text-xs text-muted font-mono">/</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Gateway Landing &amp; Overview</h3>
+            <p class="text-xs text-muted mb-0">Unified entrance with high-level stats, dual-pillar introduction, and authentication routing.</p>
+          </div>
+        </a>
+
+        <a href="/choose-domain.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Public</span>
+              <span class="text-xs text-muted font-mono">/choose-domain.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Dual-Pillar Dispatcher Hub</h3>
+            <p class="text-xs text-muted mb-0">Interactive domain selection screen choosing between Academic Institute and Placement Season.</p>
+          </div>
+        </a>
+
+        <a href="/login.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Auth</span>
+              <span class="text-xs text-muted font-mono">/login.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">SSO Security Login</h3>
+            <p class="text-xs text-muted mb-0">Single sign-on authentication supporting JWT tokens, role discovery, and pre-seeded demo quick-logins.</p>
+          </div>
+        </a>
+
+        <a href="/register.html" class="sitemap-card" data-role="student">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-student">Student</span>
+              <span class="text-xs text-muted font-mono">/register.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Student Candidate Registration</h3>
+            <p class="text-xs text-muted mb-0">Self-service student enrollment form with academic branch, USN, and profile setup.</p>
+          </div>
+        </a>
+
+        <a href="/profile.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Shared</span>
+              <span class="text-xs text-muted font-mono">/profile.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">User Account &amp; Security Settings</h3>
+            <p class="text-xs text-muted mb-0">Password updates, security credentials, and cross-pillar profile synchronization.</p>
+          </div>
+        </a>
+
+        <a href="/admin-users.html" class="sitemap-card" data-role="admin">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-admin">Admin</span>
+              <span class="text-xs text-muted font-mono">/admin-users.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">User Administration Registry</h3>
+            <p class="text-xs text-muted mb-0">Manage platform users, roles (STUDENT, TPO, DIRECTOR, COMPANY), and system credentials.</p>
+          </div>
+        </a>
+
+        <a href="/audit-logs.html" class="sitemap-card" data-role="admin">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-admin">Admin</span>
+              <span class="text-xs text-muted font-mono">/audit-logs.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Security Audit Trail &amp; Logs</h3>
+            <p class="text-xs text-muted mb-0">Immutable compliance logs capturing logins, drive modifications, and stage transitions.</p>
+          </div>
+        </a>
+
+        <a href="/healthz" class="sitemap-card" data-role="admin" target="_blank">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-admin">API / Uptime</span>
+              <span class="text-xs text-muted font-mono">/healthz</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Universal Liveness Health Check</h3>
+            <p class="text-xs text-muted mb-0">Cloud container probe endpoint returning service uptime and supervisor status.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- SECTION 2: Institute Academic Pillar -->
+    <section class="mb-8 sitemap-section">
+      <div class="d-flex align-center gap-2 mb-4 pb-2 border-bottom">
+        <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--institute);"></span>
+        <h2 class="text-lg fw-bold text-ink mb-0">2. Institute Academic Registry &amp; Student Operations</h2>
+        <span class="text-xs text-muted ml-auto font-mono">Context: /institute</span>
+      </div>
+      <div class="opportunities-grid" style="grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));">
+        <a href="/institute/dashboard.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Core</span>
+              <span class="text-xs text-muted font-mono">/institute/dashboard.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Academic Secretariat Dashboard</h3>
+            <p class="text-xs text-muted mb-0">Dual-role cockpit showing student CGPA/attendance analytics or TPO batch progress.</p>
+          </div>
+        </a>
+
+        <a href="/institute/pages/1-students/student-list.html" class="sitemap-card" data-role="admin">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-admin">Admin</span>
+              <span class="text-xs text-muted font-mono">/pages/1-students/student-list.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Student Candidate Directory</h3>
+            <p class="text-xs text-muted mb-0">Searchable ledger of all engineering students with branch filters, CGPA, and placement readiness.</p>
+          </div>
+        </a>
+
+        <a href="/institute/pages/1-students/student-profile.html" class="sitemap-card" data-role="student">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-student">Student</span>
+              <span class="text-xs text-muted font-mono">/pages/1-students/student-profile.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Student Academic Profile</h3>
+            <p class="text-xs text-muted mb-0">Detailed student credentials, verified semester scores, resume file, and dossier details.</p>
+          </div>
+        </a>
+
+        <a href="/institute/pages/2-company-drives/drive-list.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Core</span>
+              <span class="text-xs text-muted font-mono">/pages/2-company-drives/drive-list.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Master Recruitment Drives</h3>
+            <p class="text-xs text-muted mb-0">Flagship campus hiring drives (Google, Amazon AWS, Microsoft) with CTC packages and cutoffs.</p>
+          </div>
+        </a>
+
+        <a href="/institute/pages/5-drive-rounds/rounds-board.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Core</span>
+              <span class="text-xs text-muted font-mono">/pages/5-drive-rounds/rounds-board.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Recruitment Rounds Pipeline</h3>
+            <p class="text-xs text-muted mb-0">Multi-stage evaluation timeline tracking OAs, Technical Interviews, Bar Raiser rounds, and results.</p>
+          </div>
+        </a>
+
+        <a href="/institute/pages/3-question-bank/question-list.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Study</span>
+              <span class="text-xs text-muted font-mono">/pages/3-question-bank/question-list.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Technical Question Bank</h3>
+            <p class="text-xs text-muted mb-0">Categorized interview questions with difficulty tiers, company tags, and model solutions.</p>
+          </div>
+        </a>
+
+        <a href="/institute/pages/4-attendance/class/class-sessions.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Academics</span>
+              <span class="text-xs text-muted font-mono">/pages/4-attendance/class/class-sessions.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Classroom Attendance Sessions</h3>
+            <p class="text-xs text-muted mb-0">Subject-wise daily class attendance records with percentage cutoffs for exam clearance.</p>
+          </div>
+        </a>
+
+        <a href="/institute/pages/4-attendance/crt/crt-sessions.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Training</span>
+              <span class="text-xs text-muted font-mono">/pages/4-attendance/crt/crt-sessions.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">CRT Attendance &amp; Skill Labs</h3>
+            <p class="text-xs text-muted mb-0">Campus Recruitment Training session tracking covering DSA, Aptitude, and Soft Skills.</p>
+          </div>
+        </a>
+
+        <a href="/institute/pages/6-resume-ats/ats-report.html" class="sitemap-card" data-role="student">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-student">AI Tool</span>
+              <span class="text-xs text-muted font-mono">/pages/6-resume-ats/ats-report.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Resume ATS Diagnostic &amp; Parser</h3>
+            <p class="text-xs text-muted mb-0">Instant ATS compatibility scoring, keyword gap diagnostics, and structural suggestions.</p>
+          </div>
+        </a>
+
+        <a href="/institute/pages/7-hackathons/hackathon-list.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Discovery</span>
+              <span class="text-xs text-muted font-mono">/pages/7-hackathons/hackathon-list.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">National Hackathons Directory</h3>
+            <p class="text-xs text-muted mb-0">Verified national coding competitions (Smart India Hackathon, Flipkart GRiD) with prizes and PPIs.</p>
+          </div>
+        </a>
+
+        <a href="/institute/pages/8-internships/internship-list.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Discovery</span>
+              <span class="text-xs text-muted font-mono">/pages/8-internships/internship-list.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Verified Internship Postings</h3>
+            <p class="text-xs text-muted mb-0">Summer and semester internships with stipend details, tenure, and eligibility criteria.</p>
+          </div>
+        </a>
+
+        <a href="/institute/pages/9-offcampus-jobs/job-list.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Careers</span>
+              <span class="text-xs text-muted font-mono">/pages/9-offcampus-jobs/job-list.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Off-Campus Direct Job Openings</h3>
+            <p class="text-xs text-muted mb-0">Curated corporate referral openings and direct tech vacancies for graduating seniors.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- SECTION 3: Placement Operations Pillar -->
+    <section class="mb-8 sitemap-section">
+      <div class="d-flex align-center gap-2 mb-4 pb-2 border-bottom">
+        <span style="width: 10px; height: 10px; border-radius: 50%; background: var(--placement);"></span>
+        <h2 class="text-lg fw-bold text-ink mb-0">3. Placement Operations &amp; Live Recruitment Hub</h2>
+        <span class="text-xs text-muted ml-auto font-mono">Context: /placement</span>
+      </div>
+      <div class="opportunities-grid" style="grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));">
+        <a href="/placement/dashboard.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Core</span>
+              <span class="text-xs text-muted font-mono">/placement/dashboard.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Placement Control Center</h3>
+            <p class="text-xs text-muted mb-0">Executive secretariat command center with live campaign telemetry and urgent notices.</p>
+          </div>
+        </a>
+
+        <a href="/placement/pages/1-drives/drive-list.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Core</span>
+              <span class="text-xs text-muted font-mono">/pages/1-drives/drive-list.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Recruitment Drives Management</h3>
+            <p class="text-xs text-muted mb-0">Live placement seasons, registered candidates, and corporate partner drive schedules.</p>
+          </div>
+        </a>
+
+        <a href="/placement/pages/2-applications/application-board.html" class="sitemap-card" data-role="admin">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-admin">TPO / Recruiter</span>
+              <span class="text-xs text-muted font-mono">/pages/2-applications/application-board.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Applicant Pipeline Kanban Board</h3>
+            <p class="text-xs text-muted mb-0">Kanban stage progression for managing candidate shortlists across recruitment rounds.</p>
+          </div>
+        </a>
+
+        <a href="/placement/pages/2-applications/my-applications.html" class="sitemap-card" data-role="student">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-student">Student</span>
+              <span class="text-xs text-muted font-mono">/pages/2-applications/my-applications.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">My Submitted Applications</h3>
+            <p class="text-xs text-muted mb-0">Student-facing tracker of submitted applications, interview call letters, and status updates.</p>
+          </div>
+        </a>
+
+        <a href="/placement/pages/3-stages/stage-management.html" class="sitemap-card" data-role="admin">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-admin">Admin</span>
+              <span class="text-xs text-muted font-mono">/pages/3-stages/stage-management.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Stage Progression &amp; Shortlists</h3>
+            <p class="text-xs text-muted mb-0">Advance candidates between test phases, configure cutoffs, and publish stage rosters.</p>
+          </div>
+        </a>
+
+        <a href="/placement/pages/4-talks/talk-list.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Events</span>
+              <span class="text-xs text-muted font-mono">/pages/4-talks/talk-list.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Pre-Placement Talks (PPT)</h3>
+            <p class="text-xs text-muted mb-0">Corporate presentations, Q&amp;A sessions, webinar links, and company presentation slides.</p>
+          </div>
+        </a>
+
+        <a href="/placement/pages/5-live-updates/live-feed.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Broadcast</span>
+              <span class="text-xs text-muted font-mono">/pages/5-live-updates/live-feed.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Real-Time Notice Broadcasts</h3>
+            <p class="text-xs text-muted mb-0">Live circulars, room updates, interview delays, and shortlisting alerts during drives.</p>
+          </div>
+        </a>
+
+        <a href="/placement/pages/6-attendance/mark-attendance.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Ops</span>
+              <span class="text-xs text-muted font-mono">/pages/6-attendance/mark-attendance.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Door Attendance &amp; Hall Check-In</h3>
+            <p class="text-xs text-muted mb-0">Verify candidate identity before online assessments and technical interview rounds.</p>
+          </div>
+        </a>
+
+        <a href="/placement/pages/6-attendance/scan.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Mobile</span>
+              <span class="text-xs text-muted font-mono">/pages/6-attendance/scan.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Mobile QR Scanner Terminal</h3>
+            <p class="text-xs text-muted mb-0">Camera QR code scanner for instant student check-in at interview hall gates.</p>
+          </div>
+        </a>
+
+        <a href="/placement/pages/7-results/drive-results.html" class="sitemap-card" data-role="admin">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-admin">Admin</span>
+              <span class="text-xs text-muted font-mono">/pages/7-results/drive-results.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Results &amp; Offer Roll-Outs</h3>
+            <p class="text-xs text-muted mb-0">Publish official selection lists, upload offer letters, and mark student appointment status.</p>
+          </div>
+        </a>
+
+        <a href="/placement/pages/8-placed/placed-students.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Public Wall</span>
+              <span class="text-xs text-muted font-mono">/pages/8-placed/placed-students.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Placed Students Honor Wall</h3>
+            <p class="text-xs text-muted mb-0">Public celebration wall showcasing verified student selections, CTCs, and company badges.</p>
+          </div>
+        </a>
+
+        <a href="/placement/pages/10-feedback/my-feedback.html" class="sitemap-card" data-role="student">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-student">Feedback</span>
+              <span class="text-xs text-muted font-mono">/pages/10-feedback/my-feedback.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Interview Experience &amp; Review</h3>
+            <p class="text-xs text-muted mb-0">Candidate post-drive feedback dossier recording interview questions and process review.</p>
+          </div>
+        </a>
+
+        <a href="/placement/pages/11-notifications/notifications.html" class="sitemap-card" data-role="all">
+          <div>
+            <div class="d-flex justify-between align-center mb-2">
+              <span class="role-badge badge-all">Alerts</span>
+              <span class="text-xs text-muted font-mono">/pages/11-notifications/notifications.html</span>
+            </div>
+            <h3 class="text-sm fw-bold text-ink mb-1">Notifications Center</h3>
+            <p class="text-xs text-muted mb-0">Unified inbox for stage shortlists, application updates, and broadcast alerts.</p>
+          </div>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="text-center py-6 border-top text-xs text-muted">
+    <div class="container">
+      &copy; 2026 Placement Assistant Enterprise Platform &bull; Dual-Pillar Cloud Architecture &bull; <a href="/sitemap.xml" class="text-muted" target="_blank">XML Feed</a> &bull; <a href="/robots.txt" class="text-muted" target="_blank">Robots.txt</a>
+    </div>
+  </footer>
+
+  <script>
+    // Live filter implementation
+    const searchInput = document.getElementById('sitemap-search');
+    const filterButtons = document.querySelectorAll('#persona-filters button');
+    const cards = document.querySelectorAll('.sitemap-card');
+    let activePersona = 'all';
+
+    function filterCards() {
+      const q = (searchInput.value || '').toLowerCase().trim();
+      cards.forEach(card => {
+        const text = card.textContent.toLowerCase();
+        const role = card.getAttribute('data-role');
+        const matchesQuery = !q || text.includes(q);
+        const matchesPersona = activePersona === 'all' || role === activePersona || role === 'all';
+        if (matchesQuery && matchesPersona) {
+          card.style.display = 'flex';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    }
+
+    searchInput.addEventListener('input', filterCards);
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activePersona = btn.getAttribute('data-filter');
+        filterCards();
+      });
+    });
+  </script>
+</body>
+</html>

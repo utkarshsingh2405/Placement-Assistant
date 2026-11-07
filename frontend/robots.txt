@@ -1,0 +1,24 @@
+# Robots.txt for Placement Assistant Platform
+User-agent: *
+Allow: /
+Allow: /choose-domain.html
+Allow: /login.html
+Allow: /register.html
+Allow: /sitemap.html
+Allow: /sitemap.xml
+Allow: /institute/pages/7-hackathons/
+Allow: /institute/pages/8-internships/
+Allow: /institute/pages/9-offcampus-jobs/
+Allow: /placement/pages/8-placed/
+Allow: /placement/pages/9-opportunities/
+
+# Disallow API and Private Administrative endpoints
+Disallow: /api/
+Disallow: /institute/api/
+Disallow: /placement/api/
+Disallow: /healthz
+Disallow: /actuator/
+Disallow: /admin-users.html
+Disallow: /audit-logs.html
+
+Sitemap: https://placement-assistant.onrender.com/sitemap.xml

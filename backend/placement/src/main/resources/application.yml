@@ -2,6 +2,10 @@ server:
   port: ${PORT:${PLACEMENT_PORT:8082}}
   servlet:
     context-path: ${CONTEXT_PATH:/placement}
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json,image/svg+xml
+    min-response-size: 1024
 
 spring:
   application:
