@@ -66,5 +66,5 @@ ENV MAIL_MODE=log
 
 EXPOSE 8080
 
-ENTRYPOINT ["sh", "-c", "java -Dserver.port=${PORT:-8080} -Dspring.profiles.active=sqlite -DDB_PATH=/app/database/portal.db -DDB_INSTITUTE_PATH=/app/database/institute.db -DDB_PLACEMENT_PATH=/app/database/placement.db -Dpillar.institute.jar=/app/institute.jar -Dpillar.placement.jar=/app/placement.jar -jar /app/portal.jar"]
+CMD ["sh", "-c", "java -Dserver.port=${PORT:-8080} -Dspring.profiles.active=sqlite -DDB_PATH=/app/database/portal.db -DDB_INSTITUTE_PATH=/app/database/institute.db -DDB_PLACEMENT_PATH=/app/database/placement.db -Dpillar.institute.jar=/app/institute.jar -Dpillar.placement.jar=/app/placement.jar -jar /app/portal.jar"]
 
