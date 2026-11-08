@@ -36,7 +36,7 @@ public class PortalJwtFilter extends OncePerRequestFilter {
     public PortalJwtFilter(
             JwtService jwtService,
             ObjectProvider<JitUserProvisioner> jitUserProvisionerProvider,
-            @Value("${institute.integration.api-key:inst-sec-key-7f9a12b4e8c345d6}") String integrationApiKey) {
+            @Value("${institute.integration.api-key:}") String integrationApiKey) {
         this.jwtService = jwtService;
         this.jitUserProvisionerProvider = jitUserProvisionerProvider;
         this.integrationApiKey = integrationApiKey;
@@ -50,7 +50,7 @@ public class PortalJwtFilter extends OncePerRequestFilter {
 
         // Check for Integration API Key (inter-service communication)
         String apiKey = request.getHeader("X-API-KEY");
-        if (apiKey != null && apiKey.equals(integrationApiKey)) {
+        if (apiKey != null && integrationApiKey != null && !integrationApiKey.isBlank() && apiKey.equals(integrationApiKey)) {
             UserDetails apiUser = User.builder()
                     .username("system-integration")
                     .password("")

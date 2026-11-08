@@ -26,9 +26,15 @@ public class JwtService {
     private final long refreshExpirationMs;
 
     public JwtService(
-            @Value("${jwt.secret:404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}") String secret,
+            @Value("${jwt.secret:}") String secret,
             @Value("${jwt.expiration-ms:86400000}") long accessExpirationMs,
             @Value("${jwt.refresh-expiration-ms:604800000}") long refreshExpirationMs) {
+        if (secret == null || secret.trim().isEmpty()) {
+            throw new IllegalStateException("CRITICAL SECURITY CONFIGURATION ERROR: JWT_SECRET is missing! Please configure JWT_SECRET via environment variable or application configuration.");
+        }
+        if (secret.getBytes(StandardCharsets.UTF_8).length < 32) {
+            throw new IllegalStateException("CRITICAL SECURITY CONFIGURATION ERROR: JWT_SECRET must be at least 256 bits (32 bytes) long.");
+        }
         this.signingKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         this.accessExpirationMs = accessExpirationMs;
         this.refreshExpirationMs = refreshExpirationMs;

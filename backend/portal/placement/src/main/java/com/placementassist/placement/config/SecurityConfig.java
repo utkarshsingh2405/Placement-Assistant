@@ -3,15 +3,15 @@ package com.placementassist.placement.config;
 import com.placementassist.shared.security.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -27,43 +27,47 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    @Order(2)
+    public SecurityFilterChain placementSecurityFilterChain(HttpSecurity http) throws Exception {
         http
+                .securityMatcher("/placement/**")
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers
-                        .frameOptions(org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                         .contentTypeOptions(Customizer.withDefaults())
                         .xssProtection(Customizer.withDefaults())
                 )
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/placement/**").permitAll()
                         // Public frontend assets & pages
                         .requestMatchers(
-                                "/",
-                                "/index.html",
-                                "/pages/**",
-                                "/css/**",
-                                "/js/**",
-                                "/assets/**",
-                                "/favicon.ico",
-                                "/healthz",
-                                "/dashboard.html",
-                                "/error"
+                                "/placement",
+                                "/placement/",
+                                "/placement/index.html",
+                                "/placement/dashboard.html",
+                                "/placement/pages/**",
+                                "/placement/css/**",
+                                "/placement/js/**",
+                                "/placement/assets/**",
+                                "/placement/icons/**",
+                                "/placement/textures/**",
+                                "/placement/favicon.ico",
+                                "/placement/manifest.json",
+                                "/placement/robots.txt",
+                                "/placement/sitemap.html",
+                                "/placement/sitemap.xml",
+                                "/placement/healthz",
+                                "/placement/error"
                         ).permitAll()
                         // Public endpoints (highlights ticker, placed lookup)
                         .requestMatchers(
-                                "/api/public/**",
-                                "/actuator/**"
+                                "/placement/api/public/**",
+                                "/placement/actuator/**"
                         ).permitAll()
-                        // All recruitment operational APIs require authenticated token or forwarded context
-                        .requestMatchers("/api/**").authenticated()
+                        // All recruitment operational APIs require authenticated token
+                        .requestMatchers("/placement/api/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .exceptionHandling(ex -> ex

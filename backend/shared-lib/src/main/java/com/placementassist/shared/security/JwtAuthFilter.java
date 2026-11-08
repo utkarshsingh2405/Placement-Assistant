@@ -28,7 +28,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     public JwtAuthFilter(
             JwtService jwtService,
-            @Value("${institute.integration.api-key:inst-sec-key-7f9a12b4e8c345d6}") String integrationApiKey) {
+            @Value("${institute.integration.api-key:}") String integrationApiKey) {
         this.jwtService = jwtService;
         this.integrationApiKey = integrationApiKey;
     }
@@ -41,7 +41,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         // Check for Inter-Service Integration API Key (for Placement pillar consumption)
         String apiKeyHeader = request.getHeader("X-API-KEY");
-        if (apiKeyHeader != null && apiKeyHeader.equals(integrationApiKey)) {
+        if (apiKeyHeader != null && integrationApiKey != null && !integrationApiKey.isBlank() && apiKeyHeader.equals(integrationApiKey)) {
             var auth = new UsernamePasswordAuthenticationToken(
                     "service-placement",
                     null,
@@ -51,23 +51,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(auth);
             filterChain.doFilter(request, response);
             return;
-        }
-
-        // Check for Gateway forwarded user identity headers
-        String forwardedEmail = request.getHeader("X-User-Email");
-        String forwardedRole = request.getHeader("X-User-Role");
-        String forwardedId = request.getHeader("X-User-Id");
-        if (forwardedEmail != null && forwardedRole != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            try {
-                Role role = Role.valueOf(forwardedRole.toUpperCase().trim());
-                Long userId = forwardedId != null ? Long.parseLong(forwardedId) : null;
-                var authorities = resolveAuthorities(role);
-                var authToken = new UsernamePasswordAuthenticationToken(forwardedEmail, userId, authorities);
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
-                filterChain.doFilter(request, response);
-                return;
-            } catch (Exception ignored) {}
         }
 
         // Bearer token authentication

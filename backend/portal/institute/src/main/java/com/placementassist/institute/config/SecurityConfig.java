@@ -3,17 +3,15 @@ package com.placementassist.institute.config;
 import com.placementassist.shared.security.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -32,60 +30,59 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
-        return config.getAuthenticationManager();
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    @Order(1)
+    public SecurityFilterChain instituteSecurityFilterChain(HttpSecurity http) throws Exception {
         http
+                .securityMatcher("/institute/**")
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers
-                        .frameOptions(org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                         .contentTypeOptions(Customizer.withDefaults())
                         .xssProtection(Customizer.withDefaults())
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/institute/**").permitAll()
                         // Public frontend static files & assets
                         .requestMatchers(
-                                "/",
-                                "/index.html",
-                                "/login.html",
-                                "/register.html",
-                                "/dashboard.html",
-                                "/pages/**",
-                                "/css/**",
-                                "/js/**",
-                                "/assets/**",
-                                "/favicon.ico",
-                                "/v3/api-docs/**",
-                                "/swagger-ui/**",
-                                "/swagger-ui.html",
-                                "/error",
-                                "/healthz",
-                                "/actuator/**"
+                                "/institute",
+                                "/institute/",
+                                "/institute/index.html",
+                                "/institute/login.html",
+                                "/institute/register.html",
+                                "/institute/dashboard.html",
+                                "/institute/pages/**",
+                                "/institute/css/**",
+                                "/institute/js/**",
+                                "/institute/assets/**",
+                                "/institute/icons/**",
+                                "/institute/textures/**",
+                                "/institute/favicon.ico",
+                                "/institute/manifest.json",
+                                "/institute/robots.txt",
+                                "/institute/sitemap.html",
+                                "/institute/sitemap.xml",
+                                "/institute/v3/api-docs/**",
+                                "/institute/swagger-ui/**",
+                                "/institute/swagger-ui.html",
+                                "/institute/error",
+                                "/institute/healthz",
+                                "/institute/actuator/**"
                         ).permitAll()
 
                         // Public authentication endpoints
                         .requestMatchers(
-                                "/api/auth/login",
-                                "/api/auth/register",
-                                "/api/auth/refresh"
+                                "/institute/api/auth/login",
+                                "/institute/api/auth/register",
+                                "/institute/api/auth/refresh"
                         ).permitAll()
 
                         // Integration endpoints (secured by API key or JWT inside JwtAuthFilter)
-                        .requestMatchers("/api/integration/**").authenticated()
+                        .requestMatchers("/institute/api/integration/**").authenticated()
 
-                        // All other APIs require authentication
-                        .requestMatchers("/api/**").authenticated()
+                        // All other institute APIs require authentication
+                        .requestMatchers("/institute/api/**").authenticated()
 
                         // Fallback
                         .anyRequest().permitAll()
