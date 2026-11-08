@@ -1,39 +1,33 @@
 package com.placementassist.portal.config;
 
-import com.placementassist.shared.security.JwtService;
-import com.placementassist.shared.security.Role;
+import com.placementassist.shared.security.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.server.SecurityWebFilterChain;
-import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter;
-import org.springframework.web.server.ServerWebExchange;
-import org.springframework.web.server.WebFilter;
-import org.springframework.web.server.WebFilterChain;
-import reactor.core.publisher.Mono;
-
-import java.util.List;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
-@EnableWebFluxSecurity
-@EnableReactiveMethodSecurity
+@EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
-    private final JwtService jwtService;
+    private final JwtAuthFilter jwtAuthFilter;
 
-    public SecurityConfig(JwtService jwtService) {
-        this.jwtService = jwtService;
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
+        this.jwtAuthFilter = jwtAuthFilter;
     }
 
     @Bean
@@ -42,33 +36,26 @@ public class SecurityConfig {
     }
 
     @Bean
-    public org.springframework.web.cors.reactive.CorsConfigurationSource corsConfigurationSource() {
-        org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource source =
-                new org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource();
-        org.springframework.web.cors.CorsConfiguration config = new org.springframework.web.cors.CorsConfiguration();
-        config.addAllowedOriginPattern("*");
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"));
-        config.setExposedHeaders(List.of("Authorization", "Content-Disposition", "X-Total-Count"));
-        config.setAllowCredentials(true);
-        config.setMaxAge(3600L);
-        source.registerCorsConfiguration("/**", config);
-        return source;
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
+        return config.getAuthenticationManager();
     }
 
     @Bean
-    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-        return http
-                .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+    @Order(3)
+    public SecurityFilterChain portalSecurityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers
-                        .frameOptions(f -> f.mode(XFrameOptionsServerHttpHeadersWriter.Mode.SAMEORIGIN))
-                        .contentTypeOptions(org.springframework.security.config.Customizer.withDefaults())
-                        .xssProtection(org.springframework.security.config.Customizer.withDefaults())
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
+                        .contentTypeOptions(Customizer.withDefaults())
+                        .xssProtection(Customizer.withDefaults())
                 )
-                .authorizeExchange(exchanges -> exchanges
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         // Public Portal Static Pages & Assets
-                        .pathMatchers(
+                        .requestMatchers(
                                 "/",
                                 "/index.html",
                                 "/login.html",
@@ -93,8 +80,8 @@ public class SecurityConfig {
                                 "/icons/**",
                                 "/textures/**"
                         ).permitAll()
-                        // Public Auth, Health and Status Endpoints
-                        .pathMatchers(
+                        // Public Auth, Health, Status & Actuator Endpoints
+                        .requestMatchers(
                                 "/api/auth/login",
                                 "/api/auth/register",
                                 "/api/auth/refresh",
@@ -102,66 +89,25 @@ public class SecurityConfig {
                                 "/api/auth/reset-password",
                                 "/api/status/**",
                                 "/healthz",
+                                "/api/health",
                                 "/actuator/**",
-                                "/fallback/**",
                                 "/error"
                         ).permitAll()
-                        // Downstream pillar routes - permitted through gateway to let pillar security handle them
-                        .pathMatchers("/institute/**", "/placement/**").permitAll()
                         // Admin, Director, and TPO authorized user management endpoints
-                        .pathMatchers("/api/admin/**", "/admin/**").hasAnyRole("ADMIN", "DIRECTOR", "TPO")
-                        // Authenticated endpoints
-                        .pathMatchers("/api/auth/me", "/api/auth/change-password").authenticated()
-                        .anyExchange().permitAll()
+                        .requestMatchers("/api/admin/**", "/admin/**").hasAnyRole("ADMIN", "DIRECTOR", "TPO")
+                        // Authenticated user endpoints
+                        .requestMatchers("/api/auth/me", "/api/auth/change-password").authenticated()
+                        .anyRequest().permitAll()
                 )
-                .addFilterAt(jwtAuthenticationWebFilter(), SecurityWebFiltersOrder.AUTHENTICATION)
-                .build();
-    }
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(jakarta.servlet.http.HttpServletResponse.SC_UNAUTHORIZED);
+                            response.setContentType("application/json");
+                            response.getWriter().write("{\"success\":false,\"error\":{\"code\":\"UNAUTHORIZED\",\"message\":\"Authentication required or token expired\"}}");
+                        })
+                )
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
-    private WebFilter jwtAuthenticationWebFilter() {
-        return (ServerWebExchange exchange, WebFilterChain chain) -> {
-            String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                String token = authHeader.substring(7);
-                if (jwtService.isTokenValid(token)) {
-                    try {
-                        String username = jwtService.extractUsername(token);
-                        Role role = jwtService.extractRole(token);
-                        List<GrantedAuthority> authorities = resolveAuthorities(role);
-                        Authentication auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
-                        return chain.filter(exchange)
-                                .contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));
-                    } catch (Exception ignored) {}
-                }
-            }
-            return chain.filter(exchange);
-        };
-    }
-
-    private List<GrantedAuthority> resolveAuthorities(Role role) {
-        if (role == null) {
-            return List.of();
-        }
-        if (role == Role.DIRECTOR) {
-            return List.of(
-                    new SimpleGrantedAuthority("ROLE_DIRECTOR"),
-                    new SimpleGrantedAuthority("ROLE_TPO"),
-                    new SimpleGrantedAuthority("ROLE_ADMIN")
-            );
-        }
-        if (role == Role.ADMIN) {
-            return List.of(
-                    new SimpleGrantedAuthority("ROLE_ADMIN"),
-                    new SimpleGrantedAuthority("ROLE_DIRECTOR"),
-                    new SimpleGrantedAuthority("ROLE_TPO")
-            );
-        }
-        if (role == Role.TPO) {
-            return List.of(
-                    new SimpleGrantedAuthority("ROLE_TPO"),
-                    new SimpleGrantedAuthority("ROLE_ADMIN")
-            );
-        }
-        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        return http.build();
     }
 }
