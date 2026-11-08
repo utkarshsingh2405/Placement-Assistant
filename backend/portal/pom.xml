@@ -22,19 +22,22 @@
         <dependency>
             <groupId>com.placementassist</groupId>
             <artifactId>shared-lib</artifactId>
-            <exclusions>
-                <!-- Exclude Spring MVC from shared-lib because Portal uses reactive WebFlux for Spring Cloud Gateway -->
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-web</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
-        <!-- Spring Cloud Gateway (Reactive WebFlux Engine) -->
+        <!-- Submodules (Institute & Placement Pillars) -->
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-gateway</artifactId>
+            <groupId>com.placementassist</groupId>
+            <artifactId>institute</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.placementassist</groupId>
+            <artifactId>placement</artifactId>
+        </dependency>
+
+        <!-- Spring Boot Starter Web (Servlet Engine) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
         <!-- Spring Data JPA & SQLite Database -->
@@ -88,10 +91,14 @@
     </dependencies>
 
     <build>
+        <finalName>portal</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <finalName>portal</finalName>
+                </configuration>
             </plugin>
             <!-- Copy shared-web assets to static resources at build time -->
             <plugin>

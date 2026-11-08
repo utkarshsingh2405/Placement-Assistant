@@ -8,14 +8,14 @@
         <groupId>com.placementassist</groupId>
         <artifactId>placement-assist-parent</artifactId>
         <version>1.0.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>placement</artifactId>
+    <artifactId>institute</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
-    <name>placement</name>
-    <description>Placement Pillar - Live Recruitment Service</description>
+    <name>institute</name>
+    <description>Institute Pillar - Placement Assistance Spring Boot Service</description>
 
     <dependencies>
         <!-- Shared Library -->
@@ -41,14 +41,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-mail</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-        </dependency>
 
         <!-- SQLite Driver & Hibernate Dialect -->
         <dependency>
@@ -66,52 +58,10 @@
             <artifactId>flyway-core</artifactId>
         </dependency>
 
-        <!-- Excel (XLSX) Parsing -->
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
-        </dependency>
-
-        <!-- QR Code Generation (ZXing) -->
-        <dependency>
-            <groupId>com.google.zxing</groupId>
-            <artifactId>core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.google.zxing</groupId>
-            <artifactId>javase</artifactId>
-        </dependency>
-
-        <!-- Web Push with VAPID -->
-        <dependency>
-            <groupId>nl.martijndwars</groupId>
-            <artifactId>web-push</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bcprov-jdk18on</artifactId>
-        </dependency>
-
-        <!-- PDF Text Parsing -->
+        <!-- PDF Text Extraction (PDFBox) -->
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
-        </dependency>
-
-        <!-- CSV Support -->
-        <dependency>
-            <groupId>com.opencsv</groupId>
-            <artifactId>opencsv</artifactId>
-        </dependency>
-
-        <!-- OpenAPI / Swagger -->
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
         </dependency>
 
         <!-- MapStruct & Lombok -->
@@ -140,10 +90,6 @@
 
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
             <!-- Copy shared-web assets to static resources at build time -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -160,7 +106,7 @@
                             <outputDirectory>${project.basedir}/src/main/resources/static/css</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.basedir}/../shared-web/css</directory>
+                                    <directory>${project.basedir}/../../shared-web/css</directory>
                                     <filtering>false</filtering>
                                 </resource>
                             </resources>
@@ -176,13 +122,22 @@
                             <outputDirectory>${project.basedir}/src/main/resources/static/js</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.basedir}/../shared-web/js</directory>
+                                    <directory>${project.basedir}/../../shared-web/js</directory>
                                     <filtering>false</filtering>
                                 </resource>
                             </resources>
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.2.5</version>
+                <configuration>
+                    <argLine>-Dnet.bytebuddy.experimental=true -XX:+EnableDynamicAgentLoading</argLine>
+                    <failIfNoSpecifiedTests>false</failIfNoSpecifiedTests>
+                </configuration>
             </plugin>
         </plugins>
     </build>
