@@ -1,4 +1,4 @@
-package com.placementassist.institute.common;
+package com.placementassist.shared.util;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
