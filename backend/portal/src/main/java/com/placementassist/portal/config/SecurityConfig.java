@@ -17,6 +17,7 @@ import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
@@ -61,7 +62,7 @@ public class SecurityConfig {
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .headers(headers -> headers
-                        .frameOptions(f -> f.mode(org.springframework.security.config.web.server.ServerHttpSecurity.HeaderSpec.FrameOptionsSpec.Mode.SAMEORIGIN))
+                        .frameOptions(f -> f.mode(XFrameOptionsServerHttpHeadersWriter.Mode.SAMEORIGIN))
                         .contentTypeOptions(org.springframework.security.config.Customizer.withDefaults())
                         .xssProtection(org.springframework.security.config.Customizer.withDefaults())
                 )

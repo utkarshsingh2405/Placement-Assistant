@@ -131,3 +131,4 @@ Before triggering a deployment, verify the following:
 - [x] `/healthz` endpoint responds with HTTP 200 once gateway is up.
 - [x] Render dashboard **Root Directory** setting is verified **empty / blank**.
 - [x] Railway volume mounted at `/app/database` for database persistence.
+

@@ -22,3 +22,4 @@ Disallow: /admin-users.html
 Disallow: /audit-logs.html
 
 Sitemap: https://placement-assistant.onrender.com/sitemap.xml
+
