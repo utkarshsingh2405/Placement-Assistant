@@ -35,8 +35,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
                 "com.placementassist.portal",
                 "com.placementassist.institute",
                 "com.placementassist.placement"
-        },
-        nameGenerator = FullyQualifiedAnnotationBeanNameGenerator.class
+        }
 )
 @EnableScheduling
 @EnableAsync
