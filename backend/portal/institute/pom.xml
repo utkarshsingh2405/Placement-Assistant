@@ -103,7 +103,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.basedir}/src/main/resources/static/css</outputDirectory>
+                            <outputDirectory>${project.basedir}/src/main/resources/static/institute/css</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.basedir}/../../shared-web/css</directory>
@@ -119,7 +119,7 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.basedir}/src/main/resources/static/js</outputDirectory>
+                            <outputDirectory>${project.basedir}/src/main/resources/static/institute/js</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>${project.basedir}/../../shared-web/js</directory>
