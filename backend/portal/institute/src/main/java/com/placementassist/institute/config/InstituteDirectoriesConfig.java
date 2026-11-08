@@ -1,36 +1,21 @@
-package com.placementassist.institute;
+package com.placementassist.institute.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.context.annotation.Configuration;
 
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * Main Spring Boot Application entrypoint for Placement Assistance - Institute Pillar.
- */
-@SpringBootApplication(scanBasePackages = {"com.placementassist.shared", "com.placementassist.institute"})
-@EnableScheduling
-public class InstituteApplication {
+@Configuration
+public class InstituteDirectoriesConfig {
 
-    private static final Logger log = LoggerFactory.getLogger(InstituteApplication.class);
+    private static final Logger log = LoggerFactory.getLogger(InstituteDirectoriesConfig.class);
 
-    public static void main(String[] args) {
-        SpringApplication.run(InstituteApplication.class, args);
-    }
-
-    /**
-     * Initializes required storage and database directories on startup.
-     */
     @Bean
     public CommandLineRunner initDirectories(
             @Value("${storage.upload-dir:./uploads/resumes}") String uploadDir,
