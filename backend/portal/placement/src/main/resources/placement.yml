@@ -1,0 +1,9 @@
+# Web Push Notification Configuration
+vapid:
+  public-key: ${VAPID_PUBLIC_KEY:BN7cWpP3y7w_SAMPLE_KEY_ONLY}
+  private-key: ${VAPID_PRIVATE_KEY:SAMPLE_PRIVATE_KEY_ONLY}
+  subject: ${VAPID_SUBJECT:mailto:tpo@college.edu}
+
+# Mail delivery mode
+mail:
+  mode: ${MAIL_MODE:log}

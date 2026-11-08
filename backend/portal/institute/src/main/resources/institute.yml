@@ -1,0 +1,11 @@
+# File Storage Configuration
+storage:
+  upload-dir: ${UPLOAD_DIR:./uploads/resumes}
+
+# Placement Eligibility Rules
+institute:
+  eligibility:
+    min-cgpa: ${ELIGIBILITY_MIN_CGPA:6.0}
+    max-backlogs: ${ELIGIBILITY_MAX_BACKLOGS:0}
+  integration:
+    api-key: ${INSTITUTE_INTEGRATION_API_KEY:${INSTITUTE_API_KEY:}}
