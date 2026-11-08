@@ -40,14 +40,32 @@ The platform unifies **Institute Academic Management** and **Corporate Placement
 ```
 
 ### Key Architectural Highlights
-1. **Single-Console Unified Orchestration (`PillarSupervisor`)**:  
-   Launching Portal Gateway automatically supervises and launches the Institute Pillar (`8081`) and Placement Pillar (`8082`) in a single process console. Live logs from all three pillars stream together with `[PORTAL]`, `[INSTITUTE]`, and `[PLACEMENT]` prefixes.
-2. **Zero Database Sharing**:  
-   Each pillar exclusively owns its database file (`database/portal.db`, `database/institute.db`, `database/placement.db`). Cross-pillar direct queries are strictly isolated.
-3. **Resilient Decoupled Fallback**:  
-   Inter-pillar queries (`RestInstituteClient`) communicate over authenticated HTTP REST (`X-API-KEY`). If Institute is offline, Placement automatically fails over to `StubInstituteClient` with zero runtime crash.
-4. **Single-Service Cloud Deployment (Railway / Docker)**:  
-   A multi-stage container compiles all submodules and executes Portal Gateway on dynamic `$PORT`, which internally hosts and proxies all three pillars on a single cloud service.
+1. **Unified Single-JVM Architecture**:  
+   Portal, Institute, and Placement now run inside a single Spring Boot JVM container optimized for memory-constrained PaaS instances (Render 512 MB Free Tier, Railway, Fly.io). Memory footprint is managed via serial GC, tiered compilation level 1, and tight metaspace limits.
+2. **Path Matching & Prefix Routing**:  
+   Institute controllers are bound under `/institute/**`, Placement controllers under `/placement/**`, and Portal / SSO under root `/` and `/api/**`.
+3. **Consolidated High-Performance SQLite**:  
+   Runs on a unified `placement_assist.db` in WAL mode with connection pooling (Hikari 4) and `busy_timeout=5000` to eliminate database locking.
+4. **Resilient Decoupled Fallback**:  
+   Inter-pillar queries (`RestInstituteClient`) communicate over loopback REST (`X-API-KEY`). If Institute is offline or initializing, Placement automatically fails over to `StubInstituteClient` with zero runtime crash.
+
+> [!WARNING]
+> ### ⚠️ Security Notice: Production Secret Generation Required
+> The previous default credentials and tokens originally committed in repository templates are compromised.
+> 
+> Before deploying to **Render**, **Railway**, or any public cloud, you **MUST** generate new secure random secrets and configure them in your hosting provider's dashboard environment variables:
+> 
+> 1. **`JWT_SECRET`**: Generate a strong 256-bit or 512-bit HMAC key (at least 64 hex characters or 32 random bytes):
+>    ```bash
+>    openssl rand -hex 32
+>    ```
+> 2. **`INSTITUTE_API_KEY`**: Generate a random secure token:
+>    ```bash
+>    openssl rand -hex 16
+>    ```
+> 
+> The application enforces strict security and will **fail fast at startup** if `JWT_SECRET` is missing.
+
 
 ---
 

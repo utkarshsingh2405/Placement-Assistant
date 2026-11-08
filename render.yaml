@@ -3,7 +3,7 @@
 
 services:
   # ============================================================================
-  # Unified Platform: Portal Gateway + Institute + Placement in One Container
+  # Unified Single-JVM Platform: Portal + Institute + Placement in One Container
   # ============================================================================
   - type: web
     name: placement-assistant
@@ -19,18 +19,10 @@ services:
       - key: SPRING_PROFILES_ACTIVE
         value: sqlite
       - key: DB_PATH
-        value: /app/database/portal.db
-      - key: DB_INSTITUTE_PATH
-        value: /app/database/institute.db
-      - key: DB_PLACEMENT_PATH
-        value: /app/database/placement.db
-      - key: PILLAR_INSTITUTE_JAR
-        value: /app/institute.jar
-      - key: PILLAR_PLACEMENT_JAR
-        value: /app/placement.jar
+        value: /app/database/placement_assist.db
       - key: JWT_SECRET
-        value: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+        sync: false
       - key: INSTITUTE_API_KEY
-        value: inst-sec-key-7f9a12b4e8c345d6
+        sync: false
       - key: MAIL_MODE
         value: log
