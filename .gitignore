@@ -9,6 +9,8 @@ logs/
 .DS_Store
 Thumbs.db
 .vscode/
+.env
+*.env.local
 
 # Keep root or temporary databases ignored except database directories
 *.db
