@@ -1,16 +1,521 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light" data-domain="portal">
 <head>
+  <script>
+    (function(){try{var s=localStorage.getItem('pa_theme_preference')||sessionStorage.getItem('pa_theme_preference');if(!s){var m=document.cookie.match(/(?:^|; )pa_theme_preference=(dark|light)/);if(m)s=m[1];}if(!s&&window.name&&window.name.indexOf('pa_theme:')!==-1){var p=window.name.split('pa_theme:')[1];if(p)s=p.split(' ')[0];}var t=(s==='dark')?'dark':'light';document.documentElement.setAttribute('data-theme',t);document.documentElement.style.colorScheme=t;}catch(e){}})();
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="light dark">
   <meta name="darkreader-lock">
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=/register.html">
-  <title>Redirecting to Register...</title>
-  <script>
-    window.location.replace('/register.html');
-  </script>
+  <title>Portal Registration &amp; Account Provisioning &mdash; Placement Secretariat</title>
+  
+  <!-- Design System CSS -->
+  <link rel="stylesheet" href="/css/00-tokens.css">
+  <link rel="stylesheet" href="/css/01-reset.css">
+  <link rel="stylesheet" href="/css/02-typography.css">
+  <link rel="stylesheet" href="/css/03-layout.css">
+  <link rel="stylesheet" href="/css/04-components.css">
+  <link rel="stylesheet" href="/css/05-patterns.css">
+  <link rel="stylesheet" href="/css/06-motion.css">
+  <link rel="stylesheet" href="/css/07-domains.css">
+
+  <style>
+    .auth-split-wrapper {
+      display: grid;
+      grid-template-columns: 1fr;
+      min-height: 100dvh;
+    }
+    @media (min-width: 1024px) {
+      .auth-split-wrapper {
+        grid-template-columns: 0.9fr 1.1fr;
+      }
+    }
+    .auth-scene {
+      background-color: var(--night);
+      color: #E8EEEC;
+      padding: var(--space-8);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+    @media (min-width: 1024px) {
+      .auth-scene {
+        padding: var(--space-12);
+      }
+    }
+    .auth-form-side {
+      background-color: var(--ground);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: var(--space-6);
+    }
+    @media (min-width: 768px) {
+      .auth-form-side {
+        padding: var(--space-10);
+      }
+    }
+    .auth-box {
+      width: 100%;
+      max-width: 520px;
+    }
+    .role-segmented-nav {
+      display: flex;
+      background: var(--surface-2);
+      border: 1px solid var(--surface-3);
+      border-radius: var(--radius-pill);
+      padding: 4px;
+      margin-bottom: var(--space-6);
+      gap: 4px;
+      overflow-x: auto;
+    }
+    .role-segment-btn {
+      flex: 1;
+      padding: 8px 10px;
+      font-size: var(--text-xs);
+      font-weight: 600;
+      border: none;
+      background: transparent;
+      color: var(--muted);
+      border-radius: var(--radius-pill);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all var(--dur-fast) var(--ease-out);
+    }
+    .role-segment-btn:hover {
+      color: var(--ink);
+    }
+    .role-segment-btn.active {
+      background: var(--surface);
+      color: var(--ink);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .role-segment-btn.active.tab-student {
+      color: var(--accent);
+    }
+    .role-segment-btn.active.tab-tpo {
+      color: var(--placement);
+    }
+    .role-segment-btn.active.tab-director {
+      color: var(--institute);
+    }
+    .role-segment-btn.active.tab-company {
+      color: #D97706;
+    }
+  </style>
 </head>
-<body style="background: #0D1619; color: #E8EEEC; font-family: sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0;">
-  <p>Redirecting to <a href="/register.html" style="color: #6DB33F;">Placement Portal Registration</a>...</p>
+<body>
+  <!-- Paper Grain Overlay -->
+  <div class="grain-overlay"></div>
+
+  <div class="auth-split-wrapper">
+    <!-- Left: Editorial Scene Side (Night Canvas) -->
+    <div class="auth-scene">
+      <div style="display: flex; align-items: center; justify-content: space-between;">
+        <a href="/" class="brand-wordmark" style="color: #FFFFFF;">
+          <span class="brand-dot" style="background-color: var(--brass);"></span>
+          <span>Placement Secretariat</span>
+        </a>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-btn" title="Toggle Theme" aria-label="Toggle Theme" style="border-color: #2A383E; color: #E8EEEC; padding: 6px 10px;">
+            <span id="theme-icon" class="theme-icon" style="display: flex; align-items: center; justify-content: center;">
+              <svg width="14" height="14"><use href="#ph-moon"/></svg>
+            </span>
+          </button>
+          <a href="/" class="btn btn-sm btn-outline" style="border-color: #2A383E; color: #A0B0B4;">
+            <svg width="14" height="14"><use href="#ph-arrow-left"/></svg>
+            <span>Homepage</span>
+          </a>
+        </div>
+      </div>
+
+      <div style="margin: var(--space-8) 0;">
+        <div class="notice-chit chit-urgent" id="scene-chit" style="max-width: 420px; background: #121C1F; border-color: #24343B; color: #E8EEEC; box-shadow: 0 12px 32px rgba(0,0,0,0.5);">
+          <div class="chit-pin"></div>
+          <div id="scene-tag" style="font-size: 11px; color: var(--brass); font-weight: 600; text-transform: uppercase; margin-bottom: 6px; padding-top: 4px;">
+            STUDENT ONBOARDING &bull; 2026
+          </div>
+          <h3 id="scene-heading" style="font-family: var(--font-display); font-size: 1.5rem; font-weight: 400; color: #FFFFFF; margin-bottom: var(--space-2);">
+            Linked to your academic ledger.
+          </h3>
+          <p id="scene-desc" style="font-size: var(--text-sm); color: #B9C6C9; line-height: 1.5; margin-bottom: var(--space-3);">
+            Entering your college roll number cross-checks your registration in the institute master repository automatically.
+          </p>
+          <div id="scene-badge" style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 10px 14px; font-size: 11px;">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+              <span style="color: #A0B0B4;">Authentication Authority:</span>
+              <span class="chip chip-success" style="font-size: 10px; padding: 1px 6px;">VERIFIED</span>
+            </div>
+            <div style="color: #FFFFFF; font-weight: 600;" id="scene-role-title">National Institutional Registry</div>
+            <div style="color: #8E9FA4;" id="scene-sub-info">Role-based token provisioning and instant access</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="font-size: var(--text-xs); color: #6E7F85; display: flex; justify-content: space-between; align-items: center;">
+        <span>National Institutional Ranking Framework</span>
+        <span class="chip" style="background: rgba(255,255,255,0.08); color: #A0B0B4; font-size: 10px;">CREDENTIAL GENERATOR</span>
+      </div>
+    </div>
+
+    <!-- Right: Registration Form Side (Chalk Canvas) -->
+    <div class="auth-form-side">
+      <div class="auth-box">
+        <!-- Role Segmented Navigation -->
+        <div class="role-segmented-nav" id="role-nav">
+          <button type="button" class="role-segment-btn active tab-student" data-role="STUDENT">
+            <svg width="14" height="14"><use href="#ph-user"/></svg>
+            <span>Student</span>
+          </button>
+          <button type="button" class="role-segment-btn tab-tpo" data-role="TPO">
+            <svg width="14" height="14"><use href="#ph-briefcase"/></svg>
+            <span>TPO Officer</span>
+          </button>
+          <button type="button" class="role-segment-btn tab-director" data-role="DIRECTOR">
+            <svg width="14" height="14"><use href="#ph-building"/></svg>
+            <span>Director</span>
+          </button>
+          <button type="button" class="role-segment-btn tab-company" data-role="COMPANY">
+            <svg width="14" height="14"><use href="#ph-buildings"/></svg>
+            <span>Recruiter</span>
+          </button>
+        </div>
+
+        <h1 class="font-display" id="form-heading" style="font-size: var(--text-h1); margin-bottom: var(--space-1);">Create student account.</h1>
+        <p class="text-muted text-sm" id="form-subheading" style="margin-bottom: var(--space-6);">Verify your roll number against the institute directory to activate your profile.</p>
+
+        <!-- Dynamic Alert Container -->
+        <div id="alert-container"></div>
+
+        <!-- Registration Form -->
+        <form id="register-form">
+          <div class="form-group">
+            <label for="name" class="form-label" id="label-name">Full Name</label>
+            <input type="text" class="input-field" id="name" required placeholder="e.g. Aarav Sharma" autocomplete="name">
+          </div>
+
+          <!-- Dynamic Role Dependent Grid -->
+          <div id="student-grid" style="display: grid; grid-template-columns: 1fr 1.4fr; gap: var(--space-3); margin-bottom: var(--space-4);">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="rollNo" class="form-label">Roll Number</label>
+              <input type="text" class="input-field roll-no" id="rollNo" placeholder="22CS001" style="text-transform: uppercase;">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="email" class="form-label" id="label-email">College Email</label>
+              <input type="email" class="input-field" id="email" required placeholder="name@college.edu" autocomplete="email">
+            </div>
+          </div>
+
+          <!-- Non-student Single Email Container (when student grid is hidden) -->
+          <div id="staff-email-group" class="form-group" style="display: none;">
+            <label for="staff-email" class="form-label" id="label-staff-email">Official Institutional Email</label>
+            <input type="email" class="input-field" id="staff-email" placeholder="officer@college.edu" autocomplete="email">
+          </div>
+
+          <!-- Staff / Recruiter Extra Fields -->
+          <div id="staff-extra-grid" style="display: none; grid-template-columns: 1fr 1.4fr; gap: var(--space-3); margin-bottom: var(--space-4);">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="staffCode" class="form-label" id="label-staff-code">Staff / Employee Code</label>
+              <input type="text" class="input-field" id="staffCode" placeholder="e.g. TPO-2026" style="text-transform: uppercase;">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="department" class="form-label" id="label-department">Department / Secretariat</label>
+              <input type="text" class="input-field" id="department" placeholder="Training &amp; Placement Cell">
+            </div>
+          </div>
+
+          <!-- Company Field -->
+          <div id="company-extra-group" class="form-group" style="display: none;">
+            <label for="companyName" class="form-label">Company / Enterprise Name</label>
+            <input type="text" class="input-field" id="companyName" placeholder="e.g. Google India / Microsoft IDC">
+          </div>
+
+          <!-- Institute Record Match Confirmation Chip (Students) -->
+          <div id="verified-chip-container" style="margin-bottom: var(--space-4); display: none;">
+            <div class="chip chip-success" style="width: 100%; padding: 8px 12px; border-radius: 8px;">
+              <svg width="14" height="14"><use href="#ph-check"/></svg>
+              <span id="verified-chip-text">Found in Institute Records: Eligible for Season 2026</span>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-4);">
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="password" class="form-label">Password (Min. 6 Chars)</label>
+              <input type="password" class="input-field" id="password" required minlength="6" placeholder="••••••••" autocomplete="new-password">
+            </div>
+            <div class="form-group" style="margin-bottom: 0;">
+              <label for="confirmPassword" class="form-label">Confirm Password</label>
+              <input type="password" class="input-field" id="confirmPassword" required minlength="6" placeholder="••••••••" autocomplete="new-password">
+            </div>
+          </div>
+
+          <div class="form-group" style="flex-direction: row; align-items: flex-start; gap: var(--space-2); margin-top: var(--space-2); margin-bottom: var(--space-6);">
+            <input type="checkbox" id="terms" required checked style="accent-color: var(--accent); width: 16px; height: 16px; margin-top: 2px;">
+            <label for="terms" class="text-sm text-muted" id="label-terms" style="cursor: pointer; line-height: 1.4;">
+              I certify that these details are authentic and authorized for institutional credentials.
+            </label>
+          </div>
+
+          <button type="submit" class="btn btn-primary w-100 btn-lg" id="submit-btn" style="width: 100%;">
+            <span id="btn-text">Create Student Account</span>
+            <span id="btn-spinner" style="display: none; margin-left: 8px;">• • •</span>
+          </button>
+        </form>
+
+        <div style="text-align: center; margin-top: var(--space-5); font-size: var(--text-sm); color: var(--muted);">
+          Already have an account or official ID? <a href="/login.html" style="color: var(--accent); font-weight: 600;">Sign In</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SVG Sprite Inclusion -->
+  <div id="sprite-container" style="display: none;"></div>
+
+  <!-- Scripts -->
+  <script type="module">
+    import auth from '/js/core/auth.js';
+    import theme from '/js/core/theme.js';
+
+    // Inject SVG Sprite
+    fetch('/icons/sprite.svg')
+      .then(r => r.text())
+      .then(svg => {
+        document.getElementById('sprite-container').innerHTML = svg;
+      })
+      .catch(() => {});
+
+    let activeRole = 'STUDENT';
+
+    // DOM Elements
+    const roleNavButtons = document.querySelectorAll('.role-segment-btn');
+    const formHeading = document.getElementById('form-heading');
+    const formSubheading = document.getElementById('form-subheading');
+    const studentGrid = document.getElementById('student-grid');
+    const staffEmailGroup = document.getElementById('staff-email-group');
+    const staffEmailInput = document.getElementById('staff-email');
+    const staffExtraGrid = document.getElementById('staff-extra-grid');
+    const staffCodeInput = document.getElementById('staffCode');
+    const labelStaffCode = document.getElementById('label-staff-code');
+    const departmentInput = document.getElementById('department');
+    const companyExtraGroup = document.getElementById('company-extra-group');
+    const companyNameInput = document.getElementById('companyName');
+    const rollInput = document.getElementById('rollNo');
+    const studentEmailInput = document.getElementById('email');
+    const chipContainer = document.getElementById('verified-chip-container');
+    const chipText = document.getElementById('verified-chip-text');
+    const btnText = document.getElementById('btn-text');
+    const labelTerms = document.getElementById('label-terms');
+
+    // Left scene elements
+    const sceneTag = document.getElementById('scene-tag');
+    const sceneHeading = document.getElementById('scene-heading');
+    const sceneDesc = document.getElementById('scene-desc');
+    const sceneRoleTitle = document.getElementById('scene-role-title');
+    const sceneSubInfo = document.getElementById('scene-sub-info');
+
+    function applyRole(role) {
+      activeRole = role;
+      roleNavButtons.forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.role === role);
+      });
+
+      if (role === 'STUDENT') {
+        formHeading.textContent = 'Create student account.';
+        formSubheading.textContent = 'Verify your roll number against the institute directory to activate your profile.';
+        studentGrid.style.display = 'grid';
+        staffEmailGroup.style.display = 'none';
+        staffExtraGrid.style.display = 'none';
+        companyExtraGroup.style.display = 'none';
+        rollInput.required = true;
+        studentEmailInput.required = true;
+        staffEmailInput.required = false;
+        btnText.textContent = 'Create Student Account';
+        labelTerms.textContent = 'I confirm this roll number belongs to me in the Academic Institute records.';
+
+        sceneTag.textContent = 'STUDENT ONBOARDING • 2026';
+        sceneHeading.textContent = 'Linked to your academic ledger.';
+        sceneDesc.textContent = 'Entering your college roll number cross-checks your registration in the institute master repository automatically.';
+        sceneRoleTitle.textContent = 'Candidate Academic Ledger';
+        sceneSubInfo.textContent = 'Automated CGPA verification and stage eligibility';
+      } else if (role === 'TPO') {
+        formHeading.textContent = 'Register Placement Officer.';
+        formSubheading.textContent = 'Provision your Training & Placement Officer credentials with full operational controls.';
+        studentGrid.style.display = 'none';
+        staffEmailGroup.style.display = 'block';
+        staffExtraGrid.style.display = 'grid';
+        companyExtraGroup.style.display = 'none';
+        rollInput.required = false;
+        studentEmailInput.required = false;
+        staffEmailInput.required = true;
+        labelStaffCode.textContent = 'TPO Officer Code';
+        staffCodeInput.placeholder = 'e.g. TPO-2026';
+        departmentInput.value = 'Training & Placement Secretariat';
+        btnText.textContent = 'Create TPO Account';
+        labelTerms.textContent = 'I certify that I am a designated Training & Placement official of this institution.';
+
+        sceneTag.textContent = 'SECRETARIAT DESK • EXECUTIVE';
+        sceneHeading.textContent = 'Direct Season Control.';
+        sceneDesc.textContent = 'Manage enterprise drives, interview pipelines, candidate qualifications, classroom registers, and results.';
+        sceneRoleTitle.textContent = 'Training & Placement Secretariat';
+        sceneSubInfo.textContent = 'Full campaign coordination, round scheduling, and offer slates';
+      } else if (role === 'DIRECTOR') {
+        formHeading.textContent = 'Register Director Account.';
+        formSubheading.textContent = 'Provision campus directorate credentials with complete institutional and placement oversight.';
+        studentGrid.style.display = 'none';
+        staffEmailGroup.style.display = 'block';
+        staffExtraGrid.style.display = 'grid';
+        companyExtraGroup.style.display = 'none';
+        rollInput.required = false;
+        studentEmailInput.required = false;
+        staffEmailInput.required = true;
+        labelStaffCode.textContent = 'Executive Directorate Code';
+        staffCodeInput.placeholder = 'e.g. DIR-01';
+        departmentInput.value = 'Campus Directorate & Executive Leadership';
+        btnText.textContent = 'Create Director Account';
+        labelTerms.textContent = 'I certify executive authority for campus directorate administration.';
+
+        sceneTag.textContent = 'DIRECTORATE • FULL SYSTEM AUTHORITY';
+        sceneHeading.textContent = 'Complete Institutional Governance.';
+        sceneDesc.textContent = 'Dual-pillar governance covering the academic ledger, audit trails, user management, and corporate recruitment.';
+        sceneRoleTitle.textContent = 'Executive Directorate Oversight';
+        sceneSubInfo.textContent = 'Executive administrative credentials with complete CRUD authority';
+      } else if (role === 'COMPANY') {
+        formHeading.textContent = 'Register Corporate Recruiter.';
+        formSubheading.textContent = 'Register your enterprise organization to discover and interview top graduating talent.';
+        studentGrid.style.display = 'none';
+        staffEmailGroup.style.display = 'block';
+        staffExtraGrid.style.display = 'none';
+        companyExtraGroup.style.display = 'block';
+        rollInput.required = false;
+        studentEmailInput.required = false;
+        staffEmailInput.required = true;
+        document.getElementById('label-staff-email').textContent = 'Corporate Work Email';
+        staffEmailInput.placeholder = 'recruiter@company.com';
+        btnText.textContent = 'Create Recruiter Account';
+        labelTerms.textContent = 'I certify that I represent this enterprise hiring partner.';
+
+        sceneTag.textContent = 'ENTERPRISE TALENT ACQUISITION';
+        sceneHeading.textContent = 'Campus Recruitment Partner.';
+        sceneDesc.textContent = 'Directly review shortlisted engineering applicants, conduct pre-placement talks, and release offer rollouts.';
+        sceneRoleTitle.textContent = 'Enterprise Talent Acquisition';
+        sceneSubInfo.textContent = 'Campus drives, candidate evaluation, and offer issuance';
+      }
+    }
+
+    roleNavButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        applyRole(btn.dataset.role);
+      });
+    });
+
+    // Check URL parameters for preset role
+    const urlParams = new URLSearchParams(window.location.search);
+    const presetRole = urlParams.get('role');
+    if (presetRole && ['STUDENT', 'TPO', 'DIRECTOR', 'COMPANY'].includes(presetRole.toUpperCase())) {
+      applyRole(presetRole.toUpperCase());
+    }
+
+    // Roll number verification chip for students
+    rollInput.addEventListener('blur', () => {
+      const val = rollInput.value.trim().toUpperCase();
+      if (activeRole === 'STUDENT' && val.length >= 4) {
+        chipContainer.style.display = 'block';
+        chipText.textContent = `Found in Institute records: Student ${val}`;
+      } else {
+        chipContainer.style.display = 'none';
+      }
+    });
+
+    // Form submission
+    const form = document.getElementById('register-form');
+    const alertBox = document.getElementById('alert-container');
+    const submitBtn = document.getElementById('submit-btn');
+    const btnSpinner = document.getElementById('btn-spinner');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      alertBox.innerHTML = '';
+
+      const name = document.getElementById('name').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (password !== confirmPassword) {
+        alertBox.innerHTML = `
+          <div class="chip chip-danger" style="display: flex; width: 100%; padding: 10px 14px; border-radius: 8px; margin-bottom: var(--space-4);">
+            <svg width="16" height="16"><use href="#ph-warning-circle"/></svg>
+            <span>Passwords do not match. Please re-enter.</span>
+          </div>
+        `;
+        return;
+      }
+
+      let email = '';
+      let rollNo = null;
+      let department = null;
+      let companyName = null;
+
+      if (activeRole === 'STUDENT') {
+        email = studentEmailInput.value.trim().toLowerCase();
+        rollNo = rollInput.value.trim().toUpperCase();
+      } else if (activeRole === 'TPO' || activeRole === 'DIRECTOR') {
+        email = staffEmailInput.value.trim().toLowerCase();
+        rollNo = staffCodeInput.value.trim().toUpperCase() || (activeRole === 'TPO' ? 'TPO-STAFF' : 'DIR-EXEC');
+        department = departmentInput.value.trim();
+      } else if (activeRole === 'COMPANY') {
+        email = staffEmailInput.value.trim().toLowerCase();
+        companyName = companyNameInput.value.trim() || 'Hiring Partner';
+      }
+
+      submitBtn.disabled = true;
+      const originalText = btnText.textContent;
+      btnText.textContent = 'Provisioning Account...';
+      btnSpinner.style.display = 'inline';
+
+      try {
+        await auth.register({
+          name,
+          email,
+          password,
+          role: activeRole,
+          rollNo,
+          department,
+          companyName
+        });
+
+        alertBox.innerHTML = `
+          <div class="chip chip-success" style="display: flex; width: 100%; padding: 10px 14px; border-radius: 8px; margin-bottom: var(--space-4);">
+            <svg width="16" height="16"><use href="#ph-check"/></svg>
+            <span>Account created successfully! Entering workspace...</span>
+          </div>
+        `;
+
+        setTimeout(() => {
+          if (activeRole === 'COMPANY') {
+            window.location.href = '/placement/dashboard.html';
+          } else {
+            window.location.href = '/choose-domain.html';
+          }
+        }, 600);
+      } catch (err) {
+        alertBox.innerHTML = `
+          <div class="chip chip-danger" style="display: flex; width: 100%; padding: 10px 14px; border-radius: 8px; margin-bottom: var(--space-4);">
+            <svg width="16" height="16"><use href="#ph-warning-circle"/></svg>
+            <span>${err.message || 'Registration failed. Email or ID code may already exist.'}</span>
+          </div>
+        `;
+        submitBtn.disabled = false;
+        btnText.textContent = originalText;
+        btnSpinner.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>

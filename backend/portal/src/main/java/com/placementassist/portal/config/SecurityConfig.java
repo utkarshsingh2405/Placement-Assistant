@@ -60,6 +60,11 @@ public class SecurityConfig {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .headers(headers -> headers
+                        .frameOptions(f -> f.mode(org.springframework.security.config.web.server.ServerHttpSecurity.HeaderSpec.FrameOptionsSpec.Mode.SAMEORIGIN))
+                        .contentTypeOptions(org.springframework.security.config.Customizer.withDefaults())
+                        .xssProtection(org.springframework.security.config.Customizer.withDefaults())
+                )
                 .authorizeExchange(exchanges -> exchanges
                         // Public Portal Static Pages & Assets
                         .pathMatchers(
@@ -73,12 +78,19 @@ public class SecurityConfig {
                                 "/unavailable.html",
                                 "/profile.html",
                                 "/offline.html",
+                                "/sitemap.html",
+                                "/sitemap.xml",
+                                "/robots.txt",
+                                "/404.html",
+                                "/manifest.json",
                                 "/manifest.webmanifest",
                                 "/sw.js",
                                 "/favicon.ico",
                                 "/css/**",
                                 "/js/**",
-                                "/assets/**"
+                                "/assets/**",
+                                "/icons/**",
+                                "/textures/**"
                         ).permitAll()
                         // Public Auth, Health and Status Endpoints
                         .pathMatchers(
@@ -95,8 +107,8 @@ public class SecurityConfig {
                         ).permitAll()
                         // Downstream pillar routes - permitted through gateway to let pillar security handle them
                         .pathMatchers("/institute/**", "/placement/**").permitAll()
-                        // Admin restricted endpoints
-                        .pathMatchers("/api/admin/**", "/admin/**").hasRole("ADMIN")
+                        // Admin, Director, and TPO authorized user management endpoints
+                        .pathMatchers("/api/admin/**", "/admin/**").hasAnyRole("ADMIN", "DIRECTOR", "TPO")
                         // Authenticated endpoints
                         .pathMatchers("/api/auth/me", "/api/auth/change-password").authenticated()
                         .anyExchange().permitAll()
@@ -114,9 +126,7 @@ public class SecurityConfig {
                     try {
                         String username = jwtService.extractUsername(token);
                         Role role = jwtService.extractRole(token);
-                        List<GrantedAuthority> authorities = role != null
-                                ? List.of(new SimpleGrantedAuthority("ROLE_" + role.name()))
-                                : List.of();
+                        List<GrantedAuthority> authorities = resolveAuthorities(role);
                         Authentication auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
                         return chain.filter(exchange)
                                 .contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));
@@ -125,5 +135,32 @@ public class SecurityConfig {
             }
             return chain.filter(exchange);
         };
+    }
+
+    private List<GrantedAuthority> resolveAuthorities(Role role) {
+        if (role == null) {
+            return List.of();
+        }
+        if (role == Role.DIRECTOR) {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_DIRECTOR"),
+                    new SimpleGrantedAuthority("ROLE_TPO"),
+                    new SimpleGrantedAuthority("ROLE_ADMIN")
+            );
+        }
+        if (role == Role.ADMIN) {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_DIRECTOR"),
+                    new SimpleGrantedAuthority("ROLE_TPO")
+            );
+        }
+        if (role == Role.TPO) {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_TPO"),
+                    new SimpleGrantedAuthority("ROLE_ADMIN")
+            );
+        }
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 }

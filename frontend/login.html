@@ -118,6 +118,9 @@
           <span>Placement Secretariat</span>
         </a>
         <div style="display: flex; align-items: center; gap: 8px;">
+          <a href="/register.html" class="btn btn-sm btn-primary" style="padding: 6px 12px; font-weight: 600; font-size: var(--text-xs);">
+            <span>+ Sign Up</span>
+          </a>
           <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-btn" title="Toggle Theme" aria-label="Toggle Theme" style="border-color: #2A383E; color: #E8EEEC; padding: 6px 10px;">
             <span id="theme-icon" class="theme-icon" style="display: flex; align-items: center; justify-content: center;">
               <svg width="14" height="14"><use href="#ph-moon"/></svg>
@@ -216,8 +219,8 @@
           </button>
         </form>
 
-        <div style="text-align: center; margin-top: var(--space-4); font-size: var(--text-sm); color: var(--muted);">
-          New student? <a href="/register.html" style="color: var(--accent); font-weight: 600;">Create Candidate Account</a>
+        <div id="signup-prompt-container" style="text-align: center; margin-top: var(--space-4); font-size: var(--text-sm); color: var(--muted);">
+          New student? <a href="/register.html?role=STUDENT" style="color: var(--accent); font-weight: 600;">Create Candidate Account &rarr;</a>
         </div>
 
         <div style="height: 1px; background: var(--surface-3); margin: var(--space-6) 0 var(--space-5);"></div>
@@ -292,6 +295,7 @@
         btn.classList.toggle('active', btn.dataset.role === role);
       });
 
+      const signupContainer = document.getElementById('signup-prompt-container');
       if (role === 'STUDENT') {
         authTitle.textContent = 'Student Portal.';
         authSubtitle.textContent = 'Enter your college credentials to access your season desk and hall tickets.';
@@ -302,6 +306,9 @@
         sceneTitle.textContent = 'Round by round to your offer.';
         sceneDesc.textContent = 'Access your personalized hall ticket, eligible enterprise recruitment cycles, CRT attendance, and official offer status.';
         sceneStudentBadge.style.display = 'block';
+        if (signupContainer) {
+          signupContainer.innerHTML = 'New candidate? <a href="/register.html?role=STUDENT" style="color: var(--accent); font-weight: 600;">Create Candidate Account &rarr;</a>';
+        }
       } else if (role === 'DIRECTOR') {
         authTitle.textContent = 'Secretariat Desk.';
         authSubtitle.textContent = 'Campus Director and Training & Placement Officer executive workspace with full CRUD controls.';
@@ -312,6 +319,9 @@
         sceneTitle.textContent = 'Full System Oversight & Control.';
         sceneDesc.textContent = 'Manage master drives, candidate pipelines, eligibility criteria, test schedules, classroom sessions, and official appointments.';
         sceneStudentBadge.style.display = 'none';
+        if (signupContainer) {
+          signupContainer.innerHTML = 'Need an official secretariat ID? <a href="/register.html?role=TPO" style="color: var(--institute); font-weight: 600;">Register TPO / Director ID &rarr;</a>';
+        }
       } else if (role === 'COMPANY') {
         authTitle.textContent = 'Recruiter Portal.';
         authSubtitle.textContent = 'Enterprise partner access for screening, interview shortlists, and rollouts.';
@@ -322,6 +332,9 @@
         sceneTitle.textContent = 'Discover Top Engineering Talent.';
         sceneDesc.textContent = 'Review candidate profiles, evaluate shortlists, conduct pre-placement talks, and issue official placement offers.';
         sceneStudentBadge.style.display = 'none';
+        if (signupContainer) {
+          signupContainer.innerHTML = 'New enterprise partner? <a href="/register.html?role=COMPANY" style="color: #D97706; font-weight: 600;">Register Recruiter Account &rarr;</a>';
+        }
       }
     }
 

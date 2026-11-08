@@ -82,6 +82,17 @@ class DomainSwitcher {
             </div>
           </div>
 
+          <!-- User Directory & Official IDs (TPO / Director / Admin) -->
+          ${auth.canManage() ? `
+          <a href="/admin/users.html" class="domain-item text-decoration-none" style="color: var(--ink);">
+            <div style="display: flex; align-items: center; gap: var(--space-2);">
+              <svg width="14" height="14"><use href="#ph-users-three"/></svg>
+              <span>User Directory &amp; IDs</span>
+            </div>
+            <span class="chip chip-neutral" style="font-size: 9px; padding: 1px 5px;">MANAGE</span>
+          </a>
+          ` : ''}
+
           <!-- Switch Account -->
           <div class="domain-item" id="domain-switch-account-btn" style="color: var(--danger);">
             <div style="display: flex; align-items: center; gap: var(--space-2);">

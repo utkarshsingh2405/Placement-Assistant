@@ -266,9 +266,9 @@
         import auth from '/js/auth.js';
         import api from '/js/api.js';
 
-        // Restrict to ADMIN
-        if (!auth.requireAuth(['ADMIN'])) {
-            // Handled
+        // Restrict to ADMIN, DIRECTOR, and TPO
+        if (!auth.canManage()) {
+            window.location.href = '/choose-domain.html';
         }
 
         // Logout

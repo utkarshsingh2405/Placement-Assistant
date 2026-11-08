@@ -113,6 +113,12 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     new SimpleGrantedAuthority("ROLE_DIRECTOR")
             );
         }
+        if (role == Role.TPO) {
+            return List.of(
+                    new SimpleGrantedAuthority("ROLE_TPO"),
+                    new SimpleGrantedAuthority("ROLE_ADMIN")
+            );
+        }
         return List.of(new SimpleGrantedAuthority(role.withPrefix()));
     }
 }

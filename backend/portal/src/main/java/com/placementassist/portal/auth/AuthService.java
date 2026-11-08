@@ -106,32 +106,42 @@ public class AuthService {
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         String email = request.getEmail().toLowerCase().trim();
-        String rollNo = request.getRollNo().toUpperCase().trim();
+        Role role = request.getRole() != null ? request.getRole() : Role.STUDENT;
 
         if (userRepository.existsByEmail(email)) {
             throw new ConflictException("User with email " + email + " already exists");
         }
 
-        if (userRepository.existsByRollNo(rollNo)) {
-            throw new ConflictException("User with roll number " + rollNo + " already registered");
+        String rollNo = null;
+        if (role == Role.STUDENT) {
+            if (request.getRollNo() == null || request.getRollNo().isBlank()) {
+                throw new ApiException(HttpStatus.BAD_REQUEST, "MISSING_ROLL_NO", "Roll number is required for student registration");
+            }
+            rollNo = request.getRollNo().toUpperCase().trim();
+            if (userRepository.existsByRollNo(rollNo)) {
+                throw new ConflictException("User with roll number " + rollNo + " already registered");
+            }
+            // Validate student existence against Institute Integration API
+            validateStudentWithInstitute(rollNo);
+        } else if (request.getRollNo() != null && !request.getRollNo().isBlank()) {
+            rollNo = request.getRollNo().toUpperCase().trim();
         }
-
-        // Validate student existence against Institute Integration API
-        validateStudentWithInstitute(rollNo);
 
         PortalUser newUser = PortalUser.builder()
                 .email(email)
                 .name(request.getName().trim())
                 .rollNo(rollNo)
-                .role(Role.STUDENT)
+                .role(role)
                 .passwordHash(passwordEncoder.encode(request.getPassword()))
                 .active(true)
                 .build();
 
         newUser = userRepository.save(newUser);
 
-        // Auto-provision and synchronize with Institute database
-        syncStudentWithInstitute(newUser.getName(), newUser.getEmail(), newUser.getRollNo());
+        // Auto-provision and synchronize with Institute database for student accounts
+        if (role == Role.STUDENT && rollNo != null) {
+            syncStudentWithInstitute(newUser.getName(), newUser.getEmail(), newUser.getRollNo());
+        }
 
         String accessToken = jwtService.generatePortalToken(
                 newUser.getEmail(),
@@ -139,12 +149,12 @@ public class AuthService {
                 newUser.getRole(),
                 newUser.getRollNo(),
                 newUser.getName(),
-                null
+                newUser.getCompanyId()
         );
         String refreshToken = jwtService.generateRefreshToken(newUser.getEmail(), newUser.getId());
 
-        auditService.record(newUser.getEmail(), "REGISTER", "USER", newUser.getId().toString(), null, null, null);
-        log.info("Registered new student account: {} (rollNo={})", newUser.getEmail(), newUser.getRollNo());
+        auditService.record(newUser.getEmail(), "REGISTER", "USER", newUser.getId().toString(), null, "Role: " + role.name(), null);
+        log.info("Registered new account: {} (role={}, rollNo={})", newUser.getEmail(), newUser.getRole(), newUser.getRollNo());
 
         return AuthResponse.builder()
                 .accessToken(accessToken)
@@ -154,6 +164,7 @@ public class AuthService {
                 .role(newUser.getRole())
                 .name(newUser.getName())
                 .rollNo(newUser.getRollNo())
+                .companyId(newUser.getCompanyId())
                 .build();
     }
 
@@ -291,6 +302,11 @@ public class AuthService {
 
     @Transactional
     public UserResponse createUser(CreateUserRequest request) {
+        return createUser(request, "ADMIN");
+    }
+
+    @Transactional
+    public UserResponse createUser(CreateUserRequest request, String actor) {
         String email = request.getEmail().toLowerCase().trim();
         if (userRepository.existsByEmail(email)) {
             throw new ConflictException("User with email " + email + " already exists");
@@ -311,8 +327,15 @@ public class AuthService {
                 .active(true)
                 .build();
         user = userRepository.save(user);
-        auditService.record("ADMIN", "CREATE_USER", "USER", user.getId().toString(), null, user.getEmail(), null);
-        log.info("Admin created new user: {} (role={})", user.getEmail(), user.getRole());
+
+        // If newly created user is a student, sync to Institute DB as well!
+        if (user.getRole() == Role.STUDENT && user.getRollNo() != null) {
+            syncStudentWithInstitute(user.getName(), user.getEmail(), user.getRollNo());
+        }
+
+        String loggedActor = (actor != null && !actor.isBlank()) ? actor : "ADMIN";
+        auditService.record(loggedActor, "CREATE_USER", "USER", user.getId().toString(), null, user.getEmail(), "Role: " + user.getRole().name());
+        log.info("{} created new user: {} (role={})", loggedActor, user.getEmail(), user.getRole());
         return toUserResponse(user);
     }
 

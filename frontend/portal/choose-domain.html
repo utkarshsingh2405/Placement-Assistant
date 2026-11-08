@@ -150,9 +150,21 @@
     </div>
 
     <div style="display: flex; align-items: center; gap: var(--space-3);">
+      <!-- Executive ID Creation & User Directory (Visible to TPO, Director, Admin) -->
+      <div id="admin-actions-group" style="display: none; align-items: center; gap: 8px;">
+        <button id="open-create-id-modal-btn" class="btn btn-sm btn-primary" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-weight: 600; font-size: var(--text-xs); cursor: pointer;">
+          <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"/></svg>
+          <span>Create New ID</span>
+        </button>
+        <a href="/admin/users.html" class="btn btn-sm btn-outline hide-on-mobile" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; font-weight: 500; font-size: var(--text-xs);">
+          <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M117.25,157.92a60,60,0,1,0-66.5,0A95.83,95.83,0,0,0,3.53,195.63a8,8,0,1,0,13.4,8.74,80,80,0,0,1,134.14,0,8,8,0,0,0,13.4-8.74A95.83,95.83,0,0,0,117.25,157.92ZM40,108a44,44,0,1,1,44,44A44.05,44.05,0,0,1,40,108Zm210.14,96.37a8,8,0,0,1-11.07-2.33A79.83,79.83,0,0,0,172,164a8,8,0,0,1,0-16,44,44,0,1,0-16.34-84.87,8,8,0,1,1-5.92-14.85,60,60,0,1,1,25.5,113.84A95.73,95.73,0,0,1,247.81,202,8,8,0,0,1,250.14,204.37Z"/></svg>
+          <span>User Directory</span>
+        </a>
+      </div>
+
       <!-- Theme Toggle with guaranteed visible icon -->
-      <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-btn" title="Toggle Light/Dark Theme" aria-label="Toggle Light/Dark Theme" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;">
-        <span id="theme-icon" class="theme-icon" style="display: inline-flex; align-items: center;">
+      <button class="btn btn-sm btn-outline theme-toggle-btn" id="theme-btn" title="Toggle Light/Dark Theme" aria-label="Toggle Light/Dark Theme" style="display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; cursor: pointer;">
+        <span id="theme-icon" class="theme-icon" style="display: inline-flex; align-items: center; pointer-events: none;">
           <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor">
             <path d="M216.7,152.6A96,96,0,1,1,103.4,39.3,80,80,0,0,0,216.7,152.6Z"/>
           </svg>
@@ -198,7 +210,7 @@
             <span>PILLAR 1 • ACADEMIC REGISTRY</span>
           </span>
           <span class="chip" id="inst-pill-status" style="background: rgba(0,0,0,0.3); color: #FFFFFF; font-family: var(--font-mono); font-size: 11px;">
-            ONLINE • 8081
+            ONLINE • /institute
           </span>
         </div>
 
@@ -252,7 +264,7 @@
             <span>PILLAR 2 • RECRUITMENT SEASON</span>
           </span>
           <span class="chip" id="plc-pill-status" style="background: rgba(0,0,0,0.3); color: #FFFFFF; font-family: var(--font-mono); font-size: 11px;">
-            ONLINE • 8082
+            ONLINE • /placement
           </span>
         </div>
 
@@ -294,6 +306,90 @@
     </section>
   </main>
 
+  <!-- Executive Administrative & User ID Provisioning Strip (Visible for TPO, Director, Admin) -->
+  <section id="executive-id-desk" style="display: none; width: 100%; max-width: 1140px; margin: var(--space-6) auto; padding: 0 var(--space-4);">
+    <div style="background: var(--surface); border: 1px solid var(--surface-3); border-radius: var(--radius-card); padding: var(--space-5); box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: var(--space-4);">
+      <div>
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+          <span class="chip chip-accent" style="font-size: 10px; font-weight: 700; padding: 2px 6px;">EXECUTIVE ID AUTHORITY</span>
+          <span style="font-weight: 700; font-size: var(--text-sm); color: var(--ink);">Campus Official User &amp; Credentials Desk</span>
+        </div>
+        <p style="font-size: var(--text-xs); color: var(--muted); margin: 0; max-width: 60ch;">
+          Provision institutional IDs for Students, TPO Coordinators, Directorate staff, and Corporate Recruiters with automated pillar synchronization.
+        </p>
+      </div>
+      <div style="display: flex; align-items: center; gap: var(--space-2);">
+        <button id="btn-quick-new-id" class="btn btn-sm btn-primary" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 600; font-size: var(--text-xs); cursor: pointer;">
+          <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor"><path d="M224,128a8,8,0,0,1-8,8H136v80a8,8,0,0,1-16,0V136H40a8,8,0,0,1,0-16h80V40a8,8,0,0,1,16,0v80h80A8,8,0,0,1,224,128Z"/></svg>
+          <span>+ Create New ID</span>
+        </button>
+        <a href="/admin/users.html" class="btn btn-sm btn-outline" style="display: inline-flex; align-items: center; gap: 6px; font-weight: 500; font-size: var(--text-xs);">
+          <span>Full User Directory &rarr;</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Modal for Creating New IDs (Quick-ID Provisioning) -->
+  <div id="create-id-modal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 1000; align-items: center; justify-content: center; padding: var(--space-4);">
+    <div style="background: var(--surface); border: 1px solid var(--surface-3); border-radius: var(--radius-card); width: 100%; max-width: 480px; box-shadow: var(--shadow-float); position: relative; max-height: 92vh; overflow-y: auto; padding: var(--space-6);">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-4);">
+        <div>
+          <div class="chip chip-accent" style="font-size: 10px; font-weight: 700; margin-bottom: 4px;">CREDENTIAL GENERATOR</div>
+          <h2 style="font-family: var(--font-display); font-size: 1.35rem; font-weight: 600; color: var(--ink); margin: 0;">Create New User ID</h2>
+        </div>
+        <button type="button" id="close-create-id-modal" style="background: none; border: none; font-size: 24px; color: var(--muted); cursor: pointer; line-height: 1; padding: 0 4px;">&times;</button>
+      </div>
+
+      <div id="modal-alert-box"></div>
+
+      <form id="modal-create-user-form">
+        <div class="form-group" style="margin-bottom: var(--space-3);">
+          <label for="modal-name" class="form-label" style="font-size: 11px; font-weight: 600;">Full Name</label>
+          <input type="text" id="modal-name" class="input-field" required placeholder="e.g. Prof. Ramesh Gupta / Student Name">
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); margin-bottom: var(--space-3);">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="modal-role" class="form-label" style="font-size: 11px; font-weight: 600;">Assigned Role</label>
+            <select id="modal-role" class="input-field" style="cursor: pointer;">
+              <option value="STUDENT">Student</option>
+              <option value="TPO">TPO Officer</option>
+              <option value="DIRECTOR">Director</option>
+              <option value="COMPANY">Company Recruiter</option>
+              <option value="ADMIN">Administrator</option>
+            </select>
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="modal-roll" class="form-label" id="modal-roll-label" style="font-size: 11px; font-weight: 600;">Roll Number (Student)</label>
+            <input type="text" id="modal-roll" class="input-field" placeholder="e.g. 22CS099" style="text-transform: uppercase;">
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom: var(--space-3);">
+          <label for="modal-email" class="form-label" style="font-size: 11px; font-weight: 600;">Official / Institutional Email</label>
+          <input type="email" id="modal-email" class="input-field" required placeholder="user@college.edu">
+        </div>
+
+        <div class="form-group" style="margin-bottom: var(--space-5);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+            <label for="modal-password" class="form-label" style="font-size: 11px; font-weight: 600; margin-bottom: 0;">Initial Password</label>
+            <button type="button" id="modal-quick-pass-btn" style="background: none; border: none; font-size: 11px; color: var(--accent); cursor: pointer; text-decoration: underline;">Use Default</button>
+          </div>
+          <input type="password" id="modal-password" class="input-field" required minlength="6" placeholder="Min. 6 characters (e.g. Password@123)">
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: var(--space-2);">
+          <button type="button" id="modal-cancel-btn" class="btn btn-outline btn-sm">Cancel</button>
+          <button type="submit" id="modal-submit-btn" class="btn btn-primary btn-sm" style="font-weight: 600;">
+            <span id="modal-btn-text">Provision ID</span>
+            <span id="modal-btn-spinner" style="display: none; margin-left: 6px;">• • •</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <footer class="text-center py-4 text-xs text-muted">
     <div class="container d-flex justify-center align-center gap-3 flex-wrap">
       <span>Placement Assistant Enterprise &bull; Graduating Cohort 2026</span>
@@ -320,6 +416,7 @@
   <!-- Scripts -->
   <script type="module">
     import auth from '/js/auth.js';
+    import api from '/js/api.js';
     import theme from '/js/core/theme.js';
 
     // Inject SVG Sprite
@@ -344,10 +441,18 @@
       const displayName = user.name || user.email;
       const role = user.role || 'STUDENT';
       const isStudent = role === 'STUDENT';
+      const canManage = auth.canManage();
 
       document.getElementById('user-display-name').textContent = displayName;
       document.getElementById('user-dropdown-role').textContent = isStudent && user.rollNo ? `${role} • ${user.rollNo}` : role;
       document.getElementById('user-avatar').textContent = (displayName[0] || 'U').toUpperCase();
+
+      if (canManage) {
+        const adminActions = document.getElementById('admin-actions-group');
+        const execDesk = document.getElementById('executive-id-desk');
+        if (adminActions) adminActions.style.display = 'inline-flex';
+        if (execDesk) execDesk.style.display = 'block';
+      }
 
       if (isStudent) {
         const greetingDiv = document.createElement('div');
@@ -365,41 +470,141 @@
         greetingDiv.style.borderBottom = '1px solid var(--surface-3)';
         greetingDiv.style.fontSize = 'var(--text-xs)';
         greetingDiv.style.color = 'var(--ink)';
-        greetingDiv.innerHTML = `Executive Secretariat: <strong>${displayName}</strong> &bull; <span class="chip chip-accent" style="font-size: 10px;">DIRECTOR &bull; FULL SYSTEM OVERSIGHT</span>`;
+        greetingDiv.innerHTML = `Executive Secretariat: <strong>${displayName}</strong> &bull; <span class="chip chip-accent" style="font-size: 10px;">DIRECTOR &bull; FULL SYSTEM OVERSIGHT &bull; CRUD AUTHORIZED</span>`;
+        document.querySelector('.app-topbar').insertAdjacentElement('afterend', greetingDiv);
+      } else if (role === 'TPO') {
+        const greetingDiv = document.createElement('div');
+        greetingDiv.className = 'w-100 text-center py-2 px-4';
+        greetingDiv.style.background = 'var(--surface-2)';
+        greetingDiv.style.borderBottom = '1px solid var(--surface-3)';
+        greetingDiv.style.fontSize = 'var(--text-xs)';
+        greetingDiv.style.color = 'var(--ink)';
+        greetingDiv.innerHTML = `Training &amp; Placement Secretariat: <strong>${displayName}</strong> &bull; <span class="chip chip-success" style="font-size: 10px;">TPO OFFICER &bull; FULL CRUD OPERATIONS ENABLED</span>`;
         document.querySelector('.app-topbar').insertAdjacentElement('afterend', greetingDiv);
       }
     }
 
-    // Theme Toggle
-    function updateThemeIcon() {
-      const current = document.documentElement.getAttribute('data-theme') || 'light';
-      const iconSpan = document.getElementById('theme-icon');
-      if (iconSpan) {
-        if (current === 'dark') {
-          iconSpan.innerHTML = `
-            <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor">
-              <circle cx="128" cy="128" r="48"/>
-              <line x1="128" y1="24" x2="128" y2="48" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
-              <line x1="128" y1="208" x2="128" y2="232" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
-              <line x1="24" y1="128" x2="48" y2="128" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
-              <line x1="208" y1="128" x2="232" y2="128" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
-              <line x1="54.5" y1="54.5" x2="71.5" y2="71.5" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
-              <line x1="184.5" y1="184.5" x2="201.5" y2="201.5" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
-              <line x1="54.5" y1="201.5" x2="71.5" y2="184.5" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
-              <line x1="184.5" y1="71.5" x2="201.5" y2="54.5" stroke="currentColor" stroke-width="24" stroke-linecap="round"/>
-            </svg>
-          `;
-        } else {
-          iconSpan.innerHTML = `
-            <svg width="14" height="14" viewBox="0 0 256 256" fill="currentColor">
-              <path d="M216.7,152.6A96,96,0,1,1,103.4,39.3,80,80,0,0,0,216.7,152.6Z"/>
-            </svg>
-          `;
-        }
+    // Modal Logic for Create ID
+    const createIdModal = document.getElementById('create-id-modal');
+    const openModalBtn = document.getElementById('open-create-id-modal-btn');
+    const quickModalBtn = document.getElementById('btn-quick-new-id');
+    const closeModalBtn = document.getElementById('close-create-id-modal');
+    const cancelModalBtn = document.getElementById('modal-cancel-btn');
+    const modalForm = document.getElementById('modal-create-user-form');
+    const modalAlertBox = document.getElementById('modal-alert-box');
+    const modalRoleSelect = document.getElementById('modal-role');
+    const modalRollLabel = document.getElementById('modal-roll-label');
+    const modalRollInput = document.getElementById('modal-roll');
+    const modalPasswordInput = document.getElementById('modal-password');
+    const quickPassBtn = document.getElementById('modal-quick-pass-btn');
+
+    function openModal() {
+      if (createIdModal) {
+        modalAlertBox.innerHTML = '';
+        createIdModal.style.display = 'flex';
       }
     }
 
-    // Theme Icon listener (ThemeManager handles click events and initial icon setup automatically)
+    function closeModal() {
+      if (createIdModal) {
+        createIdModal.style.display = 'none';
+      }
+    }
+
+    openModalBtn?.addEventListener('click', openModal);
+    quickModalBtn?.addEventListener('click', openModal);
+    closeModalBtn?.addEventListener('click', closeModal);
+    cancelModalBtn?.addEventListener('click', closeModal);
+
+    createIdModal?.addEventListener('click', (e) => {
+      if (e.target === createIdModal) closeModal();
+    });
+
+    quickPassBtn?.addEventListener('click', () => {
+      modalPasswordInput.value = 'Password@123';
+    });
+
+    modalRoleSelect?.addEventListener('change', () => {
+      const selected = modalRoleSelect.value;
+      if (selected === 'STUDENT') {
+        modalRollLabel.textContent = 'Roll Number (Student)';
+        modalRollInput.placeholder = 'e.g. 22CS099';
+        modalRollInput.required = true;
+      } else if (selected === 'TPO') {
+        modalRollLabel.textContent = 'Staff Code (Optional)';
+        modalRollInput.placeholder = 'e.g. TPO-2026';
+        modalRollInput.required = false;
+      } else if (selected === 'DIRECTOR') {
+        modalRollLabel.textContent = 'Directorate Code (Optional)';
+        modalRollInput.placeholder = 'e.g. DIR-01';
+        modalRollInput.required = false;
+      } else if (selected === 'COMPANY') {
+        modalRollLabel.textContent = 'Company Name / ID';
+        modalRollInput.placeholder = 'e.g. Google India';
+        modalRollInput.required = false;
+      } else {
+        modalRollLabel.textContent = 'Identifier Code';
+        modalRollInput.placeholder = 'Optional code';
+        modalRollInput.required = false;
+      }
+    });
+
+    modalForm?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      modalAlertBox.innerHTML = '';
+
+      const submitBtn = document.getElementById('modal-submit-btn');
+      const btnText = document.getElementById('modal-btn-text');
+      const btnSpinner = document.getElementById('modal-btn-spinner');
+
+      const name = document.getElementById('modal-name').value.trim();
+      const email = document.getElementById('modal-email').value.trim().toLowerCase();
+      const role = modalRoleSelect.value;
+      const rollNo = modalRollInput.value.trim().toUpperCase() || null;
+      const password = modalPasswordInput.value;
+
+      submitBtn.disabled = true;
+      btnText.textContent = 'Provisioning ID...';
+      btnSpinner.style.display = 'inline';
+
+      try {
+        const res = await api.post('/api/admin/users', {
+          name,
+          email,
+          role,
+          rollNo,
+          password
+        });
+
+        const created = res.data || res;
+        modalAlertBox.innerHTML = `
+          <div class="chip chip-success" style="display: flex; flex-direction: column; width: 100%; padding: 12px 14px; border-radius: 8px; margin-bottom: var(--space-4); gap: 4px;">
+            <div style="display: flex; align-items: center; gap: 6px; font-weight: 600;">
+              <svg width="16" height="16"><use href="#ph-check"/></svg>
+              <span>User ID successfully generated &amp; synced!</span>
+            </div>
+            <div style="font-size: 11px; opacity: 0.9;">Email: <strong>${created.email || email}</strong> &bull; Role: <strong>${created.role || role}</strong> &bull; Password: <code>${password}</code></div>
+          </div>
+        `;
+
+        modalForm.reset();
+        submitBtn.disabled = false;
+        btnText.textContent = 'Generate Another ID';
+        btnSpinner.style.display = 'none';
+      } catch (err) {
+        modalAlertBox.innerHTML = `
+          <div class="chip chip-danger" style="display: flex; width: 100%; padding: 10px 14px; border-radius: 8px; margin-bottom: var(--space-4);">
+            <svg width="16" height="16"><use href="#ph-warning-circle"/></svg>
+            <span>${err.message || 'Failed to create user ID. Email or Roll Number may already exist.'}</span>
+          </div>
+        `;
+        submitBtn.disabled = false;
+        btnText.textContent = 'Provision ID';
+        btnSpinner.style.display = 'none';
+      }
+    });
+
+    // Theme change listener (ThemeManager handles click events and icon updates automatically)
     window.addEventListener('themechange', (e) => {
       if (typeof theme !== 'undefined') {
         theme.updateToggleIcons(e.detail?.theme || theme.getTheme());
@@ -444,11 +649,25 @@
       .then(r => r.json())
       .then(res => {
         const d = res.data || res;
-        if (d && d.institute && d.institute.status !== 'UP') {
-          document.getElementById('inst-pill-status').textContent = 'OFFLINE';
+        const instChip = document.getElementById('inst-pill-status');
+        const plcChip = document.getElementById('plc-pill-status');
+        if (d && d.institute && instChip) {
+          if (d.institute.status === 'UP') {
+            instChip.textContent = 'ONLINE • /institute';
+            instChip.style.color = '#4FD1B8';
+          } else {
+            instChip.textContent = 'STARTING...';
+            instChip.style.color = '#E0808C';
+          }
         }
-        if (d && d.placement && d.placement.status !== 'UP') {
-          document.getElementById('plc-pill-status').textContent = 'OFFLINE';
+        if (d && d.placement && plcChip) {
+          if (d.placement.status === 'UP') {
+            plcChip.textContent = 'ONLINE • /placement';
+            plcChip.style.color = '#4FD1B8';
+          } else {
+            plcChip.textContent = 'STARTING...';
+            plcChip.style.color = '#E0808C';
+          }
         }
       })
       .catch(() => {});

@@ -155,6 +155,14 @@ class UIManager {
         </div>
 
         <div style="display: flex; align-items: center; gap: var(--space-3);">
+          <!-- Executive ID & User Directory Quick Link (TPO, Director, Admin) -->
+          ${auth.canManage() ? `
+            <a href="/admin/users.html" class="btn btn-sm btn-outline hide-on-mobile" style="border-color: var(--accent); color: var(--accent); font-weight: 600; padding: 6px 12px; display: inline-flex; align-items: center; gap: 6px;" title="Official User Directory & ID Creation">
+              <svg width="14" height="14"><use href="#ph-users-three"/></svg>
+              <span>User IDs</span>
+            </a>
+          ` : ''}
+
           <!-- Notification Bell -->
           <a href="/placement/pages/11-notifications/notifications.html" class="btn btn-sm btn-outline" title="Notifications" id="topbar-bell" style="position: relative; padding: 8px;">
             <svg width="16" height="16"><use href="#ph-bell"/></svg>

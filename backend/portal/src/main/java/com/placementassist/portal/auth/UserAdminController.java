@@ -13,10 +13,14 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+
+import java.security.Principal;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/admin")
+@PreAuthorize("hasAnyRole('ADMIN', 'DIRECTOR', 'TPO')")
 public class UserAdminController {
 
     private final AuthService authService;
@@ -40,8 +44,11 @@ public class UserAdminController {
     }
 
     @PostMapping("/users")
-    public ResponseEntity<ApiResponse<UserResponse>> createUser(@Valid @RequestBody CreateUserRequest request) {
-        UserResponse created = authService.createUser(request);
+    public ResponseEntity<ApiResponse<UserResponse>> createUser(
+            @Valid @RequestBody CreateUserRequest request,
+            Principal principal) {
+        String actor = principal != null ? principal.getName() : "ADMIN";
+        UserResponse created = authService.createUser(request, actor);
         return ResponseEntity.ok(ApiResponse.ok("User created successfully", created));
     }
 

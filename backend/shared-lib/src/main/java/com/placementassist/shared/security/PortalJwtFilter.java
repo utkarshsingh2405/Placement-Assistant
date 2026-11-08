@@ -88,9 +88,7 @@ public class PortalJwtFilter extends OncePerRequestFilter {
                     if (provisioner != null && role != null) {
                         userDetails = provisioner.provisionOrGetUser(email, uid, role, rollNo, name, companyId);
                     } else {
-                        var authorities = role != null
-                                ? Collections.singletonList(new SimpleGrantedAuthority(role.withPrefix()))
-                                : Collections.singletonList(new SimpleGrantedAuthority("ROLE_STUDENT"));
+                        var authorities = resolveAuthorities(role);
 
                         userDetails = User.builder()
                                 .username(email)
@@ -113,5 +111,32 @@ public class PortalJwtFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    private java.util.List<SimpleGrantedAuthority> resolveAuthorities(Role role) {
+        if (role == null) {
+            return Collections.singletonList(new SimpleGrantedAuthority("ROLE_STUDENT"));
+        }
+        if (role == Role.DIRECTOR) {
+            return java.util.List.of(
+                    new SimpleGrantedAuthority("ROLE_DIRECTOR"),
+                    new SimpleGrantedAuthority("ROLE_TPO"),
+                    new SimpleGrantedAuthority("ROLE_ADMIN")
+            );
+        }
+        if (role == Role.ADMIN) {
+            return java.util.List.of(
+                    new SimpleGrantedAuthority("ROLE_ADMIN"),
+                    new SimpleGrantedAuthority("ROLE_TPO"),
+                    new SimpleGrantedAuthority("ROLE_DIRECTOR")
+            );
+        }
+        if (role == Role.TPO) {
+            return java.util.List.of(
+                    new SimpleGrantedAuthority("ROLE_TPO"),
+                    new SimpleGrantedAuthority("ROLE_ADMIN")
+            );
+        }
+        return Collections.singletonList(new SimpleGrantedAuthority(role.withPrefix()));
     }
 }
