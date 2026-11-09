@@ -23,7 +23,8 @@ public class RegisterRequest {
     // Roll number (mandatory for students, optional for staff/recruiters)
     private String rollNo;
 
-    // Selected role: STUDENT, TPO, DIRECTOR, COMPANY, or ADMIN (defaults to STUDENT)
+    // Selected role: STUDENT, TPO, DIRECTOR, COMPANY, or ADMIN (defaults to
+    // STUDENT)
     private Role role;
 
     // Optional organizational fields

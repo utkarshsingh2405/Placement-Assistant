@@ -68,9 +68,8 @@ class ApiClient {
       return `${base}${clean}`;
     }
 
-    // Auth and status endpoints:
-    // If we are currently browsing an isolated or context-routed pillar (/institute or /placement),
-    // retain the pillar prefix so standalone and multi-pillar deployments both work properly.
+    // Auth, status, admin, and actuator endpoints:
+    // Route to unified portal root endpoints
     if (
       clean.startsWith('/api/auth') || 
       clean.startsWith('/auth') || 
@@ -78,14 +77,11 @@ class ApiClient {
       clean.startsWith('/api/admin')
     ) {
       if (clean.startsWith('/auth')) clean = `/api${clean}`;
-      if (prefix && (clean.startsWith('/api/auth') || clean.startsWith('/api/status'))) {
-        return `${base}${prefix}${clean}`;
-      }
       return `${base}${clean}`;
     }
 
     if (clean.startsWith('/actuator')) {
-      return `${base}${prefix}${clean}`;
+      return `${base}${clean}`;
     }
 
     if (clean.startsWith('/api/') || clean === '/api') {
@@ -116,7 +112,7 @@ class ApiClient {
     try {
       const response = await fetch(url, config);
 
-      if (response.status === 401 || (response.status === 403 && this.getToken())) {
+      if (response.status === 401) {
         const refreshed = await this.tryRefreshToken();
         if (refreshed) {
           headers['Authorization'] = `Bearer ${this.getToken()}`;
