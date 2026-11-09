@@ -31,8 +31,9 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends curl procps && rm -rf /var/lib/apt/lists/*
 
-# Create data and upload storage directories
-RUN mkdir -p /app/database \
+# Create data and upload storage directories (including /data for persistent disk mount)
+RUN mkdir -p /data \
+    /app/database \
     /app/uploads/resumes
 
 # Copy pre-seeded SQLite database
@@ -42,12 +43,12 @@ COPY backend/database/ /app/database/
 COPY --from=build /app/backend/portal/target/portal.jar /app/portal.jar
 
 # Environment defaults for cloud container
-ENV PORT=8080
-ENV SERVER_PORT=8080
+ENV PORT=10000
 ENV SPRING_PROFILES_ACTIVE=sqlite
-ENV DB_PATH=/app/database/placement_assist.db
+ENV SQLITE_DB_PATH=/data/app.db
+ENV DB_PATH=/data/app.db
 ENV MAIL_MODE=log
 
-EXPOSE 8080
+EXPOSE 10000
 
-CMD ["sh", "-c", "java -XX:MaxRAMPercentage=60 -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -Xss512k -XX:MaxMetaspaceSize=128m -Dserver.port=${PORT:-8080} -Dspring.profiles.active=sqlite -DDB_PATH=/app/database/placement_assist.db -jar /app/portal.jar"]
+ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75", "-XX:+UseSerialGC", "-Xss512k", "-jar", "/app/portal.jar"]

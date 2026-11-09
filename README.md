@@ -51,20 +51,24 @@ The platform unifies **Institute Academic Management** and **Corporate Placement
 
 > [!WARNING]
 > ### ⚠️ Security Notice: Production Secret Generation Required
-> The previous default credentials and tokens originally committed in repository templates are compromised.
+> Before deploying to **Render**, **Railway**, or any public cloud, you **MUST** configure your hosting provider's dashboard environment variables:
 > 
-> Before deploying to **Render**, **Railway**, or any public cloud, you **MUST** generate new secure random secrets and configure them in your hosting provider's dashboard environment variables:
-> 
-> 1. **`JWT_SECRET`**: Generate a strong 256-bit or 512-bit HMAC key (at least 64 hex characters or 32 random bytes):
+> 1. **`JWT_SECRET`**: Generate a strong 256-bit or 512-bit HMAC key (at least 32 bytes / 64 hex characters):
 >    ```bash
 >    openssl rand -hex 32
 >    ```
+>    The application enforces strict security and will **fail fast at startup** if `JWT_SECRET` is missing or shorter than 32 bytes.
 > 2. **`INSTITUTE_API_KEY`**: Generate a random secure token:
 >    ```bash
 >    openssl rand -hex 16
 >    ```
+
+> [!IMPORTANT]
+> ### ⚠️ Render Ephemeral Filesystem Notice: Persistent Disk / Database Migration
+> Render container filesystems are **ephemeral** and reset on every deploy or container restart.
 > 
-> The application enforces strict security and will **fail fast at startup** if `JWT_SECRET` is missing.
+> * **For SQLite deployments:** The SQLite database path is configurable via `SQLITE_DB_PATH` (or `DB_PATH`). In production on Render, you must attach a **Persistent Disk** mounted at `/data` (e.g. `SQLITE_DB_PATH=/data/app.db`) to preserve candidate registrations and placement drive data across deploys.
+> * **For Managed Production Databases:** For enterprise clustering or zero-disk scaling, migrate the database to managed **PostgreSQL** or **MySQL** by setting `SPRING_PROFILES_ACTIVE=mysql` (or providing `SPRING_DATASOURCE_URL`).
 
 
 ---

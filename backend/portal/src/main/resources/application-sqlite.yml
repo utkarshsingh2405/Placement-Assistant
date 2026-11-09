@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:sqlite:${DB_PATH:database/placement_assist.db}}
+    url: ${SPRING_DATASOURCE_URL:jdbc:sqlite:${SQLITE_DB_PATH:${DB_PATH:database/placement_assist.db}}}
     driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME:org.sqlite.JDBC}
     hikari:
       maximum-pool-size: 4
@@ -19,3 +19,6 @@ spring:
 
   flyway:
     enabled: false
+
+jwt:
+  secret: ${JWT_SECRET:}

@@ -29,13 +29,23 @@ public class JwtService {
             @Value("${jwt.secret:}") String secret,
             @Value("${jwt.expiration-ms:86400000}") long accessExpirationMs,
             @Value("${jwt.refresh-expiration-ms:604800000}") long refreshExpirationMs) {
-        if (secret == null || secret.trim().isEmpty()) {
-            throw new IllegalStateException("CRITICAL SECURITY CONFIGURATION ERROR: JWT_SECRET is missing! Please configure JWT_SECRET via environment variable or application configuration.");
+        String resolvedSecret = secret;
+        if (resolvedSecret == null || resolvedSecret.trim().isEmpty()) {
+            resolvedSecret = System.getenv("JWT_SECRET");
         }
-        if (secret.getBytes(StandardCharsets.UTF_8).length < 32) {
-            throw new IllegalStateException("CRITICAL SECURITY CONFIGURATION ERROR: JWT_SECRET must be at least 256 bits (32 bytes) long.");
+        if (resolvedSecret == null || resolvedSecret.trim().isEmpty()) {
+            throw new IllegalStateException(
+                    "CRITICAL SECURITY CONFIGURATION ERROR: JWT_SECRET is missing! "
+                            + "Please configure JWT_SECRET via environment variable (JWT_SECRET) or application configuration (jwt.secret).");
         }
-        this.signingKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        byte[] secretBytes = resolvedSecret.getBytes(StandardCharsets.UTF_8);
+        if (secretBytes.length < 32) {
+            throw new IllegalStateException(
+                    "CRITICAL SECURITY CONFIGURATION ERROR: JWT_SECRET is too short! "
+                            + "HMAC-SHA signing requires at least 256 bits (32 bytes). "
+                            + "Currently provided secret is " + secretBytes.length + " bytes long.");
+        }
+        this.signingKey = Keys.hmacShaKeyFor(secretBytes);
         this.accessExpirationMs = accessExpirationMs;
         this.refreshExpirationMs = refreshExpirationMs;
     }

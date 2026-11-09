@@ -42,8 +42,24 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class PortalApplication {
 
     public static void main(String[] args) {
+        ensureDatabaseDirectory();
         new SpringApplicationBuilder(PortalApplication.class)
                 .beanNameGenerator(new FullyQualifiedAnnotationBeanNameGenerator())
                 .run(args);
+    }
+
+    private static void ensureDatabaseDirectory() {
+        String dbPath = System.getenv("SQLITE_DB_PATH");
+        if (dbPath == null || dbPath.isBlank()) {
+            dbPath = System.getenv("DB_PATH");
+        }
+        if (dbPath != null && !dbPath.isBlank()) {
+            try {
+                java.nio.file.Path p = java.nio.file.Paths.get(dbPath);
+                if (p.getParent() != null && !java.nio.file.Files.exists(p.getParent())) {
+                    java.nio.file.Files.createDirectories(p.getParent());
+                }
+            } catch (Exception ignored) {}
+        }
     }
 }
