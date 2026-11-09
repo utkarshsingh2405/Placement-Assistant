@@ -55,9 +55,22 @@ public class PortalApplication {
         }
         if (dbPath != null && !dbPath.isBlank()) {
             try {
-                java.nio.file.Path p = java.nio.file.Paths.get(dbPath);
-                if (p.getParent() != null && !java.nio.file.Files.exists(p.getParent())) {
-                    java.nio.file.Files.createDirectories(p.getParent());
+                java.nio.file.Path target = java.nio.file.Paths.get(dbPath);
+                if (target.getParent() != null && !java.nio.file.Files.exists(target.getParent())) {
+                    java.nio.file.Files.createDirectories(target.getParent());
+                }
+                if (!java.nio.file.Files.exists(target)) {
+                    java.nio.file.Path[] seedCandidates = new java.nio.file.Path[] {
+                            java.nio.file.Paths.get("/app/database/placement_assist.db"),
+                            java.nio.file.Paths.get("backend/database/placement_assist.db"),
+                            java.nio.file.Paths.get("database/placement_assist.db")
+                    };
+                    for (java.nio.file.Path seed : seedCandidates) {
+                        if (java.nio.file.Files.exists(seed)) {
+                            java.nio.file.Files.copy(seed, target);
+                            break;
+                        }
+                    }
                 }
             } catch (Exception ignored) {}
         }

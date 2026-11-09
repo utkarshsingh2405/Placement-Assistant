@@ -39,6 +39,10 @@ RUN mkdir -p /data \
 # Copy pre-seeded SQLite database
 COPY backend/database/ /app/database/
 
+# Copy entrypoint script
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
+
 # Copy single executable JAR from build stage
 COPY --from=build /app/backend/portal/target/portal.jar /app/portal.jar
 
@@ -51,4 +55,5 @@ ENV MAIL_MODE=log
 
 EXPOSE 10000
 
-ENTRYPOINT ["java", "-XX:MaxRAMPercentage=75", "-XX:+UseSerialGC", "-Xss512k", "-jar", "/app/portal.jar"]
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["java", "-XX:MaxRAMPercentage=60", "-XX:MaxMetaspaceSize=128m", "-XX:+UseSerialGC", "-Xss512k", "-XX:+ExitOnOutOfMemoryError", "-XX:TieredStopAtLevel=1", "-Djava.io.tmpdir=/tmp", "-jar", "/app/portal.jar"]

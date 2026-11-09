@@ -1,1 +1,1 @@
-web: java -XX:MaxRAMPercentage=60 -XX:+UseSerialGC -XX:TieredStopAtLevel=1 -Xss512k -XX:MaxMetaspaceSize=128m -Dserver.port=$PORT -Dspring.profiles.active=sqlite -DDB_PATH=/app/database/placement_assist.db -jar /app/portal.jar
+web: java -XX:MaxRAMPercentage=60 -XX:MaxMetaspaceSize=128m -XX:+UseSerialGC -Xss512k -XX:+ExitOnOutOfMemoryError -XX:TieredStopAtLevel=1 -Djava.io.tmpdir=/tmp -Dserver.port=$PORT -Dspring.profiles.active=sqlite -jar /app/portal.jar
