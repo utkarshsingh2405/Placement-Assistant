@@ -28,3 +28,4 @@ mkdir -p /tmp
 chmod 1777 /tmp
 
 exec "$@"
+
